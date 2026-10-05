@@ -1,0 +1,9 @@
+{
+  "appId": "com.instructormotion.app",
+  "appName": "Instructor Motion",
+  "webDir": "www",
+  "server": { "androidScheme": "https" },
+  "backgroundColor": "#042142",
+  "ios": { "contentInset": "always" },
+  "android": { "allowMixedContent": false }
+}

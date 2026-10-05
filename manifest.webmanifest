@@ -1,0 +1,50 @@
+{
+ "name": "Instructor Motion",
+ "short_name": "Instructor",
+ "description": "منصة تدريب وإدارة رياضية متعددة الرياضات",
+ "lang": "ar",
+ "dir": "rtl",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#042142",
+ "theme_color": "#042142",
+ "categories": [
+  "sports",
+  "education",
+  "productivity"
+ ],
+ "icons": [
+  {
+   "src": "icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "icons/maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ],
+ "shortcuts": [
+  {
+   "name": "الحصص",
+   "url": "./#sessions"
+  },
+  {
+   "name": "الفرق واللاعبين",
+   "url": "./#squad"
+  },
+  {
+   "name": "اللوحة التكتيكية",
+   "url": "./#board"
+  }
+ ]
+}

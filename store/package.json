@@ -1,0 +1,14 @@
+{
+  "name": "instructor-motion-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Instructor Motion — native wrapper (Capacitor) around the same web app",
+  "scripts": {
+    "prepare-web": "mkdir -p www && cp ../index.html ../manifest.webmanifest ../sw.js www/ && cp -r ../icons www/",
+    "android": "npm run prepare-web && npx cap add android && npx cap sync android && npx cap open android",
+    "ios": "npm run prepare-web && npx cap add ios && npx cap sync ios && npx cap open ios",
+    "sync": "npm run prepare-web && npx cap sync"
+  },
+  "dependencies": { "@capacitor/core": "^6.0.0", "@capacitor/android": "^6.0.0", "@capacitor/ios": "^6.0.0" },
+  "devDependencies": { "@capacitor/cli": "^6.0.0" }
+}

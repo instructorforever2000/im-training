@@ -1,0 +1,20 @@
+{
+  "packageId": "com.instructormotion.app",
+  "host": "YOUR-ACCOUNT.github.io",
+  "name": "Instructor Motion",
+  "launcherName": "Instructor",
+  "display": "standalone",
+  "orientation": "default",
+  "themeColor": "#042142",
+  "navigationColor": "#042142",
+  "backgroundColor": "#042142",
+  "enableNotifications": false,
+  "startUrl": "/instructor-motion/",
+  "iconUrl": "https://YOUR-ACCOUNT.github.io/instructor-motion/icons/icon-512.png",
+  "maskableIconUrl": "https://YOUR-ACCOUNT.github.io/instructor-motion/icons/maskable-512.png",
+  "webManifestUrl": "https://YOUR-ACCOUNT.github.io/instructor-motion/manifest.webmanifest",
+  "appVersionCode": 1,
+  "appVersionName": "1.0.0",
+  "fallbackType": "customtabs",
+  "features": {}
+}
