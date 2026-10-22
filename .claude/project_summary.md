@@ -17,7 +17,7 @@
 | المنصة (React 2.0) | جذر مستودع im-training | الوحيدة التي تُطوَّر وتُنشر |
 | المنصة القديمة v28/v29 (ملف واحد ≈2.3MB) | im-training/legacy/v28/ | **قراءة فقط** — مصدر المحتوى للنقل، لا تُعدَّل ولا تُنشر |
 | ملاحظات قرارات v29 (الملعب أولًا) | im-training/legacy/v28/MIGRATION-NOTES.md | تُطبَّق عند نقل كل قسم |
-| مستودع instructor-motion-training | GitHub | يُؤرشف (لا يُحذف) بعد التأكد من الرابط الموحّد |
+| مستودع instructor-motion-training | GitHub | **مؤرشف** (2026-10-22) — للقراءة فقط |
 | نسخة احتياطية v28 | D:\Claude-Work\01-IM-Training\instructor-motion-v28 | محفوظة |
 | التصميمات المعتمدة | im-training/docs/design + D:\Claude-Work\01-IM-Training\design | البرنامج اليومي · الوحدة التدريبية |
 | قاعدة البيانات والدخول | Supabase الأم instructor-motion (المنصة: training) | الأساس المشترك جاهز |
