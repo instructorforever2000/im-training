@@ -27,16 +27,16 @@ small { font-family: var(--font-latin); color: #7fe3da; font-size: .85em; font-w
 .lg-card { position: relative; width: 250px; height: 250px; flex: none;
   transition: width .5s cubic-bezier(.3,.7,.2,1), height .5s cubic-bezier(.3,.7,.2,1);
   transform: perspective(1200px) rotateY(calc(var(--mx) * -.5deg)) rotateX(calc(var(--my) * .5deg)); }
-.lg-card[data-state="active"] { width: 430px; height: 392px; }
+.lg-card[data-state="active"] { width: 430px; height: auto; min-height: 392px; }
 .lg-root[data-compact] .lg-card { height: 212px; }
-.lg-root[data-compact] .lg-card[data-state="active"] { height: 312px; }
+.lg-root[data-compact] .lg-card[data-state="active"] { height: auto; min-height: 372px; }
 
 .lg-plate i { position: absolute; inset: 0; border-radius: 22px; border: 1px solid rgba(255,255,255,.1); background: rgba(255,255,255,.035); }
 .lg-plate i:nth-child(1) { transform: translate(-22px,-20px); }
 .lg-plate i:nth-child(2) { transform: translate(-44px,-40px); opacity: .7; }
 .lg-plate i:nth-child(3) { transform: translate(-66px,-60px); opacity: .45; }
 
-.lg-glass { position: relative; height: 100%; box-sizing: border-box; padding: 20px 22px; overflow: hidden auto; border-radius: 22px;
+.lg-glass { position: relative; height: 100%; box-sizing: border-box; padding: 20px 22px; overflow: visible; border-radius: 22px;
   background: linear-gradient(145deg, rgba(255,255,255,.12), rgba(255,255,255,.04));
   border: 1px solid rgba(255,255,255,.14); backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px);
   box-shadow: 0 20px 50px rgba(0,0,0,.28); }

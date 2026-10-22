@@ -30,7 +30,7 @@ export function computeLayout(W: number, H: number): LayoutMetrics {
   const courtH = clamp(H * 0.34, 190, 360)
   const top = 66
   const zoneH = H - top - courtH - 118
-  const clusterH = (compact ? 312 : 392) + 60
+  const clusterH = (compact ? 372 : 440) + 60
   const k = Math.max(0.72, Math.min(1, zoneH / clusterH, (W - 70) / 1010))
   const pt = top + 60 * k + Math.max(0, (zoneH - clusterH * k) / 2)
   return { mode: "row", portrait: false, compact, k, pt, courtH, mobile: false }
