@@ -1,0 +1,168 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Arena Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--tq:#1FB5A8;--royal:#1F2E7A;--navy:#042142;--bg:#030d18;--line:#ffffff14;--txt:#e7f4f3;--mut:#9fb3bd;--acc:#1FB5A8}
+*{box-sizing:border-box;margin:0}html,body{background:var(--bg);color:var(--txt);font-family:'IBM Plex Sans Arabic','Outfit',sans-serif;min-height:100%}
+.en{font-family:Outfit;color:var(--mut);font-weight:400;font-size:.82em}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+body:before{content:"";position:fixed;inset:0;background:radial-gradient(900px 600px at 65% -10%,color-mix(in srgb,var(--acc) 22%,transparent),transparent 70%),radial-gradient(800px 500px at 0% 100%,#1f2e7a33,transparent 70%);pointer-events:none;transition:background .8s}
+.app{position:relative;display:grid;grid-template-columns:1fr 340px;grid-template-rows:auto auto 1fr auto;gap:16px;padding:18px 22px;min-height:100dvh;max-width:1600px;margin:auto}
+header{grid-column:1/-1;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700}.brand img{width:36px;border-radius:9px}.brand b{color:var(--tq)}
+.badge{font-size:11px;border:1px solid var(--line);border-radius:99px;padding:4px 10px;color:var(--mut)}
+.sports{display:flex;gap:6px;margin-inline-start:auto;flex-wrap:wrap}
+.sports button{padding:8px 14px;border-radius:99px;background:#ffffff0a;border:1px solid var(--line);font-size:13.5px;transition:.25s}
+.sports button.on{background:var(--acc);color:#04121c;font-weight:700;border-color:transparent;box-shadow:0 0 0 6px color-mix(in srgb,var(--acc) 20%,transparent)}
+/* AI bar */
+.ai{grid-column:1/-1;display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:18px;background:linear-gradient(90deg,color-mix(in srgb,var(--acc) 16%,#0b1a28),#0b1a28);border:1px solid color-mix(in srgb,var(--acc) 35%,transparent)}
+.orb{width:34px;height:34px;border-radius:50%;flex:none;background:conic-gradient(from 0deg,var(--acc),#5b7bff,var(--acc));animation:spin 4s linear infinite;mask:radial-gradient(circle,transparent 9px,#000 10px)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ai p{flex:1;font-size:15px;line-height:1.6}.ai p small{display:block;color:var(--mut);font-size:12px}
+.ai .act{display:flex;gap:8px}.ai .act button{padding:8px 14px;border-radius:12px;font-size:13px;background:#ffffff12}.ai .act button.y{background:var(--acc);color:#04121c;font-weight:700}
+/* arena */
+.stage{position:relative;border-radius:24px;background:#06131f;border:1px solid var(--line);overflow:hidden;min-height:440px;perspective:1100px;touch-action:none;cursor:grab}
+.stage:active{cursor:grabbing}
+.plane{position:absolute;inset:8% 6% 12%;transform-style:preserve-3d;transition:transform .15s}
+.plane svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 30px 40px #000a)}
+.hud{position:absolute;top:14px;right:14px;left:14px;display:flex;justify-content:space-between;gap:10px;pointer-events:none}
+.chip{background:#030d18cc;backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:14px;padding:10px 14px;font-size:12.5px;pointer-events:auto}
+.chip b{display:block;font-size:15px;color:var(--txt)}
+.hint{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);font-size:11.5px;color:var(--mut);background:#030d18aa;padding:5px 12px;border-radius:99px}
+.views{position:absolute;bottom:12px;right:14px;display:flex;gap:6px}.views button{font-size:12px;padding:6px 10px;border-radius:10px;background:#030d18cc;border:1px solid var(--line)}
+/* side */
+aside{grid-row:3/5;grid-column:2;display:flex;flex-direction:column;gap:12px}
+.card{background:#ffffff07;border:1px solid var(--line);border-radius:18px;padding:16px}
+.card h4{font-size:14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.tabs{display:flex;gap:4px;background:#ffffff08;border-radius:12px;padding:4px;margin-bottom:12px}.tabs button{flex:1;font-size:12.5px;padding:7px 4px;border-radius:9px;color:var(--mut)}.tabs button.on{background:#ffffff14;color:var(--txt);font-weight:600}
+.list div{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid #ffffff0b;font-size:13px}.list div span:last-child{color:var(--mut);font-size:12px;text-align:left}
+.radar{width:100%;height:210px}
+/* timeline */
+.tl{grid-column:1;padding:14px 18px;border-radius:18px;background:#ffffff07;border:1px solid var(--line)}
+.tl .t{display:flex;justify-content:space-between;font-size:13px;margin-bottom:10px}
+.seg{display:flex;gap:5px;height:40px}.seg div{border-radius:10px;font-size:11.5px;padding:6px 9px;display:flex;align-items:center;cursor:pointer;transition:.3s;white-space:nowrap;overflow:hidden}
+.seg div.on{outline:2px solid var(--acc);outline-offset:2px}
+input[type=range]{width:100%;margin-top:10px;accent-color:var(--acc)}
+.fade{animation:fade .5s ease}@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1}}
+.proto{position:fixed;bottom:10px;left:12px;font-size:11px;color:var(--mut);opacity:.7}
+@media (max-width:980px){html,body{overflow-x:hidden}.app>*{min-width:0}.hint{display:none}.proto{position:static;display:block;text-align:center;padding:10px}.app{grid-template-columns:1fr;padding:12px}aside{grid-column:1;grid-row:auto}.tl{grid-column:1}.stage{min-height:340px}.ai{flex-wrap:wrap}.sports{margin:0;overflow-x:auto;flex-wrap:nowrap;width:100%}.sports button{white-space:nowrap}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body>
+<div class="app">
+ <header>
+  <div class="brand"><img src="logo.png" alt="">Instructor Motion <b>Training</b></div>
+  <span class="badge">نموذج تفاعلي · Prototype</span>
+  <nav class="sports" id="sports"></nav>
+ </header>
+ <div class="ai"><span class="orb"></span><p id="aiText"></p><div class="act"><button class="y" id="aiYes">نفّذ</button><button id="aiNo">لاحقًا</button></div></div>
+ <div class="stage" id="stage">
+  <div class="plane" id="plane"></div>
+  <div class="hud"><div class="chip" id="chipA"></div><div class="chip" id="chipB"></div></div>
+  <div class="views"><button data-v="top">من فوق</button><button data-v="tilt">منظور</button><button data-v="low">مستوى الأرض</button></div>
+  <div class="hint">اسحب لتدوير الساحة · Drag to rotate</div>
+ </div>
+ <aside>
+  <div class="card"><div class="tabs" id="tabs"><button data-t="skills" class="on">المهارات</button><button data-t="tactics">الخطط</button><button data-t="rules">القوانين</button><button data-t="gear">الأدوات</button></div><div class="list fade" id="tabBody"></div></div>
+  <div class="card"><h4>أولويات الإعداد البدني <span class="en">Physical Prep</span></h4><svg class="radar" id="radar" viewBox="-130 -110 260 220"></svg></div>
+ </aside>
+ <div class="tl"><div class="t"><b>خط الموسم <span class="en">Season</span></b><span id="wk" class="en"></span></div><div class="seg" id="seg"></div><input type="range" id="scrub" min="1" max="36" value="9"></div>
+</div>
+<div class="proto">نموذج للتجربة — المحتوى توضيحي وسيُستبدل ببيانات المنصة</div>
+<script>
+const S={
+ football:{n:'كرة القدم',en:'Football',c:'#1FB5A8',
+  ai:['الحصة بعد ساعة. حمل خط الوسط مرتفع هذا الأسبوع، فخفّفت شدة التمرين الثاني إلى 70٪.','اقتراح: تمرين «بناء من الخلف 3 ضد 2» يناسب مرحلة الإعداد الخاص الحالية.'],
+  a:['التمرين الآن','بناء من الخلف — 3 ضد 2'],b:['الملعب','100–110 × 64–75 م'],
+  skills:[['التمرير القصير','أساسي'],['الاستلام الموجّه','أساسي'],['المراوغة 1 ضد 1','متوسط'],['التسديد من خارج المنطقة','متقدم']],
+  tactics:[['الضغط العالي','دفاعي'],['البناء من الخلف','هجومي'],['التحولات السريعة','انتقالي'],['الكرات الثابتة','ثابت']],
+  rules:[['عدد اللاعبين','11 لكل فريق'],['زمن المباراة','شوطان × 45 د'],['التبديلات','حسب لائحة البطولة'],['التسلل','قانون 11']],
+  gear:[['أقماع وحواجز','تدريب'],['سلالم رشاقة','بدني'],['مرمى مصغّر','ألعاب صغيرة'],['صدريات ملونة','تقسيم']],
+  fit:{'السرعة':.85,'التحمل':.9,'القوة':.6,'الرشاقة':.8,'المرونة':.5,'القدرة':.7},
+  phases:[['إعداد عام',4,'#1f2e7a'],['إعداد خاص',5,'#155e75'],['المنافسات',24,'#ffffff12'],['انتقالي',3,'#ffffff08']]},
+ taekwondo:{n:'التايكوندو',en:'Taekwondo',c:'#ef4444',
+  ai:['قبل البطولة بأسبوعين: ركّز على السرعة الانفجارية للركلات الدورانية، وقلّل حجم التحمل.','اقتراح: نزال تدريبي 3 جولات × 2 دقيقة مع تحليل نقاط ركلات الرأس.'],
+  a:['التدريب الآن','الركلة الدورانية — توقيت الهجوم المضاد'],b:['ساحة النزال','مثمّنة · 8 م'],
+  skills:[['دوليو تشاغي (الركلة الدائرية)','أساسي'],['تيمو تشاغي (الدورانية الخلفية)','متقدم'],['الهجوم المضاد','متوسط'],['حركة القدمين والمسافة','أساسي']],
+  tactics:[['التحكم في المسافة','دفاعي'],['الهجوم بالخداع','هجومي'],['إدارة النقاط في الجولة الأخيرة','ذهني'],['العمل عند الحافة','مساحة']],
+  rules:[['نظام النزال','أفضل جولتين من 3'],['زمن الجولة','دقيقتان'],['النقاط','لكمة 1 · جذع 2 · رأس 3 + إضافي للدورانية'],['المرجع','قوانين World Taekwondo']],
+  gear:[['واقي جذع إلكتروني','PSS'],['خوذة وواقيات','حماية'],['أكياس ركل ومضارب','تقنية'],['حبال قفز','لياقة']],
+  fit:{'السرعة':.9,'التحمل':.6,'القوة':.55,'الرشاقة':.85,'المرونة':.95,'القدرة':.9},
+  phases:[['إعداد عام',6,'#1f2e7a'],['إعداد خاص',8,'#7f1d1d'],['ما قبل البطولة',4,'#b91c1c'],['البطولة',2,'#ef4444'],['تعافٍ',16,'#ffffff08']]},
+ tennis:{n:'التنس',en:'Tennis',c:'#d9f13b',
+  ai:['ملاحظة: نسبة الإرسال الأول منخفضة في آخر 3 حصص. أضفت تمرين «الإرسال تحت الضغط» لحصة اليوم.','اقتراح: سلسلة 6×30 ثانية حركة جانبية لتحسين التغطية في الخط الخلفي.'],
+  a:['التمرين الآن','الإرسال تحت الضغط — 20 كرة'],b:['الملعب','23.77 × 8.23 م (فردي)'],
+  skills:[['الضربة الأمامية','أساسي'],['الضربة الخلفية بيدين','أساسي'],['الإرسال المنزلق','متقدم'],['الضربة الطائرة','متوسط']],
+  tactics:[['اللعب من الخط الخلفي','أسلوب'],['الإرسال ثم التقدم للشبكة','هجومي'],['تغيير الاتجاه قطريًا','نمط'],['اللعب على نقطة الضعف','ذهني']],
+  rules:[['نظام النقاط','15 · 30 · 40 · لعبة'],['المجموعة','6 ألعاب بفارق 2'],['ارتفاع الشبكة','0.914 م في المنتصف'],['عرض الزوجي','10.97 م']],
+  gear:[['مضرب وأوتار','أداة'],['آلة قذف الكرات','تقنية'],['أهداف أرضية','دقة'],['أقماع حركة','بدني']],
+  fit:{'السرعة':.8,'التحمل':.75,'القوة':.55,'الرشاقة':.95,'المرونة':.6,'القدرة':.75},
+  phases:[['إعداد',6,'#1f2e7a'],['بطولات قصيرة',10,'#4d5b0f'],['إعداد بيني',3,'#155e75'],['بطولات',13,'#ffffff12'],['راحة',4,'#ffffff08']]},
+ athletics:{n:'ألعاب القوى',en:'Athletics',c:'#f59e0b',
+  ai:['زمن الانطلاق تحسّن في آخر أسبوعين. أقترح رفع مسافات العدو القصير إلى 60 م هذا الأسبوع.','تنبيه: حجم القفز مرتفع منذ 3 حصص؛ أضفت يوم تعافٍ نشط.'],
+  a:['التمرين الآن','انطلاقات من المكعبات — 6 × 30 م'],b:['المضمار','400 م · 8 حارات'],
+  skills:[['الانطلاق من المكعبات','أساسي'],['ميكانيكا العدو','أساسي'],['تخطي الحواجز','متقدم'],['الاقتراب في الوثب الطويل','متوسط']],
+  tactics:[['توزيع الجهد في 400 م','سباق'],['التمركز في سباقات المسافات','سباق'],['الإيقاع بين الحواجز','تقني'],['إدارة المحاولات في الوثب','ذهني']],
+  rules:[['عرض الحارة','1.22 م'],['البدء الخاطئ','إقصاء من أول مخالفة'],['الوثب الطويل','عادةً 3 محاولات + 3 للنهائي'],['المرجع','قوانين World Athletics']],
+  gear:[['مكعبات انطلاق','عدو'],['حواجز قابلة للتعديل','تقني'],['بوابات توقيت','قياس'],['صناديق قفز','قدرة']],
+  fit:{'السرعة':.95,'التحمل':.55,'القوة':.75,'الرشاقة':.6,'المرونة':.7,'القدرة':.95},
+  phases:[['إعداد عام',8,'#1f2e7a'],['إعداد خاص',6,'#78350f'],['موسم داخلي',6,'#b45309'],['إعداد',4,'#155e75'],['موسم خارجي',12,'#ffffff12']]},
+ basketball:{n:'كرة السلة',en:'Basketball',c:'#fb923c',
+  ai:['الفريق يخسر الكرة كثيرًا عند الضغط. أضفت تمرين «الخروج من الضغط 3 ضد 3».','اقتراح: تقسيم الحصة إلى 4 فترات قصيرة لمحاكاة شدة المباراة.'],
+  a:['التمرين الآن','بيك آند رول — قراءة الدفاع'],b:['الملعب','28 × 15 م'],
+  skills:[['التنطيط بكلتا اليدين','أساسي'],['التصويب بالقفز','متوسط'],['التمريرة المرتدة','أساسي'],['الاختراق والإنهاء','متقدم']],
+  tactics:[['بيك آند رول','هجومي'],['الدفاع رجل لرجل','دفاعي'],['الدفاع المنطقة 2-3','دفاعي'],['الهجوم السريع','انتقالي']],
+  rules:[['عدد اللاعبين','5 لكل فريق'],['زمن المباراة','4 فترات × 10 د (FIBA)'],['ساعة الهجمة','24 ثانية'],['الخط الثلاثي','6.75 م']],
+  gear:[['كرات بأحجام مختلفة','حسب العمر'],['أقماع ومساند','تمارين'],['حلقات تنطيط','مهارة'],['أحزمة مقاومة','بدني']],
+  fit:{'السرعة':.8,'التحمل':.75,'القوة':.65,'الرشاقة':.9,'المرونة':.55,'القدرة':.9},
+  phases:[['إعداد عام',4,'#1f2e7a'],['إعداد خاص',4,'#7c2d12'],['المنافسات',24,'#ffffff12'],['انتقالي',4,'#ffffff08']]}
+};
+let cur='football',tab='skills',ai=0,rx=48,rz=0,raf;
+const $=id=>document.getElementById(id);
+$('sports').innerHTML=Object.entries(S).map(([k,v])=>`<button data-s="${k}">${v.n}</button>`).join('');
+function arena(k,c){
+ const W=1000,H=560;let g='';
+ if(k==='football'){g=`<rect width="${W}" height="${H}" rx="14" fill="#0f5e3f"/>${[...Array(10)].map((_,i)=>`<rect x="${i*100}" width="50" height="${H}" fill="#127049"/>`).join('')}<g stroke="#ffffffbb" stroke-width="3" fill="none"><rect x="20" y="20" width="960" height="520"/><line x1="500" y1="20" x2="500" y2="540"/><circle cx="500" cy="280" r="72"/><rect x="20" y="150" width="140" height="260"/><rect x="840" y="150" width="140" height="260"/></g>`;
+  g+=path('M300 380 Q420 300 560 330 T780 190')+dots([[300,380],[560,330],[780,190],[430,170],[240,250],[650,450]],c,[8,10,9,6,4,7])+dots([[700,300],[830,250],[640,200]],'#ef4444')+ball(300,380,'M300 380 Q420 300 560 330 T780 190');}
+ if(k==='taekwondo'){const o=[[350,60],[650,60],[860,170],[860,390],[650,500],[350,500],[140,390],[140,170]].map(p=>p.join(',')).join(' ');
+  g=`<rect width="${W}" height="${H}" rx="14" fill="#0b1626"/><polygon points="${o}" fill="#1e3a8a"/><polygon points="${o}" fill="none" stroke="#ef4444" stroke-width="10" transform="translate(500 280) scale(1.04) translate(-500 -280)"/><circle cx="500" cy="280" r="150" fill="#2547a3"/><text x="500" y="290" text-anchor="middle" fill="#ffffff22" font-size="60" font-family="Outfit" font-weight="700">IM</text>`;
+  g+=`<g class="f1"><circle cx="400" cy="280" r="34" fill="#2563eb" stroke="#fff" stroke-width="4"/><text x="400" y="287" text-anchor="middle" fill="#fff" font-family="Outfit" font-weight="700" font-size="18">B</text><animateTransform attributeName="transform" type="translate" values="0 0;40 -10;0 0" dur="2.4s" repeatCount="indefinite"/></g><g><circle cx="600" cy="280" r="34" fill="#dc2626" stroke="#fff" stroke-width="4"/><text x="600" y="287" text-anchor="middle" fill="#fff" font-family="Outfit" font-weight="700" font-size="18">R</text><animateTransform attributeName="transform" type="translate" values="0 0;-20 15;0 0" dur="2.4s" repeatCount="indefinite"/></g>`+path('M430 270 Q520 190 575 255','#fde047')+`<text x="500" y="190" text-anchor="middle" fill="#fde047" font-size="20" font-family="Outfit" font-weight="700">+3<animate attributeName="opacity" values="0;1;0" dur="2.4s" repeatCount="indefinite"/></text>`;}
+ if(k==='tennis'){g=`<rect width="${W}" height="${H}" rx="14" fill="#1d4ed8"/><rect x="60" y="60" width="880" height="440" fill="#2563eb"/><g stroke="#fff" stroke-width="4" fill="none"><rect x="60" y="60" width="880" height="440"/><line x1="60" y1="115" x2="940" y2="115"/><line x1="60" y1="445" x2="940" y2="445"/><line x1="270" y1="115" x2="270" y2="445"/><line x1="730" y1="115" x2="730" y2="445"/><line x1="270" y1="280" x2="730" y2="280"/></g><line x1="500" y1="40" x2="500" y2="520" stroke="#f8fafc" stroke-width="8" stroke-dasharray="4 4"/>`;
+  g+=dots([[150,330],[860,200]],c,['A','B'])+path('M150 330 Q500 120 860 210','#d9f13b')+`<circle r="10" fill="#d9f13b"><animateMotion dur="1.6s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.5;1" calcMode="linear" path="M150 330 Q500 120 860 210"/></circle>`+`<g fill="#d9f13b55">${[[780,170],[800,240],[760,380]].map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="26"/>`).join('')}</g>`;}
+ if(k==='athletics'){const L=220,R0=105,st=r=>`M${500-L} ${280-r} H${500+L} A${r} ${r} 0 0 1 ${500+L} ${280+r} H${500-L} A${r} ${r} 0 0 1 ${500-L} ${280-r} Z`;
+  g=`<rect width="${W}" height="${H}" rx="14" fill="#0b1626"/><path d="${st(R0+160)}" fill="#9a3412"/>`;for(let i=0;i<8;i++){g+=`<path d="${st(R0+10+i*20)}" fill="none" stroke="${i%2?'#c2410c':'#b4400e'}" stroke-width="19"/>`}
+  for(let i=0;i<=8;i++){g+=`<path d="${st(R0+i*20)}" fill="none" stroke="#ffffffaa" stroke-width="1.5"/>`}
+  g+=`<path d="${st(R0)}" fill="#166534"/><line x1="${500+L}" y1="${280-R0-160}" x2="${500+L}" y2="${280-R0}" stroke="#fff" stroke-width="4"/>`;
+  for(let i=0;i<6;i++){g+=`<circle r="9" fill="${i==2?c:'#fff'}" stroke="#04121c" stroke-width="3"><animateMotion dur="${6+i*.3}s" repeatCount="indefinite" path="${st(R0+30+i*20)}"/></circle>`}}
+ if(k==='basketball'){g=`<rect width="${W}" height="${H}" rx="14" fill="#c2814a"/>${[...Array(20)].map((_,i)=>`<rect x="${i*50}" width="25" height="${H}" fill="#b8763f" opacity=".5"/>`).join('')}<g stroke="#fff" stroke-width="4" fill="none"><rect x="20" y="20" width="960" height="520"/><line x1="500" y1="20" x2="500" y2="540"/><circle cx="500" cy="280" r="60"/><rect x="20" y="200" width="190" height="160"/><rect x="790" y="200" width="190" height="160"/><path d="M20 55 H90 A240 240 0 0 1 90 505 H20"/><path d="M980 55 H910 A240 240 0 0 0 910 505 H980"/></g><circle cx="60" cy="280" r="14" fill="none" stroke="#f97316" stroke-width="5"/><circle cx="940" cy="280" r="14" fill="none" stroke="#f97316" stroke-width="5"/>`;
+  g+=dots([[620,300],[720,200],[760,400],[560,150],[820,300]],'#1F2E7A',[1,2,3,4,5])+path('M620 300 Q700 260 720 200','#fff')+path('M720 200 Q850 230 930 280',c)+`<circle r="12" fill="#f97316" stroke="#000" stroke-width="2"><animateMotion dur="2.2s" repeatCount="indefinite" path="M620 300 Q700 260 720 200 Q850 230 930 280"/></circle>`;}
+ return `<svg viewBox="0 0 ${W} ${H}">${g}</svg>`;
+}
+function path(d,col='#fde047'){return `<path d="${d}" fill="none" stroke="${col}" stroke-width="4" stroke-dasharray="12 10"><animate attributeName="stroke-dashoffset" from="44" to="0" dur="1s" repeatCount="indefinite"/></path>`}
+function dots(a,col,lab=[]){return a.map((p,i)=>`<g><circle cx="${p[0]}" cy="${p[1]}" r="22" fill="${col}" stroke="#04121c" stroke-width="3"><animate attributeName="r" values="22;24;22" dur="${2+i*.3}s" repeatCount="indefinite"/></circle>${lab[i]!==undefined?`<text x="${p[0]}" y="${p[1]+6}" text-anchor="middle" font-family="Outfit" font-weight="700" font-size="17" fill="#04121c">${lab[i]}</text>`:''}</g>`).join('')}
+function ball(x,y,d){return `<circle r="9" fill="#fff" stroke="#000" stroke-width="2"><animateMotion dur="3s" repeatCount="indefinite" path="${d}"/></circle>`}
+function radar(f,c){const k=Object.keys(f),n=k.length,R=80;let s='';
+ for(let l=1;l<=4;l++){s+=`<polygon points="${k.map((_,i)=>{const a=-Math.PI/2+i*2*Math.PI/n;return [Math.cos(a)*R*l/4,Math.sin(a)*R*l/4].join(',')}).join(' ')}" fill="none" stroke="#ffffff14"/>`}
+ const pts=k.map((key,i)=>{const a=-Math.PI/2+i*2*Math.PI/n;return [Math.cos(a)*R*f[key],Math.sin(a)*R*f[key]]});
+ s+=`<polygon points="${pts.map(p=>p.join(',')).join(' ')}" fill="${c}33" stroke="${c}" stroke-width="2.5" class="fade"/>`;
+ k.forEach((key,i)=>{const a=-Math.PI/2+i*2*Math.PI/n;s+=`<text x="${Math.cos(a)*(R+22)}" y="${Math.sin(a)*(R+22)+4}" text-anchor="middle" fill="#cfe3e1" font-size="11">${key}</text>`});
+ return s}
+function seg(){const s=S[cur];let w=0;$('seg').innerHTML=s.phases.map(p=>{const st=w+1,en=w+p[1];w=en;const on=+$('scrub').value>=st&&+$('scrub').value<=en;return `<div style="flex:${p[1]};background:${p[2]}" class="${on?'on':''}">${p[0]}</div>`}).join('');$('wk').textContent='الأسبوع '+$('scrub').value+' / 36'}
+function setTab(){const s=S[cur];$('tabBody').innerHTML=s[tab].map(r=>`<div><span>${r[0]}</span><span>${r[1]}</span></div>`).join('');$('tabBody').classList.remove('fade');void $('tabBody').offsetWidth;$('tabBody').classList.add('fade')}
+function setAI(){const s=S[cur];$('aiText').innerHTML=`${s.ai[ai%2]}<small>المساعد الذكي · ${s.n} <span class="en">AI Coach</span></small>`}
+function render(){const s=S[cur];document.documentElement.style.setProperty('--acc',s.c);
+ document.querySelectorAll('#sports button').forEach(b=>b.classList.toggle('on',b.dataset.s===cur));
+ $('plane').innerHTML=arena(cur,s.c);$('plane').classList.remove('fade');void $('plane').offsetWidth;$('plane').classList.add('fade');
+ $('chipA').innerHTML=`${s.a[0]}<b>${s.a[1]}</b>`;$('chipB').innerHTML=`${s.b[0]}<b class="en" style="color:var(--txt);font-size:14px">${s.b[1]}</b>`;
+ $('radar').innerHTML=radar(s.fit,s.c);setTab();setAI();seg()}
+function rot(){$('plane').style.transform=`rotateX(${rx}deg) rotateZ(${rz}deg)`}
+$('sports').onclick=e=>{const b=e.target.closest('button');if(b){cur=b.dataset.s;ai=0;render()}};
+$('tabs').onclick=e=>{const b=e.target.closest('button');if(!b)return;tab=b.dataset.t;document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('on',x===b));setTab()};
+$('aiYes').onclick=()=>{$('aiText').innerHTML='✓ تم التنفيذ — حُدّثت خطة اليوم.<small>يمكنك التراجع من سجل التغييرات</small>';setTimeout(()=>{ai++;setAI()},2200)};
+$('aiNo').onclick=()=>{ai++;setAI()};
+$('scrub').oninput=seg;
+document.querySelector('.views').onclick=e=>{const v=e.target.dataset.v;if(!v)return;({top:()=>{rx=0;rz=0},tilt:()=>{rx=48;rz=0},low:()=>{rx=66;rz=-18}})[v]();$('plane').style.transition='transform .6s';rot();setTimeout(()=>$('plane').style.transition='transform .15s',600)};
+let drag=null;$('stage').addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;drag=[e.clientX,e.clientY,rx,rz];$('stage').setPointerCapture(e.pointerId)});
+$('stage').addEventListener('pointermove',e=>{if(!drag)return;rz=drag[3]+(e.clientX-drag[0])*.3;rx=Math.max(0,Math.min(70,drag[2]-(e.clientY-drag[1])*.25));rot()});
+$('stage').addEventListener('pointerup',()=>drag=null);
+render();rot();
+</script></body></html>

@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+/* Brand tokens — Instructor Motion Training (turquoise). Final design system comes in Phase 2. */
+@theme {
+  --color-brand: #0f9b9b;
+  --color-brand-deep: #0b5f63;
+  --color-ink: #0b1b2b;
+  --font-sans: "IBM Plex Sans Arabic", "Outfit", system-ui, sans-serif;
+  --font-latin: "Outfit", "IBM Plex Sans Arabic", sans-serif;
+}
+
+html { background: #f3f7f8; color: var(--color-ink); }
+@media (prefers-color-scheme: dark) { html { background: #071318; color: #e6f1f2; } }
+body { margin: 0; font-family: var(--font-sans); }
