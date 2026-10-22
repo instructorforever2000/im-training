@@ -1502,6 +1502,26 @@ body.stg-on .modal-bg{z-index:450}body.stg-on .toast{z-index:470}body.stg-on .dr
 body:has(.modal-bg) .stg-pill,body:has(.drawer-bg) .stg-pill{display:none}
 @media (max-width:760px){.stg-chip.dv-back{display:inline-flex;font-size:0;gap:0;padding:6px}}
 
+
+/* v29: auto-hide sidebar (desktop/tablet) — fixed 68px rail, expands over the content on hover */
+@media (min-width:821px){
+  #app{grid-template-columns:68px 1fr}
+  .rail{z-index:90}
+  .rail.peek{width:var(--side-w);box-shadow:0 22px 60px -14px rgba(0,0,0,.6)}
+  #sideToggle{display:none}
+  .studio.docked{height:100%;min-height:0}
+  .content.flush:has(.studio.docked){overflow:hidden}
+  .studio.docked .studio-body{min-height:0}
+  .studio.docked .studio-stage{min-height:0}
+  .studio.docked .studio-panel{border-top:0;border-inline-start:1px solid var(--line);overflow-y:auto;min-height:0}
+  .rail.collapsed .im-wordmark{display:none}
+}
+/* v29: tablets/laptops — keep the board panel docked beside the pitch instead of dropping below it */
+@media (min-width:821px) and (max-width:1180px){
+  .board{grid-template-columns:56px minmax(0,1fr) 270px;grid-template-rows:none;height:100%;min-height:0}
+  .board .panel{grid-column:auto;border-top:0;border-inline-start:1px solid var(--line)}
+  .content.flush:has(.board){overflow:hidden;display:flex}
+}
 </style>
 </head>
 <body>
@@ -5613,7 +5633,9 @@ function renderRoles() {
       <div class="field"><label for="stOD">${L('دفاع المنافس', 'Opponent defence')}</label><select class="inp" id="stOD">${Object.keys(defs).map(k => opt(k, fname(mode, 'B', k), stDef(mode, true))).join('')}</select></div>`;
   };
   const inStage = typeof stageWanted === 'function' && stageWanted('roles'), wide = !inStage && S.ui.stWide !== false;
-  $('#content').innerHTML = `<div class="studio ${wide ? 'wide' : ''} ${inStage ? 'in-stage' : ''}">
+  /* v29: on desktop the full-width pitch keeps its explanation docked beside it (no floating card, no scrolling) */
+  const dock = wide && matchMedia('(min-width:901px)').matches;
+  $('#content').innerHTML = `<div class="studio ${wide && !dock ? 'wide' : ''} ${inStage || dock ? 'in-stage' : ''} ${dock ? 'docked' : ''}">
     <div class="studio-head">
       <div class="seg-scroll" role="tablist" aria-label="${L('الرياضة', 'Sport')}">${Object.entries(MODES).filter(([, m]) => !m.area).map(([k, m]) => `<button class="chip" data-stm="${k}" aria-pressed="${k === mode}">${esc(T(m.name))}</button>`).join('')}</div>
       <div class="studio-ctl">${formSel()}
@@ -5626,7 +5648,7 @@ function renderRoles() {
       <div class="studio-stage">
         <div class="phase-bar">${phs.map((p, i) => `<button class="phase-btn" data-ph="${p}" aria-pressed="${p === c.phase}"><b>${i + 1}</b><span>${esc(T(ph[p]))}</span></button>`).join('')}
           <button class="btn primary sm" id="stPlay">${icon(ST.playing ? 'pause' : 'play')} ${ST.playing ? L('إيقاف', 'Stop') : L('تشغيل الدورة', 'Play cycle')}</button></div>
-        <div class="stage">${wide ? `<div class="st-focus" id="stFocus" aria-live="polite"></div>` : ''}<svg id="stPitch" role="application" aria-label="${L('استوديو الأدوار', 'Roles studio')}"></svg></div>
+        <div class="stage">${wide && !dock ? `<div class="st-focus" id="stFocus" aria-live="polite"></div>` : ''}<svg id="stPitch" role="application" aria-label="${L('استوديو الأدوار', 'Roles studio')}"></svg></div>
         <div class="stage-legend"><span><i class="lg-us"></i>${L('فريقنا — اضغط على أي لاعب', 'Our team — tap any player')}</span>${c.opp ? `<span><i class="lg-opp"></i>${L('المنافس', 'Opponent')}</span>` : ''}<span><i class="lg-tr"></i>${L('الحركة من المرحلة السابقة', 'Movement from the previous phase')}</span><span><i class="zk-wb"></i>${L('منطقة مع الكرة', 'Zone with the ball')}</span><span><i class="zk-nb"></i>${L('منطقة دون الكرة', 'Zone without the ball')}</span></div>
       </div>
       <aside class="studio-panel" id="stPanel"></aside>
@@ -10949,7 +10971,7 @@ const favs = () => (S.ui.favs || ['sessions', 'squad', 'board']).filter(id => na
 function navBtn(id, fav) { const m = navMeta(id); return `<button class="nav-btn" data-nav="${id}" title="${esc(m.l)}">${icon(m.ic)}<span>${esc(m.l)}</span>${id !== 'dash' ? `<i class="pin ${favs().includes(id) ? 'on' : ''}" data-pin="${id}" title="${fav || favs().includes(id) ? L('إزالة من المفضلة', 'Unpin') : L('تثبيت في المفضلة', 'Pin to favourites')}" aria-hidden="true">★</i>` : ''}</button>`; }
 function sideHTML() {
   const closed = S.ui.grpClosed || {}, cur = curNav(), fv = favs();
-  return `<nav class="rail ${S.ui.sideC ? 'collapsed' : ''}" aria-label="${L('الأقسام', 'Sections')}"><div class="side-top"><div class="logo" title="${BRAND.name}" role="button" tabindex="0" aria-label="${L('الرئيسية', 'Home')}">${logoLive('im-rl')}</div>${S.ui.sideC ? '' : logoWordLive()}</div>${orgSwitcherHTML()}
+  return `<nav class="rail collapsed" aria-label="${L('الأقسام', 'Sections')}"><div class="side-top"><div class="logo" title="${BRAND.name}" role="button" tabindex="0" aria-label="${L('الرئيسية', 'Home')}">${logoLive('im-rl')}</div>${logoWordLive()}</div>${orgSwitcherHTML()}
     <div class="side-scroll">${fv.length ? `<div class="side-sec"><div class="side-lbl">★ ${L('المفضلة', 'Favourites')}</div>${fv.map(id => navBtn(id, 1)).join('')}</div>` : ''}
     ${NAV_GROUPS.map(g => { const items = g.items.filter(navAllowed); if (!items.length) return ''; if (!g.n) return items.map(id => navBtn(id)).join('');
       const open = !closed[g.k] || items.includes(cur);
@@ -10978,6 +11000,11 @@ function bindSide() {
   $('#sideToggle').onclick = () => { S.ui.sideC = !S.ui.sideC; save(); refreshSide(); };
   /* collapsed: hovering a group opens a flyout next to the rail */
   $$('.nav-grp', rail).forEach(g => { g.onmouseenter = () => { if (!rail.classList.contains('collapsed')) return; const r = g.getBoundingClientRect(), it = $('.grp-items', g), rr = rail.getBoundingClientRect(); it.style.top = Math.min(r.top, innerHeight - it.scrollHeight - 12) + 'px'; if (LANG === 'en') it.style.left = rr.right + 'px'; else it.style.right = (innerWidth - rr.left) + 'px'; g.classList.add('fly'); }; g.onmouseleave = () => g.classList.remove('fly'); });
+  /* v29: auto-hide rail on desktop — icons only; opens on hover over the page, closes on leave */
+  const wide = matchMedia('(min-width:821px)');
+  rail.onmouseenter = () => { if (!wide.matches) return; $$('.nav-grp.fly', rail).forEach(g => g.classList.remove('fly')); rail.classList.remove('collapsed'); rail.classList.add('peek'); };
+  rail.onmouseleave = () => { if (!wide.matches) return; rail.classList.remove('peek'); rail.classList.add('collapsed'); };
+  if (rail.matches(':hover')) rail.onmouseenter();
   const lg = $('.rail .logo'); if (lg) lg.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go('dash'); } };
 }
 function refreshSide() { const old = $('.rail'); if (!old) return; const tmp = document.createElement('div'); tmp.innerHTML = sideHTML(); old.replaceWith(tmp.firstElementChild); bindSide(); markNav(); termize($('.rail')); watchRequestsBadge(); }
