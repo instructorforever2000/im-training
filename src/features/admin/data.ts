@@ -111,18 +111,23 @@ export async function createOrg(v: { name_ar: string; name_en: string; org_type:
   return error ? error.message : null
 }
 
+const NO_ROWS = "قاعدة البيانات رفضت التعديل — الحساب ده مالوش صلاحية تعديل الجهة (RLS)."
+
 export interface OrgFields { name_ar: string; name_en: string; org_type: OrgType; country: string; city: string }
 
 /** Edit an organization — owner only (or a person the owner delegated 'org_edit' to). */
 export async function updateOrg(id: string, v: OrgFields): Promise<string | null> {
-  const { error } = await supabase.from("organizations").update({ ...v, name_en: v.name_en || null, city: v.city || null }).eq("id", id)
-  return error ? error.message : null
+  const { data, error } = await supabase.from("organizations").update({ ...v, name_en: v.name_en || null, city: v.city || null }).eq("id", id).select("id")
+  if (error) return error.message
+  // RLS blocks silently (0 rows) — say so instead of pretending it saved.
+  return data?.length ? null : NO_ROWS
 }
 
 /** Suspend or re-activate — the platform never deletes an organization, so its history stays. */
 export async function setOrgActive(id: string, active: boolean): Promise<string | null> {
-  const { error } = await supabase.from("organizations").update({ is_active: active }).eq("id", id)
-  return error ? error.message : null
+  const { data, error } = await supabase.from("organizations").update({ is_active: active }).eq("id", id).select("id")
+  if (error) return error.message
+  return data?.length ? null : NO_ROWS
 }
 
 const CODE_LEN = 8
