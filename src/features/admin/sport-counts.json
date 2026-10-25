@@ -1,0 +1,5 @@
+{
+  "_source": "docs/MIGRATION-MAP.md — plays and roles per sport (their v28 JSON has no single sport field). Order: football, basketball, handball, volleyball, futsal.",
+  "plays": [26, 21, 16, 16, 14],
+  "roles": [21, 9, 7, 5, 4]
+}
