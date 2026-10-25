@@ -1,0 +1,762 @@
+[
+ {
+  "sp": "football",
+  "ref": "fb-num",
+  "ar": [
+   "ما أقل عدد من اللاعبين لبدء أو استمرار مباراة كرة القدم (11 × 11)؟",
+   "7",
+   "8",
+   "6",
+   "9",
+   "لا تبدأ المباراة ولا تستمر إذا كان عدد لاعبي أي فريق أقل من 7."
+  ],
+  "en": [
+   "What is the minimum number of players to start or continue an 11-a-side match?",
+   "7",
+   "8",
+   "6",
+   "9",
+   "A match may not start or continue if either team has fewer than seven players."
+  ]
+ },
+ {
+  "sp": "football",
+  "ref": "fb-dfk",
+  "ar": [
+   "ما المسافة التي يجب أن يبتعدها المنافسون عن الكرة عند تنفيذ الركلة الحرة؟",
+   "9.15 م",
+   "7 م",
+   "11 م",
+   "5 م",
+   "المسافة القانونية 9.15 متر (10 ياردات)."
+  ],
+  "en": [
+   "How far must opponents be from the ball at a free kick?",
+   "9.15 m",
+   "7 m",
+   "11 m",
+   "5 m",
+   "The legal distance is 9.15 m (10 yards)."
+  ]
+ },
+ {
+  "sp": "football",
+  "ref": "fb-off",
+  "ar": [
+   "من أي استئناف لا يُحتسب التسلل مباشرة؟",
+   "رمية التماس",
+   "الركلة الحرة غير المباشرة",
+   "تمريرة من منتصف الملعب",
+   "الركلة الحرة المباشرة",
+   "لا تسلل مباشرة من ركلة المرمى أو رمية التماس أو الركلة الركنية."
+  ],
+  "en": [
+   "From which restart can a player NOT be offside directly?",
+   "Throw-in",
+   "Indirect free kick",
+   "A pass from midfield",
+   "Direct free kick",
+   "There is no offside offence directly from a goal kick, throw-in or corner kick."
+  ]
+ },
+ {
+  "sp": "football",
+  "ref": "fb-gk8",
+  "ar": [
+   "ماذا يُحتسب إذا احتفظ الحارس بالكرة بيده أكثر من 8 ثوانٍ (قانون 2025/26)؟",
+   "ركلة ركنية للمنافس",
+   "ركلة حرة غير مباشرة",
+   "إنذار للحارس",
+   "ركلة جزاء",
+   "منذ 2025/26 أصبحت العقوبة ركلة ركنية بعد عدّ ظاهر من الحكم."
+  ],
+  "en": [
+   "What is awarded if the goalkeeper holds the ball for more than 8 seconds (2025/26 Laws)?",
+   "A corner kick to the opponents",
+   "An indirect free kick",
+   "A caution for the keeper",
+   "A penalty kick",
+   "Since 2025/26 the sanction is a corner kick, after a visible countdown by the referee."
+  ]
+ },
+ {
+  "sp": "football",
+  "ref": "fb-dur",
+  "ar": [
+   "كم مدة مباراة كرة القدم للكبار؟",
+   "شوطان × 45 دقيقة",
+   "شوطان × 40 دقيقة",
+   "أربعة أرباع × 20 دقيقة",
+   "شوطان × 35 دقيقة",
+   "المباراة شوطان متساويان مدة كل منهما 45 دقيقة."
+  ],
+  "en": [
+   "How long is a senior football match?",
+   "2 × 45 minutes",
+   "2 × 40 minutes",
+   "4 × 20 minutes",
+   "2 × 35 minutes",
+   "A match has two equal halves of 45 minutes."
+  ]
+ },
+ {
+  "sp": "football",
+  "ref": "fb-in",
+  "ar": [
+   "هل يُحتسب الهدف المسجل مباشرة من رمية التماس؟",
+   "لا، يُستأنف بركلة مرمى أو ركنية",
+   "نعم دائماً",
+   "نعم إذا لمس الحارس الكرة",
+   "فقط في كرة القدم للصغار",
+   "لا يُسجل هدف مباشرة من رمية التماس."
+  ],
+  "en": [
+   "Can a goal be scored directly from a throw-in?",
+   "No — restart with a goal kick or corner",
+   "Yes, always",
+   "Yes, if the keeper touches it",
+   "Only in youth football",
+   "A goal cannot be scored directly from a throw-in."
+  ]
+ },
+ {
+  "sp": "football",
+  "ref": "fb-cards",
+  "ar": [
+   "ماذا يحدث للاعب يتلقى إنذارين في المباراة نفسها؟",
+   "يُطرد",
+   "يُستبدل إجبارياً",
+   "يخرج 10 دقائق",
+   "لا شيء",
+   "الإنذار الثاني في المباراة نفسها يعني الطرد."
+  ],
+  "en": [
+   "What happens to a player who receives a second caution in the same match?",
+   "Sent off",
+   "Must be substituted",
+   "Leaves for 10 minutes",
+   "Nothing",
+   "A second caution in the same match means a sending-off."
+  ]
+ },
+ {
+  "sp": "football",
+  "ref": "fb-dfk",
+  "ar": [
+   "مخالفة مباشرة ارتكبها مدافع داخل منطقة جزاء فريقه، ما القرار؟",
+   "ركلة جزاء",
+   "ركلة حرة غير مباشرة",
+   "ركلة ركنية",
+   "إسقاط الكرة",
+   "المخالفة المباشرة من المدافع داخل منطقة جزائه تعني ركلة جزاء."
+  ],
+  "en": [
+   "A direct-free-kick offence by a defender inside their own penalty area results in…",
+   "A penalty kick",
+   "An indirect free kick",
+   "A corner kick",
+   "A dropped ball",
+   "A direct-free-kick offence by the defenders in their own penalty area is a penalty."
+  ]
+ },
+ {
+  "sp": "futsal",
+  "ref": "fs-4s",
+  "ar": [
+   "كم ثانية لدى اللاعب لتنفيذ ضربة الإدخال في كرة الصالات؟",
+   "4 ثوانٍ",
+   "5 ثوانٍ",
+   "6 ثوانٍ",
+   "8 ثوانٍ",
+   "ضربة الإدخال والركنية والحرة ورمية الحارس خلال 4 ثوانٍ."
+  ],
+  "en": [
+   "How many seconds does a player have to take a kick-in in futsal?",
+   "4 seconds",
+   "5 seconds",
+   "6 seconds",
+   "8 seconds",
+   "Kick-ins, corners, free kicks and goal clearances must be taken within 4 seconds."
+  ]
+ },
+ {
+  "sp": "futsal",
+  "ref": "fs-acc",
+  "ar": [
+   "من أي خطأ متراكم يبدأ تنفيذ الركلة الحرة المباشرة دون حائط؟",
+   "الخطأ السادس",
+   "الخطأ الخامس",
+   "الخطأ الرابع",
+   "الخطأ الثامن",
+   "من الخطأ المتراكم السادس في الشوط: ركلة دون حائط من علامة 10 م."
+  ],
+  "en": [
+   "From which accumulated foul is a direct free kick taken without a wall?",
+   "The sixth",
+   "The fifth",
+   "The fourth",
+   "The eighth",
+   "From the sixth accumulated foul in a half: a free kick without a wall from the 10 m mark."
+  ]
+ },
+ {
+  "sp": "futsal",
+  "ref": "fs-num",
+  "ar": [
+   "متى يدخل البديل بعد طرد لاعب في كرة الصالات؟",
+   "بعد دقيقتين أو عند استقبال هدف",
+   "فوراً",
+   "في الشوط التالي",
+   "لا يدخل بديل حتى النهاية",
+   "يلعب الفريق ناقصاً دقيقتين أو حتى يستقبل هدفاً."
+  ],
+  "en": [
+   "When may a substitute enter after a futsal sending-off?",
+   "After two minutes or when a goal is conceded",
+   "Immediately",
+   "Next half",
+   "Never in that match",
+   "The team plays short for two minutes or until it concedes a goal."
+  ]
+ },
+ {
+  "sp": "futsal",
+  "ref": "fs-4s",
+  "ar": [
+   "هل يوجد تسلل في كرة الصالات؟",
+   "لا",
+   "نعم كما في كرة القدم",
+   "فقط في نصف الملعب",
+   "فقط من الركنيات",
+   "لا يوجد تسلل في كرة الصالات."
+  ],
+  "en": [
+   "Is there offside in futsal?",
+   "No",
+   "Yes, as in football",
+   "Only in the attacking half",
+   "Only from corners",
+   "There is no offside in futsal."
+  ]
+ },
+ {
+  "sp": "futsal",
+  "ref": "fs-num",
+  "ar": [
+   "كم عدد التبديلات المسموحة في كرة الصالات؟",
+   "غير محدودة",
+   "3",
+   "5",
+   "7",
+   "التبديلات طائرة وغير محدودة من منطقة التبديل."
+  ],
+  "en": [
+   "How many substitutions are allowed in futsal?",
+   "Unlimited",
+   "3",
+   "5",
+   "7",
+   "Substitutions are rolling and unlimited through the substitution zone."
+  ]
+ },
+ {
+  "sp": "basketball",
+  "ref": "bb-clock",
+  "ar": [
+   "كم ثانية لدى الفريق للتصويب (ساعة الهجوم)؟",
+   "24 ثانية",
+   "30 ثانية",
+   "20 ثانية",
+   "35 ثانية",
+   "ساعة التصويب 24 ثانية، وتُعاد إلى 14 في حالات مثل الريباوند الهجومي."
+  ],
+  "en": [
+   "How long is the shot clock?",
+   "24 seconds",
+   "30 seconds",
+   "20 seconds",
+   "35 seconds",
+   "The shot clock is 24 seconds, reset to 14 in cases such as an offensive rebound."
+  ]
+ },
+ {
+  "sp": "basketball",
+  "ref": "bb-clock",
+  "ar": [
+   "كم ثانية لنقل الكرة من الملعب الخلفي إلى الأمامي؟",
+   "8 ثوانٍ",
+   "5 ثوانٍ",
+   "10 ثوانٍ",
+   "3 ثوانٍ",
+   "على الفريق نقل الكرة إلى ملعبه الأمامي خلال 8 ثوانٍ."
+  ],
+  "en": [
+   "How long does a team have to bring the ball into the frontcourt?",
+   "8 seconds",
+   "5 seconds",
+   "10 seconds",
+   "3 seconds",
+   "The team must reach the frontcourt within 8 seconds."
+  ]
+ },
+ {
+  "sp": "basketball",
+  "ref": "bb-clock",
+  "ar": [
+   "كم ثانية يُسمح للمهاجم بالبقاء في المنطقة المحظورة للمنافس؟",
+   "أقل من 3 ثوانٍ",
+   "5 ثوانٍ",
+   "8 ثوانٍ",
+   "دون حد",
+   "قاعدة الثواني الثلاث."
+  ],
+  "en": [
+   "How long may an attacker stay in the opponents' restricted area?",
+   "Less than 3 seconds",
+   "5 seconds",
+   "8 seconds",
+   "No limit",
+   "The three-second rule."
+  ]
+ },
+ {
+  "sp": "basketball",
+  "ref": "bb-fouls",
+  "ar": [
+   "بعد كم خطأ شخصي يُستبعد اللاعب (FIBA)؟",
+   "5",
+   "6",
+   "4",
+   "3",
+   "في قوانين FIBA يُستبعد اللاعب بعد 5 أخطاء."
+  ],
+  "en": [
+   "After how many personal fouls is a player disqualified (FIBA)?",
+   "5",
+   "6",
+   "4",
+   "3",
+   "Under FIBA rules a player leaves after 5 fouls."
+  ]
+ },
+ {
+  "sp": "basketball",
+  "ref": "bb-fouls",
+  "ar": [
+   "من أي خطأ للفريق في الربع تُمنح رميتان حرتان عن كل خطأ دفاعي؟",
+   "الخامس",
+   "الرابع",
+   "السادس",
+   "السابع",
+   "من الخطأ الخامس للفريق في الربع."
+  ],
+  "en": [
+   "From which team foul in a quarter are two free throws given for every defensive foul?",
+   "The fifth",
+   "The fourth",
+   "The sixth",
+   "The seventh",
+   "From the fifth team foul in the quarter."
+  ]
+ },
+ {
+  "sp": "basketball",
+  "ref": "bb-dur",
+  "ar": [
+   "ما مدة المباراة في قوانين FIBA؟",
+   "4 أرباع × 10 دقائق",
+   "4 أرباع × 12 دقيقة",
+   "شوطان × 20 دقيقة",
+   "4 أرباع × 8 دقائق",
+   "أربعة أرباع مدة كل منها 10 دقائق."
+  ],
+  "en": [
+   "How long is a FIBA game?",
+   "4 × 10-minute quarters",
+   "4 × 12-minute quarters",
+   "2 × 20-minute halves",
+   "4 × 8-minute quarters",
+   "Four 10-minute quarters."
+  ]
+ },
+ {
+  "sp": "basketball",
+  "ref": "bb-viol",
+  "ar": [
+   "لاعب أمسك الكرة بعد المحاورة ثم عاد للمحاورة مرة أخرى. ما المخالفة؟",
+   "المحاورة المزدوجة",
+   "المشي",
+   "حمل الكرة",
+   "العودة للملعب الخلفي",
+   "إنهاء المحاورة ثم البدء بمحاورة جديدة مخالفة محاورة مزدوجة."
+  ],
+  "en": [
+   "A player ends a dribble, then starts dribbling again. The violation is…",
+   "Double dribble",
+   "Travelling",
+   "Carrying",
+   "Backcourt",
+   "Starting a new dribble after ending one is a double dribble."
+  ]
+ },
+ {
+  "sp": "volleyball",
+  "ref": "vb-score",
+  "ar": [
+   "كم نقطة يحتاجها الفريق للفوز بالشوط الخامس الحاسم؟",
+   "15 بفارق نقطتين",
+   "25 بفارق نقطتين",
+   "21",
+   "15 دون فارق",
+   "الشوط الخامس إلى 15 نقطة مع فارق نقطتين."
+  ],
+  "en": [
+   "How many points win the deciding fifth set?",
+   "15 with a two-point lead",
+   "25 with a two-point lead",
+   "21",
+   "15 with no lead needed",
+   "The fifth set is played to 15 with a two-point lead."
+  ]
+ },
+ {
+  "sp": "volleyball",
+  "ref": "vb-hits",
+  "ar": [
+   "كم لمسة يُسمح بها للفريق قبل إرجاع الكرة (دون الصد)؟",
+   "3",
+   "2",
+   "4",
+   "غير محدود",
+   "ثلاث لمسات بحد أقصى، ولمسة الصد لا تُحسب."
+  ],
+  "en": [
+   "How many team contacts are allowed before returning the ball (block excluded)?",
+   "3",
+   "2",
+   "4",
+   "Unlimited",
+   "Three contacts at most; the block does not count."
+  ]
+ },
+ {
+  "sp": "volleyball",
+  "ref": "vb-team",
+  "ar": [
+   "أي من الآتي غير مسموح لليبرو؟",
+   "الإرسال",
+   "الاستقبال",
+   "الدفاع في الخط الخلفي",
+   "التبديل دون احتساب",
+   "الليبرو لا يرسل ولا يصد ولا يهاجم فوق مستوى الشبكة."
+  ],
+  "en": [
+   "Which of these is the libero NOT allowed to do?",
+   "Serve",
+   "Receive",
+   "Defend in the back row",
+   "Replace without it counting as a substitution",
+   "The libero may not serve, block or attack above net height."
+  ]
+ },
+ {
+  "sp": "volleyball",
+  "ref": "vb-team",
+  "ar": [
+   "كم تبديلاً عادياً مسموحاً لكل فريق في الشوط؟",
+   "6",
+   "3",
+   "5",
+   "12",
+   "ستة تبديلات عادية لكل فريق في الشوط."
+  ],
+  "en": [
+   "How many regular substitutions per team per set?",
+   "6",
+   "3",
+   "5",
+   "12",
+   "Six regular substitutions per team per set."
+  ]
+ },
+ {
+  "sp": "volleyball",
+  "ref": "vb-rot",
+  "ar": [
+   "متى يدور الفريق مركزاً واحداً مع عقارب الساعة؟",
+   "عندما يكسب حق الإرسال من المنافس",
+   "بعد كل نقطة",
+   "بعد كل شوط",
+   "عندما يطلب المدرب",
+   "يدور الفريق عند كسب الإرسال من المنافس."
+  ],
+  "en": [
+   "When does a team rotate one position clockwise?",
+   "When it wins the serve from the opponents",
+   "After every point",
+   "After every set",
+   "When the coach asks",
+   "A team rotates when it gains the right to serve."
+  ]
+ },
+ {
+  "sp": "volleyball",
+  "ref": "vb-dims",
+  "ar": [
+   "ما ارتفاع الشبكة للرجال؟",
+   "2.43 م",
+   "2.24 م",
+   "2.35 م",
+   "2.50 م",
+   "الشبكة 2.43 م للرجال و2.24 م للسيدات."
+  ],
+  "en": [
+   "What is the men's net height?",
+   "2.43 m",
+   "2.24 m",
+   "2.35 m",
+   "2.50 m",
+   "The net is 2.43 m for men and 2.24 m for women."
+  ]
+ },
+ {
+  "sp": "volleyball",
+  "ref": "vb-score",
+  "ar": [
+   "كم وقتاً مستقطعاً لكل فريق في الشوط؟",
+   "وقتان × 30 ثانية",
+   "وقت واحد × 60 ثانية",
+   "3 أوقات × 30 ثانية",
+   "لا يوجد",
+   "وقتان مستقطعان مدة كل منهما 30 ثانية."
+  ],
+  "en": [
+   "How many time-outs per team per set?",
+   "Two × 30 seconds",
+   "One × 60 seconds",
+   "Three × 30 seconds",
+   "None",
+   "Two 30-second time-outs per team per set."
+  ]
+ },
+ {
+  "sp": "handball",
+  "ref": "hb-steps",
+  "ar": [
+   "كم خطوة يُسمح بها للاعب وهو يحمل الكرة في كرة اليد؟",
+   "3 خطوات",
+   "خطوتان",
+   "4 خطوات",
+   "غير محدود",
+   "ثلاث خطوات بحد أقصى مع الكرة."
+  ],
+  "en": [
+   "How many steps may a handball player take holding the ball?",
+   "3 steps",
+   "2 steps",
+   "4 steps",
+   "Unlimited",
+   "Three steps at most with the ball."
+  ]
+ },
+ {
+  "sp": "handball",
+  "ref": "hb-steps",
+  "ar": [
+   "ما أقصى مدة للاحتفاظ بالكرة في اليد؟",
+   "3 ثوانٍ",
+   "5 ثوانٍ",
+   "8 ثوانٍ",
+   "ثانيتان",
+   "ثلاث ثوانٍ بحد أقصى."
+  ],
+  "en": [
+   "What is the longest a player may hold the ball?",
+   "3 seconds",
+   "5 seconds",
+   "8 seconds",
+   "2 seconds",
+   "Three seconds at most."
+  ]
+ },
+ {
+  "sp": "handball",
+  "ref": "hb-dims",
+  "ar": [
+   "على أي مسافة يقع خط منطقة المرمى؟",
+   "6 أمتار",
+   "7 أمتار",
+   "9 أمتار",
+   "4 أمتار",
+   "منطقة المرمى 6 م، والخط المتقطع 9 م، وعلامة الرمية 7 م."
+  ],
+  "en": [
+   "How far out is the goal-area line?",
+   "6 m",
+   "7 m",
+   "9 m",
+   "4 m",
+   "Goal area 6 m, dashed free-throw line 9 m, penalty mark 7 m."
+  ]
+ },
+ {
+  "sp": "handball",
+  "ref": "hb-passive",
+  "ar": [
+   "بعد إشارة التحذير من اللعب السلبي، كم تمريرة يُسمح بها قبل التسديد؟",
+   "4 تمريرات",
+   "6 تمريرات",
+   "3 تمريرات",
+   "5 تمريرات",
+   "بحد أقصى 4 تمريرات بعد الإشارة."
+  ],
+  "en": [
+   "After the passive-play warning, how many passes are allowed before a shot?",
+   "4 passes",
+   "6 passes",
+   "3 passes",
+   "5 passes",
+   "A maximum of four passes after the signal."
+  ]
+ },
+ {
+  "sp": "handball",
+  "ref": "hb-dur",
+  "ar": [
+   "كم مدة مباراة كرة اليد للكبار؟",
+   "شوطان × 30 دقيقة",
+   "شوطان × 25 دقيقة",
+   "شوطان × 35 دقيقة",
+   "أربعة أرباع × 15 دقيقة",
+   "شوطان مدة كل منهما 30 دقيقة للكبار."
+  ],
+  "en": [
+   "How long is a senior handball match?",
+   "2 × 30 minutes",
+   "2 × 25 minutes",
+   "2 × 35 minutes",
+   "4 × 15 minutes",
+   "Two 30-minute halves for seniors."
+  ]
+ },
+ {
+  "sp": "handball",
+  "ref": "hb-sanc",
+  "ar": [
+   "ما عقوبة إفساد فرصة تسجيل محققة بشكل مخالف؟",
+   "رمية 7 أمتار",
+   "رمية حرة من 9 أمتار",
+   "رمية تماس",
+   "إنذار فقط",
+   "تُحتسب رمية 7 أمتار."
+  ],
+  "en": [
+   "What is awarded for illegally destroying a clear chance to score?",
+   "A 7 m throw",
+   "A free throw from 9 m",
+   "A throw-in",
+   "Only a warning",
+   "A 7-metre throw is awarded."
+  ]
+ },
+ {
+  "sp": "handball",
+  "ref": "hb-dur",
+  "ar": [
+   "كم وقتاً مستقطعاً للفريق في المباراة؟",
+   "3، بحد أقصى 2 في الشوط",
+   "2، واحد في كل شوط",
+   "4، اثنان في كل شوط",
+   "واحد فقط",
+   "ثلاثة أوقات مستقطعة بحد أقصى اثنين في الشوط."
+  ],
+  "en": [
+   "How many team time-outs per match?",
+   "3, at most 2 per half",
+   "2, one per half",
+   "4, two per half",
+   "Only one",
+   "Three team time-outs, maximum two per half."
+  ]
+ },
+ {
+  "sp": "comp",
+  "ref": "sys-league",
+  "ar": [
+   "كم مباراة في دوري من دور واحد يضم 8 فرق؟",
+   "28",
+   "56",
+   "16",
+   "32",
+   "عدد المباريات = ن × (ن − 1) ÷ 2 = 8 × 7 ÷ 2 = 28."
+  ],
+  "en": [
+   "How many matches in a single round-robin league of 8 teams?",
+   "28",
+   "56",
+   "16",
+   "32",
+   "Matches = n × (n − 1) ÷ 2 = 8 × 7 ÷ 2 = 28."
+  ]
+ },
+ {
+  "sp": "comp",
+  "ref": "pts-volleyball",
+  "ar": [
+   "في الكرة الطائرة، كم نقطة يحصل عليها الفائز 3–2؟",
+   "2",
+   "3",
+   "1",
+   "4",
+   "الفوز 3–0 أو 3–1 = 3 نقاط، والفوز 3–2 = نقطتان والخاسر نقطة."
+  ],
+  "en": [
+   "In volleyball, how many points does a 3–2 winner get?",
+   "2",
+   "3",
+   "1",
+   "4",
+   "A 3–0 or 3–1 win = 3 points; a 3–2 win = 2 points and the loser gets 1."
+  ]
+ },
+ {
+  "sp": "comp",
+  "ref": "pts-basketball",
+  "ar": [
+   "في ترتيب كرة السلة (FIBA)، كم نقطة للخسارة؟",
+   "1",
+   "0",
+   "2",
+   "3",
+   "الفوز نقطتان والخسارة نقطة واحدة."
+  ],
+  "en": [
+   "In FIBA standings, how many points for a loss?",
+   "1",
+   "0",
+   "2",
+   "3",
+   "A win is 2 points, a loss 1 point."
+  ]
+ },
+ {
+  "sp": "comp",
+  "ref": "sys-ko",
+  "ar": [
+   "كم مباراة يحتاجها خروج المغلوب من 16 فريقاً لتحديد البطل؟",
+   "15",
+   "16",
+   "8",
+   "31",
+   "كل مباراة تُقصي فريقاً واحداً، فيلزم ن − 1 = 15 مباراة."
+  ],
+  "en": [
+   "How many matches does a 16-team knockout need to find a champion?",
+   "15",
+   "16",
+   "8",
+   "31",
+   "Each match eliminates one team, so n − 1 = 15 matches."
+  ]
+ }
+]

@@ -1,0 +1,57 @@
+[
+ {
+  "id": "sys-league",
+  "t": {
+   "ar": "الدوري (كل فريق يقابل الجميع)",
+   "en": "League (round robin)"
+  },
+  "b": {
+   "ar": [
+    "عدد المباريات لدور واحد = ن × (ن − 1) ÷ 2، ويتضاعف في نظام الذهاب والإياب.",
+    "عدد الجولات = ن − 1 (أو ن إذا كان العدد فردياً مع استراحة لفريق في كل جولة).",
+    "الأعدل لتحديد الأفضل، لكنه يحتاج وقتاً أطول."
+   ],
+   "en": [
+    "Matches for one leg = n × (n − 1) ÷ 2, doubled for home and away.",
+    "Rounds = n − 1 (or n with a bye each round when n is odd).",
+    "The fairest way to find the best team, but it takes longest."
+   ]
+  }
+ },
+ {
+  "id": "sys-ko",
+  "t": {
+   "ar": "خروج المغلوب",
+   "en": "Knockout"
+  },
+  "b": {
+   "ar": [
+    "يُكمل العدد إلى أقرب قوة للرقم 2 (8، 16، 32) بتأهل مباشر (راحة) لأعلى المصنفين.",
+    "عدد المباريات = عدد الفرق − 1.",
+    "التعادل: وقت إضافي ثم ركلات ترجيح أو حسب اللائحة."
+   ],
+   "en": [
+    "Numbers are completed to the next power of two (8, 16, 32) with byes for the top seeds.",
+    "Matches = number of teams − 1.",
+    "Draws: extra time then a shoot-out, or as the regulations say."
+   ]
+  }
+ },
+ {
+  "id": "sys-groups",
+  "t": {
+   "ar": "المجموعات ثم الإقصائيات",
+   "en": "Groups then knockout"
+  },
+  "b": {
+   "ar": [
+    "تقسيم الفرق إلى مجموعات متوازنة بالتصنيف، ويتأهل الأول والثاني عادة.",
+    "يجمع بين عدالة الدوري وإثارة خروج المغلوب، وهو الأنسب لبطولات المدارس والأكاديميات."
+   ],
+   "en": [
+    "Teams are split into seeded groups; usually the top two advance.",
+    "Combines the fairness of a league with the excitement of knockouts — ideal for school and academy events."
+   ]
+  }
+ }
+]

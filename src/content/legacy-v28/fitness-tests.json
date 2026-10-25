@@ -1,0 +1,67 @@
+[
+ {
+  "k": "sp30",
+  "name": {
+   "ar": "سرعة 30م",
+   "en": "30 m sprint"
+  },
+  "unit": {
+   "ar": "ث",
+   "en": "s"
+  },
+  "lower": true,
+  "dp": 2
+ },
+ {
+  "k": "yoyo",
+  "name": {
+   "ar": "Yo-Yo IR1",
+   "en": "Yo-Yo IR1"
+  },
+  "unit": {
+   "ar": "م",
+   "en": "m"
+  },
+  "lower": false,
+  "dp": 0
+ },
+ {
+  "k": "cmj",
+  "name": {
+   "ar": "الوثب العمودي CMJ",
+   "en": "Countermovement jump"
+  },
+  "unit": {
+   "ar": "سم",
+   "en": "cm"
+  },
+  "lower": false,
+  "dp": 1
+ },
+ {
+  "k": "ttest",
+  "name": {
+   "ar": "اختبار T للرشاقة",
+   "en": "T-test agility"
+  },
+  "unit": {
+   "ar": "ث",
+   "en": "s"
+  },
+  "lower": true,
+  "dp": 2
+ },
+ {
+  "k": "lj",
+  "name": {
+   "ar": "الوثب العريض",
+   "en": "Standing long jump"
+  },
+  "unit": {
+   "ar": "سم",
+   "en": "cm"
+  },
+  "lower": false,
+  "dp": 0
+ }
+]

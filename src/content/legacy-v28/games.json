@@ -1,0 +1,1719 @@
+[
+ {
+  "k": "football",
+  "cat": "team",
+  "ar": "كرة القدم",
+  "en": "Football",
+  "m": "goals",
+  "pts": [
+   3,
+   1,
+   0
+  ],
+  "kw": "soccer قدم"
+ },
+ {
+  "k": "futsal",
+  "cat": "team",
+  "ar": "كرة الصالات",
+  "en": "Futsal",
+  "m": "goals",
+  "pts": [
+   3,
+   1,
+   0
+  ]
+ },
+ {
+  "k": "football7",
+  "cat": "team",
+  "ar": "كرة القدم السباعية",
+  "en": "7-a-side football",
+  "m": "goals",
+  "pts": [
+   3,
+   1,
+   0
+  ]
+ },
+ {
+  "k": "football5",
+  "cat": "team",
+  "ar": "كرة القدم الخماسية",
+  "en": "5-a-side football",
+  "m": "goals",
+  "pts": [
+   3,
+   1,
+   0
+  ]
+ },
+ {
+  "k": "beachsoccer",
+  "cat": "team",
+  "ar": "كرة القدم الشاطئية",
+  "en": "Beach soccer",
+  "m": "nodraw",
+  "pts": [
+   3,
+   0,
+   0
+  ]
+ },
+ {
+  "k": "basketball",
+  "cat": "team",
+  "ar": "كرة السلة",
+  "en": "Basketball",
+  "m": "nodraw",
+  "pts": [
+   2,
+   0,
+   1
+  ]
+ },
+ {
+  "k": "bb3x3",
+  "cat": "team",
+  "ar": "كرة السلة 3×3",
+  "en": "3x3 basketball",
+  "m": "nodraw",
+  "pts": [
+   2,
+   0,
+   1
+  ]
+ },
+ {
+  "k": "volleyball",
+  "cat": "team",
+  "ar": "الكرة الطائرة",
+  "en": "Volleyball",
+  "m": "sets",
+  "vb": 1,
+  "bo": 5,
+  "pts": [
+   3,
+   0,
+   0
+  ]
+ },
+ {
+  "k": "beachvolley",
+  "cat": "team",
+  "ar": "الكرة الطائرة الشاطئية",
+  "en": "Beach volleyball",
+  "m": "sets",
+  "bo": 3,
+  "pts": [
+   2,
+   0,
+   1
+  ]
+ },
+ {
+  "k": "handball",
+  "cat": "team",
+  "ar": "كرة اليد",
+  "en": "Handball",
+  "m": "goals",
+  "pts": [
+   2,
+   1,
+   0
+  ]
+ },
+ {
+  "k": "beachhandball",
+  "cat": "team",
+  "ar": "كرة اليد الشاطئية",
+  "en": "Beach handball",
+  "m": "sets",
+  "bo": 3,
+  "pts": [
+   2,
+   0,
+   0
+  ]
+ },
+ {
+  "k": "hockey",
+  "cat": "team",
+  "ar": "الهوكي",
+  "en": "Field hockey",
+  "m": "goals",
+  "pts": [
+   3,
+   1,
+   0
+  ]
+ },
+ {
+  "k": "icehockey",
+  "cat": "team",
+  "ar": "هوكي الجليد",
+  "en": "Ice hockey",
+  "m": "nodraw",
+  "pts": [
+   2,
+   0,
+   0
+  ]
+ },
+ {
+  "k": "rugby",
+  "cat": "team",
+  "ar": "الرجبي",
+  "en": "Rugby",
+  "m": "goals",
+  "pts": [
+   4,
+   2,
+   0
+  ]
+ },
+ {
+  "k": "cricket",
+  "cat": "team",
+  "ar": "الكريكيت",
+  "en": "Cricket",
+  "m": "nodraw",
+  "pts": [
+   2,
+   0,
+   0
+  ]
+ },
+ {
+  "k": "baseball",
+  "cat": "team",
+  "ar": "البيسبول",
+  "en": "Baseball",
+  "m": "nodraw",
+  "pts": [
+   2,
+   0,
+   0
+  ]
+ },
+ {
+  "k": "softball",
+  "cat": "team",
+  "ar": "السوفتبول",
+  "en": "Softball",
+  "m": "nodraw",
+  "pts": [
+   2,
+   0,
+   0
+  ]
+ },
+ {
+  "k": "netball",
+  "cat": "team",
+  "ar": "كرة الشبكة",
+  "en": "Netball",
+  "m": "goals",
+  "pts": [
+   2,
+   1,
+   0
+  ]
+ },
+ {
+  "k": "waterpolo",
+  "cat": "team",
+  "ar": "كرة الماء",
+  "en": "Water polo",
+  "m": "goals",
+  "pts": [
+   3,
+   1,
+   0
+  ]
+ },
+ {
+  "k": "sitvolley",
+  "cat": "team",
+  "ar": "الكرة الطائرة جلوس",
+  "en": "Sitting volleyball",
+  "m": "sets",
+  "bo": 5,
+  "vb": 1,
+  "pts": [
+   3,
+   0,
+   0
+  ]
+ },
+ {
+  "k": "goalball",
+  "cat": "team",
+  "ar": "كرة الهدف",
+  "en": "Goalball",
+  "m": "goals",
+  "pts": [
+   3,
+   1,
+   0
+  ]
+ },
+ {
+  "k": "dodgeball",
+  "cat": "team",
+  "ar": "كرة المراوغة (دودج بول)",
+  "en": "Dodgeball",
+  "m": "nodraw",
+  "pts": [
+   3,
+   0,
+   0
+  ]
+ },
+ {
+  "k": "kabaddi",
+  "cat": "team",
+  "ar": "الكبادي",
+  "en": "Kabaddi",
+  "m": "goals",
+  "pts": [
+   3,
+   1,
+   0
+  ]
+ },
+ {
+  "k": "ultimate",
+  "cat": "team",
+  "ar": "الطبق الطائر (ألتيميت)",
+  "en": "Ultimate frisbee",
+  "m": "nodraw",
+  "pts": [
+   3,
+   0,
+   0
+  ]
+ },
+ {
+  "k": "tabletennis",
+  "cat": "racket",
+  "ar": "تنس الطاولة",
+  "en": "Table tennis",
+  "m": "sets",
+  "bo": 5,
+  "pts": [
+   2,
+   0,
+   1
+  ],
+  "ind": 1,
+  "kw": "بنج بونج ping pong"
+ },
+ {
+  "k": "badminton",
+  "cat": "racket",
+  "ar": "الريشة الطائرة",
+  "en": "Badminton",
+  "m": "sets",
+  "bo": 3,
+  "pts": [
+   2,
+   0,
+   1
+  ],
+  "ind": 1
+ },
+ {
+  "k": "tennis",
+  "cat": "racket",
+  "ar": "التنس الأرضي",
+  "en": "Tennis",
+  "m": "sets",
+  "bo": 3,
+  "pts": [
+   2,
+   0,
+   1
+  ],
+  "ind": 1
+ },
+ {
+  "k": "padel",
+  "cat": "racket",
+  "ar": "البادل",
+  "en": "Padel",
+  "m": "sets",
+  "bo": 3,
+  "pts": [
+   2,
+   0,
+   1
+  ]
+ },
+ {
+  "k": "squash",
+  "cat": "racket",
+  "ar": "الإسكواش",
+  "en": "Squash",
+  "m": "sets",
+  "bo": 5,
+  "pts": [
+   2,
+   0,
+   1
+  ],
+  "ind": 1
+ },
+ {
+  "k": "pickleball",
+  "cat": "racket",
+  "ar": "البيكلبول",
+  "en": "Pickleball",
+  "m": "sets",
+  "bo": 3,
+  "pts": [
+   2,
+   0,
+   1
+  ]
+ },
+ {
+  "k": "beachtennis",
+  "cat": "racket",
+  "ar": "التنس الشاطئي",
+  "en": "Beach tennis",
+  "m": "sets",
+  "bo": 3,
+  "pts": [
+   2,
+   0,
+   1
+  ]
+ },
+ {
+  "k": "karate",
+  "cat": "combat",
+  "ar": "الكاراتيه (كوميتيه)",
+  "en": "Karate (kumite)",
+  "m": "win",
+  "ind": 1,
+  "medals": 4
+ },
+ {
+  "k": "kata",
+  "cat": "combat",
+  "ar": "الكاراتيه (كاتا)",
+  "en": "Karate (kata)",
+  "m": "judged",
+  "ind": 1
+ },
+ {
+  "k": "taekwondo",
+  "cat": "combat",
+  "ar": "التايكوندو",
+  "en": "Taekwondo",
+  "m": "win",
+  "ind": 1,
+  "medals": 4
+ },
+ {
+  "k": "poomsae",
+  "cat": "combat",
+  "ar": "التايكوندو (بومسي)",
+  "en": "Taekwondo (poomsae)",
+  "m": "judged",
+  "ind": 1
+ },
+ {
+  "k": "kungfu",
+  "cat": "combat",
+  "ar": "الكونغ فو (ووشو ساندا)",
+  "en": "Kung fu (wushu sanda)",
+  "m": "win",
+  "ind": 1,
+  "medals": 4,
+  "kw": "wushu ووشو"
+ },
+ {
+  "k": "taolu",
+  "cat": "combat",
+  "ar": "الووشو (تاولو)",
+  "en": "Wushu (taolu)",
+  "m": "judged",
+  "ind": 1
+ },
+ {
+  "k": "judo",
+  "cat": "combat",
+  "ar": "الجودو",
+  "en": "Judo",
+  "m": "win",
+  "ind": 1,
+  "medals": 4
+ },
+ {
+  "k": "wrestling",
+  "cat": "combat",
+  "ar": "المصارعة",
+  "en": "Wrestling",
+  "m": "win",
+  "ind": 1,
+  "medals": 4
+ },
+ {
+  "k": "boxing",
+  "cat": "combat",
+  "ar": "الملاكمة",
+  "en": "Boxing",
+  "m": "win",
+  "ind": 1,
+  "medals": 4
+ },
+ {
+  "k": "kickboxing",
+  "cat": "combat",
+  "ar": "الكيك بوكسينغ",
+  "en": "Kickboxing",
+  "m": "win",
+  "ind": 1,
+  "medals": 4
+ },
+ {
+  "k": "muaythai",
+  "cat": "combat",
+  "ar": "المواي تاي",
+  "en": "Muay Thai",
+  "m": "win",
+  "ind": 1,
+  "medals": 4
+ },
+ {
+  "k": "jiujitsu",
+  "cat": "combat",
+  "ar": "الجوجيتسو",
+  "en": "Jiu-jitsu",
+  "m": "win",
+  "ind": 1,
+  "medals": 4
+ },
+ {
+  "k": "fencing",
+  "cat": "combat",
+  "ar": "المبارزة",
+  "en": "Fencing",
+  "m": "nodraw",
+  "ind": 1,
+  "pts": [
+   1,
+   0,
+   0
+  ],
+  "medals": 4
+ },
+ {
+  "k": "sambo",
+  "cat": "combat",
+  "ar": "السامبو",
+  "en": "Sambo",
+  "m": "win",
+  "ind": 1,
+  "medals": 4
+ },
+ {
+  "k": "armwrestling",
+  "cat": "strength",
+  "ar": "مصارعة الذراعين (مسابقة الذراعين)",
+  "en": "Arm wrestling",
+  "m": "win",
+  "ind": 1,
+  "medals": 3,
+  "kw": "ذراع زراعين arm"
+ },
+ {
+  "k": "tugofwar",
+  "cat": "strength",
+  "ar": "شد الحبل",
+  "en": "Tug of war",
+  "m": "sets",
+  "bo": 3,
+  "lbl": {
+   "ar": "سحبة",
+   "en": "pull"
+  },
+  "pts": [
+   2,
+   0,
+   0
+  ]
+ },
+ {
+  "k": "weightlifting",
+  "cat": "strength",
+  "ar": "رفع الأثقال",
+  "en": "Weightlifting",
+  "m": "measure",
+  "ind": 1,
+  "unit": "weight",
+  "dir": "max"
+ },
+ {
+  "k": "powerlifting",
+  "cat": "strength",
+  "ar": "القوة البدنية (باورلفتنق)",
+  "en": "Powerlifting",
+  "m": "measure",
+  "ind": 1,
+  "unit": "weight",
+  "dir": "max"
+ },
+ {
+  "k": "benchpress",
+  "cat": "strength",
+  "ar": "الضغط على البنش",
+  "en": "Bench press",
+  "m": "measure",
+  "ind": 1,
+  "unit": "weight",
+  "dir": "max"
+ },
+ {
+  "k": "pushups",
+  "cat": "strength",
+  "ar": "تحدي الضغط",
+  "en": "Push-up challenge",
+  "m": "measure",
+  "ind": 1,
+  "unit": "reps",
+  "dir": "max"
+ },
+ {
+  "k": "pullups",
+  "cat": "strength",
+  "ar": "تحدي العقلة",
+  "en": "Pull-up challenge",
+  "m": "measure",
+  "ind": 1,
+  "unit": "reps",
+  "dir": "max"
+ },
+ {
+  "k": "plank",
+  "cat": "strength",
+  "ar": "تحدي البلانك",
+  "en": "Plank challenge",
+  "m": "measure",
+  "ind": 1,
+  "unit": "time",
+  "dir": "max"
+ },
+ {
+  "k": "situps",
+  "cat": "strength",
+  "ar": "تحدي البطن",
+  "en": "Sit-up challenge",
+  "m": "measure",
+  "ind": 1,
+  "unit": "reps",
+  "dir": "max"
+ },
+ {
+  "k": "rope",
+  "cat": "strength",
+  "ar": "نط الحبل",
+  "en": "Jump rope",
+  "m": "measure",
+  "ind": 1,
+  "unit": "reps",
+  "dir": "max"
+ },
+ {
+  "k": "crossfit",
+  "cat": "strength",
+  "ar": "الكروس فت",
+  "en": "CrossFit",
+  "m": "measure",
+  "ind": 1,
+  "unit": "points",
+  "dir": "max"
+ },
+ {
+  "k": "fitness",
+  "cat": "strength",
+  "ar": "اللياقة البدنية (بطارية اختبارات)",
+  "en": "Fitness battery",
+  "m": "measure",
+  "ind": 1,
+  "unit": "points",
+  "dir": "max"
+ },
+ {
+  "k": "strongman",
+  "cat": "strength",
+  "ar": "الرجل الحديدي (سترونغ مان)",
+  "en": "Strongman",
+  "m": "measure",
+  "ind": 1,
+  "unit": "points",
+  "dir": "max"
+ },
+ {
+  "k": "gymnastics",
+  "cat": "strength",
+  "ar": "الجمباز",
+  "en": "Gymnastics",
+  "m": "judged",
+  "ind": 1
+ },
+ {
+  "k": "bodybuilding",
+  "cat": "strength",
+  "ar": "بناء الأجسام",
+  "en": "Bodybuilding",
+  "m": "judged",
+  "ind": 1
+ },
+ {
+  "k": "calisthenics",
+  "cat": "strength",
+  "ar": "الكاليستنكس",
+  "en": "Calisthenics",
+  "m": "judged",
+  "ind": 1
+ },
+ {
+  "k": "sprint",
+  "cat": "athletics",
+  "ar": "الجري السريع (60/100/200م)",
+  "en": "Sprint (60/100/200 m)",
+  "m": "measure",
+  "ind": 1,
+  "unit": "time",
+  "dir": "min"
+ },
+ {
+  "k": "run400",
+  "cat": "athletics",
+  "ar": "جري 400م",
+  "en": "400 m",
+  "m": "measure",
+  "ind": 1,
+  "unit": "time",
+  "dir": "min"
+ },
+ {
+  "k": "middle",
+  "cat": "athletics",
+  "ar": "المسافات المتوسطة (800/1500م)",
+  "en": "Middle distance (800/1500 m)",
+  "m": "measure",
+  "ind": 1,
+  "unit": "time",
+  "dir": "min"
+ },
+ {
+  "k": "long",
+  "cat": "athletics",
+  "ar": "المسافات الطويلة (3000/5000م)",
+  "en": "Long distance (3000/5000 m)",
+  "m": "measure",
+  "ind": 1,
+  "unit": "time",
+  "dir": "min"
+ },
+ {
+  "k": "relay",
+  "cat": "athletics",
+  "ar": "سباق التتابع",
+  "en": "Relay",
+  "m": "measure",
+  "unit": "time",
+  "dir": "min"
+ },
+ {
+  "k": "hurdles",
+  "cat": "athletics",
+  "ar": "سباق الحواجز",
+  "en": "Hurdles",
+  "m": "measure",
+  "ind": 1,
+  "unit": "time",
+  "dir": "min"
+ },
+ {
+  "k": "longjump",
+  "cat": "athletics",
+  "ar": "الوثب الطويل",
+  "en": "Long jump",
+  "m": "measure",
+  "ind": 1,
+  "att": 3,
+  "unit": "distance",
+  "dir": "max"
+ },
+ {
+  "k": "triplejump",
+  "cat": "athletics",
+  "ar": "الوثب الثلاثي",
+  "en": "Triple jump",
+  "m": "measure",
+  "ind": 1,
+  "att": 3,
+  "unit": "distance",
+  "dir": "max"
+ },
+ {
+  "k": "highjump",
+  "cat": "athletics",
+  "ar": "الوثب العالي",
+  "en": "High jump",
+  "m": "measure",
+  "ind": 1,
+  "unit": "distance",
+  "dir": "max"
+ },
+ {
+  "k": "shotput",
+  "cat": "athletics",
+  "ar": "دفع الجلة",
+  "en": "Shot put",
+  "m": "measure",
+  "ind": 1,
+  "att": 3,
+  "unit": "distance",
+  "dir": "max"
+ },
+ {
+  "k": "javelin",
+  "cat": "athletics",
+  "ar": "رمي الرمح",
+  "en": "Javelin",
+  "m": "measure",
+  "ind": 1,
+  "att": 3,
+  "unit": "distance",
+  "dir": "max"
+ },
+ {
+  "k": "discus",
+  "cat": "athletics",
+  "ar": "رمي القرص",
+  "en": "Discus",
+  "m": "measure",
+  "ind": 1,
+  "att": 3,
+  "unit": "distance",
+  "dir": "max"
+ },
+ {
+  "k": "ball_throw",
+  "cat": "athletics",
+  "ar": "رمي الكرة الطبية",
+  "en": "Medicine-ball throw",
+  "m": "measure",
+  "ind": 1,
+  "att": 3,
+  "unit": "distance",
+  "dir": "max"
+ },
+ {
+  "k": "marathon",
+  "cat": "athletics",
+  "ar": "الماراثون ونصف الماراثون",
+  "en": "Marathon & half marathon",
+  "m": "measure",
+  "ind": 1,
+  "unit": "time",
+  "dir": "min"
+ },
+ {
+  "k": "crosscountry",
+  "cat": "athletics",
+  "ar": "اختراق الضاحية",
+  "en": "Cross country",
+  "m": "measure",
+  "ind": 1,
+  "unit": "time",
+  "dir": "min"
+ },
+ {
+  "k": "walk",
+  "cat": "athletics",
+  "ar": "المشي السريع",
+  "en": "Race walking",
+  "m": "measure",
+  "ind": 1,
+  "unit": "time",
+  "dir": "min"
+ },
+ {
+  "k": "decathlon",
+  "cat": "athletics",
+  "ar": "المسابقات المركبة",
+  "en": "Combined events",
+  "m": "measure",
+  "ind": 1,
+  "unit": "points",
+  "dir": "max"
+ },
+ {
+  "k": "swimming",
+  "cat": "aquatic",
+  "ar": "السباحة",
+  "en": "Swimming",
+  "m": "measure",
+  "ind": 1,
+  "unit": "time",
+  "dir": "min"
+ },
+ {
+  "k": "swimrelay",
+  "cat": "aquatic",
+  "ar": "تتابع السباحة",
+  "en": "Swimming relay",
+  "m": "measure",
+  "unit": "time",
+  "dir": "min"
+ },
+ {
+  "k": "diving",
+  "cat": "aquatic",
+  "ar": "الغطس",
+  "en": "Diving",
+  "m": "judged",
+  "ind": 1
+ },
+ {
+  "k": "rowing",
+  "cat": "aquatic",
+  "ar": "التجديف",
+  "en": "Rowing",
+  "m": "measure",
+  "unit": "time",
+  "dir": "min"
+ },
+ {
+  "k": "kayak",
+  "cat": "aquatic",
+  "ar": "الكاياك",
+  "en": "Kayak",
+  "m": "measure",
+  "ind": 1,
+  "unit": "time",
+  "dir": "min"
+ },
+ {
+  "k": "surf",
+  "cat": "aquatic",
+  "ar": "ركوب الأمواج",
+  "en": "Surfing",
+  "m": "judged",
+  "ind": 1
+ },
+ {
+  "k": "triathlon",
+  "cat": "aquatic",
+  "ar": "الترايثلون",
+  "en": "Triathlon",
+  "m": "measure",
+  "ind": 1,
+  "unit": "time",
+  "dir": "min"
+ },
+ {
+  "k": "billiards",
+  "cat": "cue",
+  "ar": "البلياردو",
+  "en": "Pool / billiards",
+  "m": "sets",
+  "bo": 5,
+  "lbl": {
+   "ar": "فريم",
+   "en": "frame"
+  },
+  "ind": 1,
+  "pts": [
+   2,
+   0,
+   0
+  ],
+  "kw": "pool بلياردو"
+ },
+ {
+  "k": "snooker",
+  "cat": "cue",
+  "ar": "السنوكر",
+  "en": "Snooker",
+  "m": "sets",
+  "bo": 5,
+  "lbl": {
+   "ar": "فريم",
+   "en": "frame"
+  },
+  "ind": 1,
+  "pts": [
+   2,
+   0,
+   0
+  ]
+ },
+ {
+  "k": "foosball",
+  "cat": "cue",
+  "ar": "الفرفيرة (كرة الطاولة)",
+  "en": "Foosball",
+  "m": "sets",
+  "bo": 3,
+  "lbl": {
+   "ar": "شوط",
+   "en": "game"
+  },
+  "pts": [
+   2,
+   0,
+   0
+  ],
+  "kw": "فرفيره بيبي فوت"
+ },
+ {
+  "k": "airhockey",
+  "cat": "cue",
+  "ar": "هوكي الهواء",
+  "en": "Air hockey",
+  "m": "sets",
+  "bo": 3,
+  "ind": 1,
+  "pts": [
+   2,
+   0,
+   0
+  ]
+ },
+ {
+  "k": "darts",
+  "cat": "cue",
+  "ar": "رمي السهام (الدارتس)",
+  "en": "Darts",
+  "m": "sets",
+  "bo": 5,
+  "lbl": {
+   "ar": "ليغ",
+   "en": "leg"
+  },
+  "ind": 1,
+  "pts": [
+   2,
+   0,
+   0
+  ]
+ },
+ {
+  "k": "bowling",
+  "cat": "cue",
+  "ar": "البولينغ",
+  "en": "Bowling",
+  "m": "measure",
+  "ind": 1,
+  "unit": "points",
+  "dir": "max"
+ },
+ {
+  "k": "tablefootball",
+  "cat": "cue",
+  "ar": "كرة القدم بالأصابع",
+  "en": "Finger football",
+  "m": "goals",
+  "ind": 1,
+  "pts": [
+   3,
+   1,
+   0
+  ]
+ },
+ {
+  "k": "chess",
+  "cat": "mind",
+  "ar": "الشطرنج",
+  "en": "Chess",
+  "m": "chess",
+  "ind": 1
+ },
+ {
+  "k": "chessrapid",
+  "cat": "mind",
+  "ar": "الشطرنج السريع والخاطف",
+  "en": "Rapid & blitz chess",
+  "m": "chess",
+  "ind": 1
+ },
+ {
+  "k": "baloot",
+  "cat": "mind",
+  "ar": "البلوت",
+  "en": "Baloot",
+  "m": "sets",
+  "bo": 3,
+  "lbl": {
+   "ar": "صكة",
+   "en": "game"
+  },
+  "pts": [
+   2,
+   0,
+   0
+  ],
+  "kw": "بلوت 152"
+ },
+ {
+  "k": "carrom",
+  "cat": "mind",
+  "ar": "الكيرم",
+  "en": "Carrom",
+  "m": "sets",
+  "bo": 3,
+  "ind": 1,
+  "pts": [
+   2,
+   0,
+   0
+  ]
+ },
+ {
+  "k": "domino",
+  "cat": "mind",
+  "ar": "الدومينو",
+  "en": "Dominoes",
+  "m": "sets",
+  "bo": 3,
+  "ind": 1,
+  "pts": [
+   2,
+   0,
+   0
+  ]
+ },
+ {
+  "k": "uno",
+  "cat": "mind",
+  "ar": "الأونو",
+  "en": "UNO",
+  "m": "measure",
+  "ind": 1,
+  "unit": "points",
+  "dir": "max"
+ },
+ {
+  "k": "checkers",
+  "cat": "mind",
+  "ar": "الداما",
+  "en": "Checkers",
+  "m": "chess",
+  "ind": 1
+ },
+ {
+  "k": "backgammon",
+  "cat": "mind",
+  "ar": "الطاولة (النرد)",
+  "en": "Backgammon",
+  "m": "sets",
+  "bo": 5,
+  "ind": 1,
+  "pts": [
+   2,
+   0,
+   0
+  ]
+ },
+ {
+  "k": "rubik",
+  "cat": "mind",
+  "ar": "مكعب روبيك (السرعة)",
+  "en": "Rubik's cube (speed)",
+  "m": "measure",
+  "ind": 1,
+  "att": 5,
+  "unit": "time",
+  "dir": "min"
+ },
+ {
+  "k": "sudoku",
+  "cat": "mind",
+  "ar": "السودوكو",
+  "en": "Sudoku",
+  "m": "measure",
+  "ind": 1,
+  "unit": "time",
+  "dir": "min"
+ },
+ {
+  "k": "mentalmath",
+  "cat": "mind",
+  "ar": "الحساب الذهني",
+  "en": "Mental arithmetic",
+  "m": "measure",
+  "ind": 1,
+  "unit": "points",
+  "dir": "max"
+ },
+ {
+  "k": "eafc",
+  "cat": "esports",
+  "ar": "EA SPORTS FC",
+  "en": "EA SPORTS FC",
+  "m": "goals",
+  "ind": 1,
+  "pts": [
+   3,
+   1,
+   0
+  ],
+  "kw": "fifa فيفا"
+ },
+ {
+  "k": "efootball",
+  "cat": "esports",
+  "ar": "eFootball",
+  "en": "eFootball",
+  "m": "goals",
+  "ind": 1,
+  "pts": [
+   3,
+   1,
+   0
+  ],
+  "kw": "pes بيس"
+ },
+ {
+  "k": "nba2k",
+  "cat": "esports",
+  "ar": "NBA 2K",
+  "en": "NBA 2K",
+  "m": "nodraw",
+  "ind": 1,
+  "pts": [
+   2,
+   0,
+   1
+  ]
+ },
+ {
+  "k": "rocketleague",
+  "cat": "esports",
+  "ar": "Rocket League",
+  "en": "Rocket League",
+  "m": "sets",
+  "bo": 5,
+  "lbl": {
+   "ar": "مباراة",
+   "en": "game"
+  }
+ },
+ {
+  "k": "pubgm",
+  "cat": "esports",
+  "ar": "PUBG Mobile",
+  "en": "PUBG Mobile",
+  "m": "measure",
+  "unit": "points",
+  "dir": "max"
+ },
+ {
+  "k": "fortnite",
+  "cat": "esports",
+  "ar": "Fortnite",
+  "en": "Fortnite",
+  "m": "measure",
+  "unit": "points",
+  "dir": "max"
+ },
+ {
+  "k": "freefire",
+  "cat": "esports",
+  "ar": "Free Fire",
+  "en": "Free Fire",
+  "m": "measure",
+  "unit": "points",
+  "dir": "max"
+ },
+ {
+  "k": "valorant",
+  "cat": "esports",
+  "ar": "Valorant",
+  "en": "Valorant",
+  "m": "sets",
+  "bo": 3,
+  "lbl": {
+   "ar": "خريطة",
+   "en": "map"
+  }
+ },
+ {
+  "k": "cod",
+  "cat": "esports",
+  "ar": "Call of Duty",
+  "en": "Call of Duty",
+  "m": "sets",
+  "bo": 5,
+  "lbl": {
+   "ar": "خريطة",
+   "en": "map"
+  }
+ },
+ {
+  "k": "lol",
+  "cat": "esports",
+  "ar": "League of Legends",
+  "en": "League of Legends",
+  "m": "sets",
+  "bo": 3
+ },
+ {
+  "k": "dota2",
+  "cat": "esports",
+  "ar": "Dota 2",
+  "en": "Dota 2",
+  "m": "sets",
+  "bo": 3
+ },
+ {
+  "k": "overwatch",
+  "cat": "esports",
+  "ar": "Overwatch 2",
+  "en": "Overwatch 2",
+  "m": "sets",
+  "bo": 5,
+  "lbl": {
+   "ar": "خريطة",
+   "en": "map"
+  }
+ },
+ {
+  "k": "streetfighter",
+  "cat": "esports",
+  "ar": "Street Fighter",
+  "en": "Street Fighter",
+  "m": "sets",
+  "bo": 3,
+  "ind": 1
+ },
+ {
+  "k": "tekken",
+  "cat": "esports",
+  "ar": "Tekken",
+  "en": "Tekken",
+  "m": "sets",
+  "bo": 3,
+  "ind": 1
+ },
+ {
+  "k": "mariokart",
+  "cat": "esports",
+  "ar": "Mario Kart",
+  "en": "Mario Kart",
+  "m": "measure",
+  "ind": 1,
+  "unit": "points",
+  "dir": "max"
+ },
+ {
+  "k": "clashroyale",
+  "cat": "esports",
+  "ar": "Clash Royale",
+  "en": "Clash Royale",
+  "m": "sets",
+  "bo": 3,
+  "ind": 1
+ },
+ {
+  "k": "chessonline",
+  "cat": "esports",
+  "ar": "الشطرنج الإلكتروني",
+  "en": "Online chess",
+  "m": "chess",
+  "ind": 1
+ },
+ {
+  "k": "simracing",
+  "cat": "esports",
+  "ar": "سباقات المحاكاة",
+  "en": "Sim racing",
+  "m": "measure",
+  "ind": 1,
+  "unit": "time",
+  "dir": "min"
+ },
+ {
+  "k": "archery",
+  "cat": "target",
+  "ar": "الرماية بالقوس",
+  "en": "Archery",
+  "m": "measure",
+  "ind": 1,
+  "unit": "points",
+  "dir": "max"
+ },
+ {
+  "k": "shooting",
+  "cat": "target",
+  "ar": "الرماية (أهداف ثابتة)",
+  "en": "Shooting (fixed targets)",
+  "m": "measure",
+  "ind": 1,
+  "unit": "points",
+  "dir": "max"
+ },
+ {
+  "k": "golf",
+  "cat": "target",
+  "ar": "الغولف",
+  "en": "Golf",
+  "m": "measure",
+  "ind": 1,
+  "unit": "points",
+  "dir": "min"
+ },
+ {
+  "k": "minigolf",
+  "cat": "target",
+  "ar": "الغولف المصغر",
+  "en": "Mini golf",
+  "m": "measure",
+  "ind": 1,
+  "unit": "points",
+  "dir": "min"
+ },
+ {
+  "k": "petanque",
+  "cat": "target",
+  "ar": "البتانك",
+  "en": "Pétanque",
+  "m": "sets",
+  "bo": 3,
+  "pts": [
+   2,
+   0,
+   0
+  ]
+ },
+ {
+  "k": "basketshoot",
+  "cat": "target",
+  "ar": "مسابقة التصويب (سلة)",
+  "en": "Shooting contest (basketball)",
+  "m": "measure",
+  "ind": 1,
+  "unit": "points",
+  "dir": "max"
+ },
+ {
+  "k": "penalties",
+  "cat": "target",
+  "ar": "مسابقة ركلات الجزاء",
+  "en": "Penalty shoot-out contest",
+  "m": "measure",
+  "ind": 1,
+  "unit": "points",
+  "dir": "max"
+ },
+ {
+  "k": "skills",
+  "cat": "target",
+  "ar": "مسابقة المهارات الفردية",
+  "en": "Individual skills contest",
+  "m": "judged",
+  "ind": 1
+ },
+ {
+  "k": "cycling",
+  "cat": "wheels",
+  "ar": "الدراجات الهوائية",
+  "en": "Cycling",
+  "m": "measure",
+  "ind": 1,
+  "unit": "time",
+  "dir": "min"
+ },
+ {
+  "k": "bmx",
+  "cat": "wheels",
+  "ar": "دراجات BMX",
+  "en": "BMX",
+  "m": "measure",
+  "ind": 1,
+  "unit": "time",
+  "dir": "min"
+ },
+ {
+  "k": "skate",
+  "cat": "wheels",
+  "ar": "التزلج على العجلات",
+  "en": "Roller skating",
+  "m": "measure",
+  "ind": 1,
+  "unit": "time",
+  "dir": "min"
+ },
+ {
+  "k": "skateboard",
+  "cat": "wheels",
+  "ar": "التزلج على اللوح",
+  "en": "Skateboarding",
+  "m": "judged",
+  "ind": 1
+ },
+ {
+  "k": "karting",
+  "cat": "wheels",
+  "ar": "سباق الكارتينغ",
+  "en": "Karting",
+  "m": "measure",
+  "ind": 1,
+  "unit": "time",
+  "dir": "min"
+ },
+ {
+  "k": "camel",
+  "cat": "heritage",
+  "ar": "سباق الهجن",
+  "en": "Camel racing",
+  "m": "measure",
+  "ind": 1,
+  "unit": "time",
+  "dir": "min"
+ },
+ {
+  "k": "horse",
+  "cat": "heritage",
+  "ar": "الفروسية (قفز الحواجز)",
+  "en": "Equestrian (show jumping)",
+  "m": "measure",
+  "ind": 1,
+  "unit": "points",
+  "dir": "min"
+ },
+ {
+  "k": "endurance",
+  "cat": "heritage",
+  "ar": "سباق القدرة والتحمل للخيل",
+  "en": "Endurance riding",
+  "m": "measure",
+  "ind": 1,
+  "unit": "time",
+  "dir": "min"
+ },
+ {
+  "k": "falconry",
+  "cat": "heritage",
+  "ar": "الصيد بالصقور (الملواح)",
+  "en": "Falconry (speed)",
+  "m": "measure",
+  "ind": 1,
+  "unit": "time",
+  "dir": "min"
+ },
+ {
+  "k": "dhow",
+  "cat": "heritage",
+  "ar": "سباق القوارب الشراعية",
+  "en": "Dhow sailing race",
+  "m": "measure",
+  "unit": "time",
+  "dir": "min"
+ },
+ {
+  "k": "heritswim",
+  "cat": "heritage",
+  "ar": "السباحة التراثية",
+  "en": "Heritage swimming",
+  "m": "measure",
+  "ind": 1,
+  "unit": "time",
+  "dir": "min"
+ },
+ {
+  "k": "ardah",
+  "cat": "heritage",
+  "ar": "العرضة والفنون الشعبية",
+  "en": "Ardah & folk arts",
+  "m": "judged"
+ },
+ {
+  "k": "sportsday",
+  "cat": "school",
+  "ar": "اليوم الرياضي (نقاط البيوت)",
+  "en": "Sports day (house points)",
+  "m": "measure",
+  "unit": "points",
+  "dir": "max"
+ },
+ {
+  "k": "olympiad",
+  "cat": "school",
+  "ar": "الأولمبياد المدرسي",
+  "en": "School olympiad",
+  "m": "measure",
+  "unit": "points",
+  "dir": "max"
+ },
+ {
+  "k": "sack",
+  "cat": "school",
+  "ar": "سباق الأكياس",
+  "en": "Sack race",
+  "m": "measure",
+  "ind": 1,
+  "unit": "time",
+  "dir": "min"
+ },
+ {
+  "k": "spoon",
+  "cat": "school",
+  "ar": "سباق الملعقة والبيضة",
+  "en": "Egg-and-spoon race",
+  "m": "measure",
+  "ind": 1,
+  "unit": "time",
+  "dir": "min"
+ },
+ {
+  "k": "obstacle",
+  "cat": "school",
+  "ar": "سباق الموانع",
+  "en": "Obstacle race",
+  "m": "measure",
+  "ind": 1,
+  "unit": "time",
+  "dir": "min"
+ },
+ {
+  "k": "chairs",
+  "cat": "school",
+  "ar": "الكراسي الموسيقية",
+  "en": "Musical chairs",
+  "m": "measure",
+  "ind": 1,
+  "unit": "points",
+  "dir": "max"
+ },
+ {
+  "k": "treasure",
+  "cat": "school",
+  "ar": "البحث عن الكنز",
+  "en": "Treasure hunt",
+  "m": "measure",
+  "unit": "time",
+  "dir": "min"
+ },
+ {
+  "k": "fun_run",
+  "cat": "school",
+  "ar": "الماراثون الخيري / الجري الجماعي",
+  "en": "Charity / fun run",
+  "m": "measure",
+  "ind": 1,
+  "unit": "time",
+  "dir": "min"
+ },
+ {
+  "k": "challenge",
+  "cat": "school",
+  "ar": "تحدي الفصول",
+  "en": "Class challenge",
+  "m": "measure",
+  "unit": "points",
+  "dir": "max"
+ },
+ {
+  "k": "quran",
+  "cat": "culture",
+  "ar": "مسابقة القرآن الكريم (حفظ وتلاوة)",
+  "en": "Quran memorisation & recitation",
+  "m": "judged",
+  "ind": 1
+ },
+ {
+  "k": "culturalquiz",
+  "cat": "culture",
+  "ar": "المسابقة الثقافية",
+  "en": "Cultural quiz",
+  "m": "measure",
+  "unit": "points",
+  "dir": "max"
+ },
+ {
+  "k": "sciencequiz",
+  "cat": "culture",
+  "ar": "المسابقة العلمية",
+  "en": "Science quiz",
+  "m": "measure",
+  "unit": "points",
+  "dir": "max"
+ },
+ {
+  "k": "sportsquiz",
+  "cat": "culture",
+  "ar": "المسابقة الرياضية (معلومات)",
+  "en": "Sports trivia",
+  "m": "measure",
+  "unit": "points",
+  "dir": "max"
+ },
+ {
+  "k": "debate",
+  "cat": "culture",
+  "ar": "المناظرات",
+  "en": "Debate",
+  "m": "judged"
+ },
+ {
+  "k": "spelling",
+  "cat": "culture",
+  "ar": "مسابقة الإملاء والخط",
+  "en": "Spelling & calligraphy",
+  "m": "judged",
+  "ind": 1
+ },
+ {
+  "k": "poetry",
+  "cat": "culture",
+  "ar": "الإلقاء والشعر",
+  "en": "Recitation & poetry",
+  "m": "judged",
+  "ind": 1
+ },
+ {
+  "k": "robotics",
+  "cat": "culture",
+  "ar": "الروبوت والبرمجة",
+  "en": "Robotics & coding",
+  "m": "judged"
+ },
+ {
+  "k": "art",
+  "cat": "culture",
+  "ar": "الرسم والفنون",
+  "en": "Drawing & art",
+  "m": "judged",
+  "ind": 1
+ },
+ {
+  "k": "photo",
+  "cat": "culture",
+  "ar": "التصوير",
+  "en": "Photography",
+  "m": "judged",
+  "ind": 1
+ },
+ {
+  "k": "custom",
+  "cat": "other",
+  "ar": "لعبة أو مسابقة أخرى…",
+  "en": "Another game or contest…",
+  "m": "goals",
+  "pts": [
+   3,
+   1,
+   0
+  ],
+  "custom": 1
+ }
+]

@@ -1,0 +1,4779 @@
+[
+ {
+  "id": "gk-shot",
+  "rs": "fb",
+  "fam": "GK",
+  "name": {
+   "ar": "حارس تقليدي",
+   "en": "Shot-stopper"
+  },
+  "desc": {
+   "ar": "يركز على حماية المرمى والتمركز على خط التسديد، ويبني اللعب بشكل آمن ومباشر.",
+   "en": "Focuses on protecting the goal and angle play; distributes safely and directly."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "تمريرة آمنة للمدافع الحر أو إطلاق طويل نحو المهاجم المستهدف",
+     "توجيه خط الدفاع للاتساع عند البناء"
+    ],
+    "en": [
+     "Safe pass to the free defender or long release to the target striker",
+     "Tell the back line to spread when building"
+    ]
+   },
+   "def": {
+    "ar": [
+     "التمركز على المنصّف بين الكرة والقائمين",
+     "التحكم في منطقة الست ياردات والعرضيات القريبة"
+    ],
+    "en": [
+     "Position on the bisector between ball and posts",
+     "Command the six-yard box and near crosses"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "إعادة الكرة للعب بسرعة باليد نحو اللاعب الحر",
+     "قراءة المساحة خلف ضغط الخصم"
+    ],
+    "en": [
+     "Release quickly by hand to the free player",
+     "Spot space behind the opponent's press"
+    ]
+   },
+   "td": {
+    "ar": [
+     "تنظيم الدفاع صوتياً فور فقدان الكرة",
+     "التقدم خطوة لتقليص الزاوية في الانفراد"
+    ],
+    "en": [
+     "Organise vocally the moment the ball is lost",
+     "Step out to narrow the angle in 1v1s"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "تنظيم الحائط وترتيب الرقابة في الركنيات",
+    "ضربات الجزاء: قراءة جسم المسدد وعدم التحرك المبكر"
+   ],
+   "en": [
+    "Set the wall and marking at corners",
+    "Penalties: read the taker's body, don't move early"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "نسبة التصديات",
+    "أخطاء تؤدي لتسديدة",
+    "دقة التمرير القصير",
+    "نجاح الإمساك بالعرضيات"
+   ],
+   "en": [
+    "Save percentage",
+    "Errors leading to shots",
+    "Short pass accuracy",
+    "Cross claims"
+   ]
+  },
+  "drills": [
+   "f-gk",
+   "f-cross"
+  ],
+  "z": {
+   "wb": [
+    0.06,
+    0,
+    0.06,
+    0.16
+   ],
+   "nb": [
+    0.04,
+    0,
+    0.04,
+    0.14
+   ]
+  },
+  "mv": {
+   "att": [
+    0.1,
+    0
+   ],
+   "ta": [
+    0.06,
+    0
+   ],
+   "td": [
+    0.1,
+    0
+   ]
+  }
+ },
+ {
+  "id": "gk-sweep",
+  "rs": "fb",
+  "fam": "GK",
+  "name": {
+   "ar": "حارس ليبرو",
+   "en": "Sweeper-keeper"
+  },
+  "desc": {
+   "ar": "يلعب كلاعب حر إضافي في البناء، ويغطي المساحة خلف خط دفاع متقدم.",
+   "en": "Acts as an extra free player in build-up and covers space behind a high line."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "التقدم لتكوين تفوق عددي 3 ضد 2 أمام الضغط",
+     "تمريرات قطرية لكسر الخط الأول للضغط"
+    ],
+    "en": [
+     "Step up to create a 3v2 against the press",
+     "Diagonal passes to break the first line"
+    ]
+   },
+   "def": {
+    "ar": [
+     "التمركز المتقدم خارج المنطقة عند تقدم الدفاع",
+     "قطع الكرات الطويلة خلف المدافعين"
+    ],
+    "en": [
+     "High starting position when the line is high",
+     "Sweep long balls played in behind"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "رمية أو ركلة سريعة للمرتدة خلال ثوانٍ",
+     "استغلال الخصم غير المنظم بتمرير عمودي"
+    ],
+    "en": [
+     "Fast throw or kick to launch the counter",
+     "Exploit a disorganised opponent vertically"
+    ]
+   },
+   "td": {
+    "ar": [
+     "التمركز الاستباقي خلف الدفاع",
+     "الخروج الحاسم أو البقاء، دون تردد"
+    ],
+    "en": [
+     "Pre-emptive position behind the defence",
+     "Commit decisively — come or stay"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "قيادة التمركز الدفاعي بالمنطقة",
+    "البدء السريع بعد الإمساك بالكرة"
+   ],
+   "en": [
+    "Lead zonal marking in the box",
+    "Start quickly after claiming the ball"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "تمريرات ناجحة تحت الضغط",
+    "التدخلات خارج المنطقة",
+    "متوسط بعد التمركز عن المرمى",
+    "أخطاء البناء"
+   ],
+   "en": [
+    "Passes completed under pressure",
+    "Sweeper actions outside the box",
+    "Average distance from goal",
+    "Build-up errors"
+   ]
+  },
+  "drills": [
+   "f-build",
+   "f-gk"
+  ],
+  "z": {
+   "wb": [
+    0.12,
+    0,
+    0.1,
+    0.22
+   ],
+   "nb": [
+    0.1,
+    0,
+    0.09,
+    0.2
+   ]
+  },
+  "mv": {
+   "att": [
+    0.2,
+    0
+   ],
+   "ta": [
+    0.1,
+    0
+   ],
+   "td": [
+    0.16,
+    0
+   ]
+  }
+ },
+ {
+  "id": "cb-stop",
+  "rs": "fb",
+  "fam": "CB",
+  "name": {
+   "ar": "مدافع مباشر",
+   "en": "Stopper"
+  },
+  "desc": {
+   "ar": "يتقدم لملاقاة المهاجم قبل أن يستلم ويستدير، ويكسب الالتحامات الأمامية.",
+   "en": "Steps out to meet the striker before he can turn and wins front-foot duels."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "تمرير بسيط للارتكاز أو للظهير",
+     "التقدم بالكرة عند وجود مساحة أمامه"
+    ],
+    "en": [
+     "Simple passes to the pivot or full-back",
+     "Carry the ball forward into space"
+    ]
+   },
+   "def": {
+    "ar": [
+     "الضغط على المهاجم الذي يسقط لاستلام الكرة",
+     "كسب الكرات الهوائية والالتحامات الثنائية"
+    ],
+    "en": [
+     "Follow the striker who drops to receive",
+     "Win headers and duels"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "تمريرة عمودية مباشرة بعد الافتكاك",
+     "التحرك لخلق زاوية تمرير للحارس"
+    ],
+    "en": [
+     "Vertical pass straight after winning the ball",
+     "Open an angle for the goalkeeper"
+    ]
+   },
+   "td": {
+    "ar": [
+     "تأخير المهاجم وتوجيهه للخارج",
+     "التواصل مع المغطي لتبادل الأدوار"
+    ],
+    "en": [
+     "Delay the striker and show him wide",
+     "Communicate with the cover defender"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "مهاجم رئيسي في الركنيات والحرة",
+    "رقابة لاعب الخصم الأقوى هوائياً"
+   ],
+   "en": [
+    "Main target at corners and free kicks",
+    "Mark the strongest aerial opponent"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "نسبة الالتحامات الهوائية الناجحة",
+    "الافتكاك في الثلث الأوسط",
+    "الأخطاء المرتكبة",
+    "دقة التمرير الأمامي"
+   ],
+   "en": [
+    "Aerial duels won %",
+    "Ball recoveries in the middle third",
+    "Fouls committed",
+    "Forward pass accuracy"
+   ]
+  },
+  "drills": [
+   "f-1v1",
+   "f-press"
+  ],
+  "z": {
+   "wb": [
+    0.34,
+    0,
+    0.12,
+    0.14
+   ],
+   "nb": [
+    0.22,
+    0,
+    0.1,
+    0.13
+   ]
+  },
+  "mv": {
+   "att": [
+    0.42,
+    null
+   ],
+   "ta": [
+    0.3,
+    null
+   ],
+   "td": [
+    0.45,
+    null
+   ]
+  }
+ },
+ {
+  "id": "cb-cover",
+  "rs": "fb",
+  "fam": "CB",
+  "name": {
+   "ar": "مدافع مغطٍّ",
+   "en": "Cover defender"
+  },
+  "desc": {
+   "ar": "يبقى خلف زميله ليغطي المساحة، ويقرأ الكرات البينية والطويلة.",
+   "en": "Stays behind his partner to cover space and reads through balls and long passes."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "التمركز الواسع لاستلام الكرة من الحارس",
+     "تبديل اتجاه اللعب بتمريرة جانبية آمنة"
+    ],
+    "en": [
+     "Split wide to receive from the goalkeeper",
+     "Switch play with a safe lateral pass"
+    ]
+   },
+   "def": {
+    "ar": [
+     "التغطية خلف المدافع الضاغط بزاوية 45 درجة",
+     "قيادة خط التسلل وتحديد ارتفاع الخط"
+    ],
+    "en": [
+     "Cover behind the pressing defender at 45°",
+     "Lead the offside line and set its height"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "تأمين العمق خلف المتقدمين",
+     "تمريرة أولى سريعة للارتكاز"
+    ],
+    "en": [
+     "Provide rest-defence behind the attack",
+     "Quick first pass into the pivot"
+    ]
+   },
+   "td": {
+    "ar": [
+     "التراجع أولاً لحماية المساحة خلف الدفاع",
+     "تأخير المرتدة حتى يعود الزملاء"
+    ],
+    "en": [
+     "Drop first to protect space in behind",
+     "Delay the counter until teammates recover"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "رقابة المساحة في الركنيات (دفاع منطقة)",
+    "البقاء خلف الكرة في الركنيات الهجومية"
+   ],
+   "en": [
+    "Zonal marking at corners",
+    "Stay back during attacking corners"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "قطع الكرات البينية",
+    "التمريرات الناجحة للأمام",
+    "نسبة كسب المواجهات",
+    "الأخطاء التي أدت لفرصة"
+   ],
+   "en": [
+    "Interceptions of through balls",
+    "Forward passes completed",
+    "Duels won %",
+    "Errors leading to chances"
+   ]
+  },
+  "drills": [
+   "f-press",
+   "f-build"
+  ],
+  "z": {
+   "wb": [
+    0.3,
+    0,
+    0.1,
+    0.12
+   ],
+   "nb": [
+    0.15,
+    0,
+    0.08,
+    0.14
+   ]
+  },
+  "mv": {
+   "att": [
+    0.38,
+    null
+   ],
+   "ta": [
+    0.26,
+    null
+   ],
+   "td": [
+    0.34,
+    null
+   ]
+  }
+ },
+ {
+  "id": "cb-bp",
+  "rs": "fb",
+  "fam": "CB",
+  "name": {
+   "ar": "مدافع باني لعب",
+   "en": "Ball-playing CB"
+  },
+  "desc": {
+   "ar": "نقطة البداية في بناء اللعب، يكسر خطوط الضغط بالتمرير أو بالتقدم بالكرة.",
+   "en": "Starts the build-up and breaks pressing lines by passing or carrying."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "التقدم بالكرة لسحب مهاجم الخصم وفتح خط تمرير",
+     "تمريرات بين الخطوط وتمريرات قطرية للطرف البعيد"
+    ],
+    "en": [
+     "Carry forward to draw a forward and open a lane",
+     "Passes between the lines and diagonals to the far side"
+    ]
+   },
+   "def": {
+    "ar": [
+     "الدفاع الموضعي والتغطية مع الزميل",
+     "الحفاظ على المسافة مع الارتكاز (10–15م)"
+    ],
+    "en": [
+     "Positional defending and cover with the partner",
+     "Keep 10–15 m to the pivot"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "الاستلام المفتوح والتمرير العمودي السريع",
+     "التقدم لنصف الملعب عند التفوق العددي"
+    ],
+    "en": [
+     "Receive open and play vertical quickly",
+     "Step into midfield when there is an overload"
+    ]
+   },
+   "td": {
+    "ar": [
+     "الضغط الفوري إن كانت الكرة قريبة، وإلا التراجع",
+     "إغلاق العمق وتوجيه الخصم للأطراف"
+    ],
+    "en": [
+     "Press immediately if close, otherwise drop",
+     "Close the centre and force play wide"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "تنفيذ التمريرات القصيرة من الحرة الدفاعية",
+    "مهاجم في الركنيات"
+   ],
+   "en": [
+    "Take short defensive free kicks",
+    "Attack corners"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "التمريرات التقدمية",
+    "الأمتار المقطوعة بالكرة للأمام",
+    "دقة التمرير الطويل",
+    "الكرات المفقودة في الثلث الدفاعي"
+   ],
+   "en": [
+    "Progressive passes",
+    "Progressive carrying distance",
+    "Long pass accuracy",
+    "Losses in the defensive third"
+   ]
+  },
+  "drills": [
+   "f-build",
+   "f-pos",
+   "f-rondo"
+  ],
+  "z": {
+   "wb": [
+    0.38,
+    0,
+    0.15,
+    0.15
+   ],
+   "nb": [
+    0.18,
+    0,
+    0.08,
+    0.13
+   ]
+  },
+  "mv": {
+   "att": [
+    0.47,
+    null
+   ],
+   "ta": [
+    0.34,
+    null
+   ],
+   "td": [
+    0.42,
+    null
+   ]
+  }
+ },
+ {
+  "id": "fb-over",
+  "rs": "fb",
+  "fam": "FB",
+  "name": {
+   "ar": "ظهير متقدم",
+   "en": "Overlapping full-back"
+  },
+  "desc": {
+   "ar": "يوفر الاتساع ويتقدم خلف الجناح (أوفرلاب) لإرسال العرضيات.",
+   "en": "Provides width and overlaps the winger to deliver crosses."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "التحرك خلف الجناح (Overlap) أو داخله (Underlap)",
+     "العرضيات من الخط الجانبي أو عند حافة المنطقة"
+    ],
+    "en": [
+     "Overlap or underlap the winger",
+     "Cross from the byline or the edge of the box"
+    ]
+   },
+   "def": {
+    "ar": [
+     "منع العرضيات وتوجيه الجناح للداخل حيث التغطية",
+     "الإغلاق نحو الوسط عند وجود الكرة في الطرف الآخر"
+    ],
+    "en": [
+     "Stop crosses and show the winger inside into cover",
+     "Tuck in when the ball is on the far side"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "الانطلاق المبكر على الطرف لاستغلال المساحة",
+     "التمريرة الأولى على الخط للجناح"
+    ],
+    "en": [
+     "Early run down the flank into space",
+     "First pass down the line to the winger"
+    ]
+   },
+   "td": {
+    "ar": [
+     "العودة بالجري المائل نحو خط الدفاع",
+     "الضغط على المستلم في الطرف لإبطاء المرتدة"
+    ],
+    "en": [
+     "Recovery run on a diagonal back into the line",
+     "Press the receiver wide to slow the counter"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "تغطية القائم القريب في الركنيات",
+    "تنفيذ الرميات الجانبية الطويلة عند الحاجة"
+   ],
+   "en": [
+    "Guard the near post at corners",
+    "Take long throw-ins when needed"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "العرضيات الناجحة",
+    "عدد الأوفرلاب",
+    "المواجهات الدفاعية 1 ضد 1",
+    "المسافة بالسرعات العالية"
+   ],
+   "en": [
+    "Successful crosses",
+    "Overlaps made",
+    "Defensive 1v1s won",
+    "High-speed running distance"
+   ]
+  },
+  "drills": [
+   "f-overlap",
+   "f-cross",
+   "f-rsa"
+  ],
+  "z": {
+   "wb": [
+    0.66,
+    0.08,
+    0.28,
+    0.09
+   ],
+   "nb": [
+    0.25,
+    0.02,
+    0.12,
+    0.1
+   ]
+  },
+  "mv": {
+   "att": [
+    0.72,
+    0.47
+   ],
+   "ta": [
+    0.56,
+    0.45
+   ],
+   "td": [
+    0.58,
+    0.4
+   ]
+  }
+ },
+ {
+  "id": "fb-inv",
+  "rs": "fb",
+  "fam": "FB",
+  "name": {
+   "ar": "ظهير معكوس",
+   "en": "Inverted full-back"
+  },
+  "desc": {
+   "ar": "يدخل إلى الوسط بجانب الارتكاز عند الاستحواذ لخلق تفوق عددي في العمق.",
+   "en": "Moves inside next to the pivot in possession to overload the centre."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "الدخول لمنطقة الارتكاز لتكوين 3-2 أو 2-3 في البناء",
+     "تمريرات قصيرة للأمام وتحويل اللعب"
+    ],
+    "en": [
+     "Step into midfield to form a 3-2 or 2-3 build-up",
+     "Short forward passes and switches"
+    ]
+   },
+   "def": {
+    "ar": [
+     "العودة لمركز الظهير في الشكل الدفاعي",
+     "إغلاق الممرات الداخلية أولاً"
+    ],
+    "en": [
+     "Return to full-back in the defensive shape",
+     "Close inside lanes first"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "الضغط المعاكس الفوري من الوسط",
+     "حماية العمق من المرتدات"
+    ],
+    "en": [
+     "Immediate counter-press from central areas",
+     "Protect the centre against counters"
+    ]
+   },
+   "td": {
+    "ar": [
+     "التحكم بالمساحة الوسطى حتى عودة الزملاء",
+     "التحول للطرف عند ثبات الخصم"
+    ],
+    "en": [
+     "Control central space until teammates return",
+     "Slide back out wide once play settles"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "رقابة المساحة على حافة المنطقة",
+    "البقاء للتوازن في الركنيات الهجومية"
+   ],
+   "en": [
+    "Guard the edge of the box",
+    "Stay back for balance on attacking corners"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "التمريرات في الثلث الأوسط",
+    "استعادة الكرة خلال 5 ثوانٍ",
+    "دقة التمرير",
+    "المرتدات التي أوقفها"
+   ],
+   "en": [
+    "Passes in the middle third",
+    "Recoveries within 5 seconds",
+    "Pass accuracy",
+    "Counters stopped"
+   ]
+  },
+  "drills": [
+   "f-pos",
+   "f-rondo",
+   "f-build"
+  ],
+  "z": {
+   "wb": [
+    0.44,
+    -0.2,
+    0.14,
+    0.12
+   ],
+   "nb": [
+    0.22,
+    0,
+    0.1,
+    0.1
+   ]
+  },
+  "mv": {
+   "att": [
+    0.5,
+    0.13
+   ],
+   "ta": [
+    0.38,
+    0.15
+   ],
+   "td": [
+    0.46,
+    0.12
+   ]
+  }
+ },
+ {
+  "id": "fb-hold",
+  "rs": "fb",
+  "fam": "FB",
+  "name": {
+   "ar": "ظهير دفاعي",
+   "en": "Holding full-back"
+  },
+  "desc": {
+   "ar": "يبقى مع خط الدفاع ويشكّل ثلاثياً خلفياً عندما يتقدم الظهير الآخر.",
+   "en": "Stays with the back line, forming a back three when the other full-back goes."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "البقاء كمدافع ثالث عند تقدم الظهير المقابل",
+     "تمرير آمن ودعم الجناح من الخلف"
+    ],
+    "en": [
+     "Stay as the third defender when the other full-back pushes",
+     "Safe passes and support from behind"
+    ]
+   },
+   "def": {
+    "ar": [
+     "الرقابة اللصيقة للجناح المنافس",
+     "التغطية الداخلية لقلب الدفاع"
+    ],
+    "en": [
+     "Tight marking of the opposing winger",
+     "Cover inside for the centre-back"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "تمرير مباشر للجناح في المساحة",
+     "تأمين الخلف بدل التقدم"
+    ],
+    "en": [
+     "Direct pass to the winger in space",
+     "Secure the back instead of joining"
+    ]
+   },
+   "td": {
+    "ar": [
+     "الاستعداد لمواجهة المرتدة على طرفه",
+     "التواصل مع قلب الدفاع"
+    ],
+    "en": [
+     "Ready to face the counter on his side",
+     "Communicate with the centre-back"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "رقابة القائم البعيد",
+    "البقاء في الخلف أثناء الركنيات الهجومية"
+   ],
+   "en": [
+    "Mark the far post",
+    "Stay back during attacking corners"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "المواجهات 1 ضد 1 الناجحة",
+    "الكرات المقطوعة",
+    "العرضيات المسموحة",
+    "الأخطاء قرب المنطقة"
+   ],
+   "en": [
+    "1v1s won",
+    "Interceptions",
+    "Crosses allowed",
+    "Fouls near the box"
+   ]
+  },
+  "drills": [
+   "f-1v1",
+   "f-press"
+  ],
+  "z": {
+   "wb": [
+    0.38,
+    0.04,
+    0.14,
+    0.08
+   ],
+   "nb": [
+    0.2,
+    0,
+    0.1,
+    0.1
+   ]
+  },
+  "mv": {
+   "att": [
+    0.42,
+    0.36
+   ],
+   "ta": [
+    0.3,
+    0.34
+   ],
+   "td": [
+    0.38,
+    0.34
+   ]
+  }
+ },
+ {
+  "id": "wb",
+  "rs": "fb",
+  "fam": "WB",
+  "name": {
+   "ar": "ظهير جناح",
+   "en": "Wing-back"
+  },
+  "desc": {
+   "ar": "مسؤول وحده عن الطرف بالكامل في خطط 3-5-2 و3-4-3 و5-3-2، يهاجم كجناح ويدافع كظهير.",
+   "en": "Owns the entire flank in 3-5-2, 3-4-3 and 5-3-2 — attacks as a winger, defends as a full-back."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "الاتساع الكامل على الخط لتثبيت الظهير المنافس",
+     "الوصول للقائم البعيد عند العرضيات من الطرف الآخر"
+    ],
+    "en": [
+     "Hold full width to pin the opposing full-back",
+     "Arrive at the far post for crosses from the other side"
+    ]
+   },
+   "def": {
+    "ar": [
+     "العودة لتكوين خط خماسي عند الدفاع المنخفض",
+     "الضغط العالي على ظهير الخصم عند الدفاع المتقدم"
+    ],
+    "en": [
+     "Drop to form a back five in a low block",
+     "Press the opposing full-back when pressing high"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "الانطلاق بالسرعة القصوى على الخط",
+     "توفير خيار تمرير عريض للمرتدة"
+    ],
+    "en": [
+     "Sprint down the line",
+     "Offer a wide option on the counter"
+    ]
+   },
+   "td": {
+    "ar": [
+     "العودة الفورية بالسرعة، وهي أولويته الأولى",
+     "إغلاق الطرف حتى يعود قلب الدفاع الجانبي"
+    ],
+    "en": [
+     "Immediate recovery sprint — top priority",
+     "Close the flank until the wide centre-back covers"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "العرضيات في الحرة الجانبية",
+    "رقابة القائم البعيد"
+   ],
+   "en": [
+    "Deliver wide free kicks",
+    "Mark the far post"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "المسافة بالسرعات العالية",
+    "العرضيات والتمريرات المفتاحية",
+    "الارتدادات الدفاعية الناجحة",
+    "الكرات المستعادة في الطرف"
+   ],
+   "en": [
+    "High-speed running",
+    "Crosses and key passes",
+    "Successful recovery runs",
+    "Wide recoveries"
+   ]
+  },
+  "drills": [
+   "f-cross",
+   "f-rsa",
+   "f-4x4"
+  ],
+  "z": {
+   "wb": [
+    0.68,
+    0.05,
+    0.28,
+    0.07
+   ],
+   "nb": [
+    0.25,
+    0,
+    0.13,
+    0.08
+   ]
+  },
+  "mv": {
+   "att": [
+    0.76,
+    0.48
+   ],
+   "ta": [
+    0.62,
+    0.47
+   ],
+   "td": [
+    0.6,
+    0.44
+   ],
+   "def": [
+    0.22,
+    0.46
+   ]
+  }
+ },
+ {
+  "id": "dm-anchor",
+  "rs": "fb",
+  "fam": "DM",
+  "name": {
+   "ar": "ارتكاز مدافع",
+   "en": "Anchor"
+  },
+  "desc": {
+   "ar": "يحمي المساحة أمام الدفاع ويحافظ على توازن الفريق.",
+   "en": "Screens the defence and keeps the team balanced."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "النزول بين قلبي الدفاع أو بجانبهما لتسهيل البناء",
+     "تمرير بسيط وسريع بلمستين"
+    ],
+    "en": [
+     "Drop between or beside the centre-backs to help build",
+     "Simple, quick two-touch passing"
+    ]
+   },
+   "def": {
+    "ar": [
+     "حماية المساحة أمام خط الدفاع (بين الخطوط)",
+     "قطع خطوط التمرير نحو صانع ألعاب الخصم"
+    ],
+    "en": [
+     "Protect the space between the lines",
+     "Cut passing lanes to the opposing No.10"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "التمريرة الأولى للأمام بعد الافتكاك",
+     "البقاء خلف الكرة لتأمين التوازن"
+    ],
+    "en": [
+     "First forward pass after winning the ball",
+     "Stay behind the ball for balance"
+    ]
+   },
+   "td": {
+    "ar": [
+     "إيقاف المرتدة بالتأخير أو خطأ تكتيكي عند الضرورة",
+     "إغلاق العمق فوراً"
+    ],
+    "en": [
+     "Stop the counter by delaying or a tactical foul if needed",
+     "Close the centre immediately"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "رقابة المساحة على حافة المنطقة",
+    "تأمين الخلف في الركنيات الهجومية"
+   ],
+   "en": [
+    "Guard the edge of the box",
+    "Rest-defence on attacking corners"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "الكرات المستعادة",
+    "التدخلات والاعتراضات",
+    "دقة التمرير",
+    "المرتدات التي أوقفها"
+   ],
+   "en": [
+    "Ball recoveries",
+    "Tackles and interceptions",
+    "Pass accuracy",
+    "Counters stopped"
+   ]
+  },
+  "drills": [
+   "f-rondo",
+   "f-press",
+   "f-pos"
+  ],
+  "z": {
+   "wb": [
+    0.42,
+    0,
+    0.1,
+    0.15
+   ],
+   "nb": [
+    0.3,
+    0,
+    0.09,
+    0.17
+   ]
+  },
+  "mv": {
+   "att": [
+    0.48,
+    null
+   ],
+   "ta": [
+    0.38,
+    null
+   ],
+   "td": [
+    0.52,
+    null
+   ]
+  }
+ },
+ {
+  "id": "dm-dlp",
+  "rs": "fb",
+  "fam": "DM",
+  "name": {
+   "ar": "صانع لعب متأخر",
+   "en": "Deep-lying playmaker"
+  },
+  "desc": {
+   "ar": "محور التوزيع من الخلف، يغيّر إيقاع اللعب واتجاهه.",
+   "en": "The deep distributor who dictates tempo and switches play."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "الاستلام بجسم مفتوح والتمرير الطويل لتغيير الاتجاه",
+     "التمريرات بين الخطوط للأجنحة وصانع الألعاب"
+    ],
+    "en": [
+     "Receive open and switch with long passes",
+     "Pass between the lines to wingers and the No.10"
+    ]
+   },
+   "def": {
+    "ar": [
+     "التمركز في ظل المهاجم لقطع التمرير",
+     "الضغط الجماعي عند إشارة الفريق"
+    ],
+    "en": [
+     "Use the cover shadow to block passes",
+     "Press on the team trigger"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "تمريرة طولية مبكرة خلف الدفاع",
+     "الاستلام من المدافع وتسريع اللعب"
+    ],
+    "en": [
+     "Early long ball behind the defence",
+     "Receive from defenders and speed up play"
+    ]
+   },
+   "td": {
+    "ar": [
+     "التراجع للمساحة المركزية",
+     "التأخير والتوجيه للخارج"
+    ],
+    "en": [
+     "Drop into central space",
+     "Delay and show outside"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "منفذ الركنيات والحرة غير المباشرة",
+    "التمركز على حافة المنطقة للكرات المرتدة"
+   ],
+   "en": [
+    "Corner and indirect free-kick taker",
+    "Edge of the box for second balls"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "التمريرات التقدمية",
+    "تحويل اللعب الناجح",
+    "عدد مرات الاستلام",
+    "الكرات المفقودة في الوسط"
+   ],
+   "en": [
+    "Progressive passes",
+    "Successful switches",
+    "Touches / receptions",
+    "Losses in midfield"
+   ]
+  },
+  "drills": [
+   "f-pos",
+   "f-rondo",
+   "f-build"
+  ],
+  "z": {
+   "wb": [
+    0.46,
+    0,
+    0.14,
+    0.2
+   ],
+   "nb": [
+    0.3,
+    0,
+    0.1,
+    0.15
+   ]
+  },
+  "mv": {
+   "att": [
+    0.52,
+    null
+   ],
+   "ta": [
+    0.42,
+    null
+   ],
+   "td": [
+    0.55,
+    null
+   ]
+  }
+ },
+ {
+  "id": "cm-b2b",
+  "rs": "fb",
+  "fam": "CM",
+  "name": {
+   "ar": "لاعب وسط شامل",
+   "en": "Box-to-box"
+  },
+  "desc": {
+   "ar": "يغطي المسافة بين المنطقتين، يدافع في منطقته ويصل لمنطقة الخصم.",
+   "en": "Covers ground from box to box — defends in his own and arrives in theirs."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "الانطلاق المتأخر داخل المنطقة للتسديد",
+     "الربط بين الارتكاز والمهاجمين"
+    ],
+    "en": [
+     "Late runs into the box to shoot",
+     "Link the pivot and the forwards"
+    ]
+   },
+   "def": {
+    "ar": [
+     "الضغط على لاعب وسط الخصم",
+     "التغطية خلف الظهير عند تقدمه"
+    ],
+    "en": [
+     "Press the opposing midfielder",
+     "Cover behind the full-back when he goes"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "حمل الكرة للأمام في المساحة",
+     "الوصول بسرعة لدعم المرتدة"
+    ],
+    "en": [
+     "Carry the ball into space",
+     "Arrive quickly to support the counter"
+    ]
+   },
+   "td": {
+    "ar": [
+     "الضغط المعاكس فور فقدان الكرة (5 ثوانٍ)",
+     "العودة للكتلة إن فشل الضغط"
+    ],
+    "en": [
+     "Counter-press for five seconds",
+     "Drop into the block if the press fails"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "الكرات المرتدة على حافة المنطقة",
+    "رقابة لاعب وسط في الركنيات الدفاعية"
+   ],
+   "en": [
+    "Second balls at the edge of the box",
+    "Mark a midfielder at defensive corners"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "المسافة المقطوعة",
+    "الانطلاقات داخل المنطقة",
+    "الكرات المستعادة",
+    "التسديدات والتمريرات المفتاحية"
+   ],
+   "en": [
+    "Distance covered",
+    "Box entries",
+    "Ball recoveries",
+    "Shots and key passes"
+   ]
+  },
+  "drills": [
+   "f-4x4",
+   "f-ssg",
+   "f-press"
+  ],
+  "z": {
+   "wb": [
+    0.6,
+    0,
+    0.25,
+    0.2
+   ],
+   "nb": [
+    0.38,
+    0,
+    0.2,
+    0.2
+   ]
+  },
+  "mv": {
+   "att": [
+    0.7,
+    null
+   ],
+   "ta": [
+    0.6,
+    null
+   ],
+   "td": [
+    0.68,
+    null
+   ]
+  }
+ },
+ {
+  "id": "cm-mez",
+  "rs": "fb",
+  "fam": "CM",
+  "name": {
+   "ar": "وسط متقدم",
+   "en": "Mezzala"
+  },
+  "desc": {
+   "ar": "لاعب وسط يتحرك نحو نصف المساحة بين الظهير وقلب الدفاع المنافس.",
+   "en": "A midfielder who attacks the half-space between full-back and centre-back."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "التحرك في نصف المساحة بين الخطوط",
+     "الجري خلف الظهير عندما يدخل الجناح للعمق"
+    ],
+    "en": [
+     "Operate in the half-space between the lines",
+     "Run behind the full-back when the winger comes inside"
+    ]
+   },
+   "def": {
+    "ar": [
+     "الضغط على قلب الدفاع أو الارتكاز حسب الخطة",
+     "العودة لخط الوسط في الكتلة المتوسطة"
+    ],
+    "en": [
+     "Press the centre-back or pivot as planned",
+     "Return to the midfield line in a mid-block"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "الانطلاق في نصف المساحة",
+     "التمريرة الحاسمة من العمق"
+    ],
+    "en": [
+     "Burst into the half-space",
+     "Final pass from inside"
+    ]
+   },
+   "td": {
+    "ar": [
+     "الضغط المعاكس في منطقته",
+     "إغلاق نصف المساحة"
+    ],
+    "en": [
+     "Counter-press in his zone",
+     "Close the half-space"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "التحرك نحو القائم القريب في الركنيات",
+    "التسديد من خارج المنطقة"
+   ],
+   "en": [
+    "Near-post runs at corners",
+    "Shots from outside the box"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "الاستلام بين الخطوط",
+    "التمريرات المفتاحية",
+    "الدخول للمنطقة",
+    "الاسترجاع في الثلث الهجومي"
+   ],
+   "en": [
+    "Receptions between the lines",
+    "Key passes",
+    "Box entries",
+    "Final-third recoveries"
+   ]
+  },
+  "drills": [
+   "f-pos",
+   "f-ssg"
+  ],
+  "z": {
+   "wb": [
+    0.7,
+    0.15,
+    0.15,
+    0.15
+   ],
+   "nb": [
+    0.4,
+    0,
+    0.12,
+    0.15
+   ]
+  },
+  "mv": {
+   "att": [
+    0.74,
+    0.24
+   ],
+   "ta": [
+    0.62,
+    0.25
+   ],
+   "td": [
+    0.7,
+    0.2
+   ]
+  }
+ },
+ {
+  "id": "am-10",
+  "rs": "fb",
+  "fam": "AM",
+  "name": {
+   "ar": "صانع الألعاب",
+   "en": "Number 10"
+  },
+  "desc": {
+   "ar": "يعمل بين خط وسط الخصم ودفاعه، ويصنع الفرص بالتمريرة الأخيرة.",
+   "en": "Operates between the opposing midfield and defence; creates with the final pass."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "الاستلام بين الخطوط والاستدارة للأمام",
+     "التمريرة البينية خلف الدفاع"
+    ],
+    "en": [
+     "Receive between the lines and turn",
+     "Through ball behind the defence"
+    ]
+   },
+   "def": {
+    "ar": [
+     "تظليل ارتكاز الخصم وقطع التمرير إليه",
+     "الضغط الأول مع المهاجم"
+    ],
+    "en": [
+     "Shadow the opposing pivot",
+     "First press alongside the striker"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "التمريرة الأولى في المرتدة نحو المساحة",
+     "الدخول بالكرة لجذب المدافعين"
+    ],
+    "en": [
+     "First pass into space on the counter",
+     "Carry to draw defenders"
+    ]
+   },
+   "td": {
+    "ar": [
+     "الضغط المعاكس على مستلم الكرة",
+     "العودة لحماية العمق أمام الوسط"
+    ],
+    "en": [
+     "Counter-press the receiver",
+     "Recover to protect the centre"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "تنفيذ الحرة المباشرة",
+    "التمركز للكرات المرتدة"
+   ],
+   "en": [
+    "Direct free kicks",
+    "Position for rebounds"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "التمريرات المفتاحية",
+    "الأهداف المتوقعة المصنوعة",
+    "الاستلام بين الخطوط",
+    "الكرات المفقودة"
+   ],
+   "en": [
+    "Key passes",
+    "Expected assists",
+    "Receptions between lines",
+    "Ball losses"
+   ]
+  },
+  "drills": [
+   "f-pos",
+   "f-rondo",
+   "f-finish"
+  ],
+  "z": {
+   "wb": [
+    0.74,
+    0,
+    0.12,
+    0.2
+   ],
+   "nb": [
+    0.56,
+    0,
+    0.12,
+    0.15
+   ]
+  },
+  "mv": {
+   "att": [
+    0.76,
+    null
+   ],
+   "ta": [
+    0.64,
+    null
+   ],
+   "td": [
+    0.72,
+    0.08
+   ]
+  }
+ },
+ {
+  "id": "am-shadow",
+  "rs": "fb",
+  "fam": "AM",
+  "name": {
+   "ar": "مهاجم ظل",
+   "en": "Shadow striker"
+  },
+  "desc": {
+   "ar": "يتقدم خلف المهاجم ويهاجم المنطقة من الخط الثاني.",
+   "en": "Plays off the striker and attacks the box from the second line."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "الانطلاق خلف المهاجم عند نزوله",
+     "التسديد من الخط الثاني"
+    ],
+    "en": [
+     "Run beyond the striker when he drops",
+     "Shoot from the second line"
+    ]
+   },
+   "def": {
+    "ar": [
+     "الضغط على قلب الدفاع",
+     "تظليل الارتكاز"
+    ],
+    "en": [
+     "Press a centre-back",
+     "Shadow the pivot"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "الجري نحو المرمى بأسرع طريق",
+     "مساندة المهاجم في المرتدة"
+    ],
+    "en": [
+     "Take the shortest route to goal",
+     "Support the striker on the counter"
+    ]
+   },
+   "td": {
+    "ar": [
+     "الضغط الفوري",
+     "العودة لخط الوسط"
+    ],
+    "en": [
+     "Immediate press",
+     "Drop to the midfield line"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "التمركز داخل المنطقة في الركنيات",
+    "الكرات الثانية"
+   ],
+   "en": [
+    "In the box at corners",
+    "Second balls"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "التسديدات داخل المنطقة",
+    "الأهداف",
+    "الانطلاقات خلف الدفاع",
+    "الضغوط الناجحة"
+   ],
+   "en": [
+    "Shots in the box",
+    "Goals",
+    "Runs in behind",
+    "Successful pressures"
+   ]
+  },
+  "drills": [
+   "f-finish",
+   "f-cross"
+  ],
+  "z": {
+   "wb": [
+    0.84,
+    0,
+    0.1,
+    0.15
+   ],
+   "nb": [
+    0.6,
+    0,
+    0.1,
+    0.12
+   ]
+  },
+  "mv": {
+   "att": [
+    0.84,
+    0.08
+   ],
+   "ta": [
+    0.72,
+    0.1
+   ],
+   "td": [
+    0.78,
+    0.08
+   ]
+  }
+ },
+ {
+  "id": "w-trad",
+  "rs": "fb",
+  "fam": "W",
+  "name": {
+   "ar": "جناح تقليدي",
+   "en": "Traditional winger"
+  },
+  "desc": {
+   "ar": "يلتزم بالخط الجانبي، يواجه الظهير ويرسل العرضيات.",
+   "en": "Stays wide, takes on the full-back and crosses."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "الاتساع الكامل وتثبيت الظهير المنافس",
+     "المراوغة للخارج والعرضية"
+    ],
+    "en": [
+     "Hold the width and pin the full-back",
+     "Beat him on the outside and cross"
+    ]
+   },
+   "def": {
+    "ar": [
+     "العودة لمساعدة الظهير في الطرف",
+     "الضغط على ظهير الخصم عند استلامه"
+    ],
+    "en": [
+     "Track back to help the full-back",
+     "Press the opposing full-back on reception"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "الجري في المساحة على الخط",
+     "حمل الكرة بسرعة للأمام"
+    ],
+    "en": [
+     "Run into space down the line",
+     "Carry forward at speed"
+    ]
+   },
+   "td": {
+    "ar": [
+     "العودة لخط الوسط في الطرف",
+     "إغلاق خط التمرير للظهير المنافس"
+    ],
+    "en": [
+     "Recover to the midfield line wide",
+     "Block the pass to the full-back"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "تنفيذ الركنيات",
+    "رقابة الظهير المنافس في الركنيات الدفاعية"
+   ],
+   "en": [
+    "Take corners",
+    "Mark the full-back at defensive corners"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "المراوغات الناجحة",
+    "العرضيات الناجحة",
+    "المسافة بالسرعات العالية",
+    "الارتداد الدفاعي"
+   ],
+   "en": [
+    "Successful dribbles",
+    "Successful crosses",
+    "High-speed running",
+    "Defensive recoveries"
+   ]
+  },
+  "drills": [
+   "f-1v1",
+   "f-cross",
+   "f-rsa"
+  ],
+  "z": {
+   "wb": [
+    0.78,
+    0.08,
+    0.2,
+    0.08
+   ],
+   "nb": [
+    0.5,
+    0.03,
+    0.2,
+    0.1
+   ]
+  },
+  "mv": {
+   "att": [
+    0.84,
+    0.47
+   ],
+   "ta": [
+    0.74,
+    0.46
+   ],
+   "td": [
+    0.74,
+    0.38
+   ]
+  }
+ },
+ {
+  "id": "w-inv",
+  "rs": "fb",
+  "fam": "W",
+  "name": {
+   "ar": "جناح معكوس",
+   "en": "Inverted winger"
+  },
+  "desc": {
+   "ar": "يلعب بالقدم العكسية ويدخل من الطرف إلى العمق للتسديد أو التمريرة.",
+   "en": "Plays on the opposite foot and cuts inside to shoot or create."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "الاستلام على الطرف ثم الدخول للعمق بالقدم الأقوى",
+     "التسديد الملتف أو التمريرة البينية"
+    ],
+    "en": [
+     "Receive wide then cut inside onto the strong foot",
+     "Curled shot or through ball"
+    ]
+   },
+   "def": {
+    "ar": [
+     "إغلاق خط التمرير الداخلي أولاً",
+     "المساندة الدفاعية مع الظهير"
+    ],
+    "en": [
+     "Block the inside pass first",
+     "Support the full-back defensively"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "الجري القطري من الطرف نحو المرمى",
+     "الإنهاء في المرتدات"
+    ],
+    "en": [
+     "Diagonal run from wide towards goal",
+     "Finish on the counter"
+    ]
+   },
+   "td": {
+    "ar": [
+     "الضغط المعاكس",
+     "العودة لمركزه في الكتلة"
+    ],
+    "en": [
+     "Counter-press",
+     "Recover to his place in the block"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "القائم البعيد في الركنيات",
+    "الحرة المباشرة من الجهة المناسبة لقدمه"
+   ],
+   "en": [
+    "Far post at corners",
+    "Direct free kicks from his side"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "التسديدات",
+    "الأهداف والتمريرات الحاسمة",
+    "الدخول للمنطقة بالكرة",
+    "المراوغات الناجحة"
+   ],
+   "en": [
+    "Shots",
+    "Goals and assists",
+    "Carries into the box",
+    "Successful dribbles"
+   ]
+  },
+  "drills": [
+   "f-1v1",
+   "f-finish"
+  ],
+  "z": {
+   "wb": [
+    0.8,
+    -0.14,
+    0.14,
+    0.14
+   ],
+   "nb": [
+    0.5,
+    0,
+    0.18,
+    0.1
+   ]
+  },
+  "mv": {
+   "att": [
+    0.83,
+    0.22
+   ],
+   "ta": [
+    0.72,
+    0.25
+   ],
+   "td": [
+    0.75,
+    0.25
+   ]
+  }
+ },
+ {
+  "id": "st-target",
+  "rs": "fb",
+  "fam": "ST",
+  "name": {
+   "ar": "رأس حربة",
+   "en": "Target man"
+  },
+  "desc": {
+   "ar": "نقطة ارتكاز أمامية يستلم الكرات الطويلة ويحميها لصعود زملائه.",
+   "en": "A focal point who receives long balls and holds them up for support."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "الاستلام بظهره للمرمى وحماية الكرة",
+     "كسب الكرات الهوائية وتوجيهها للزملاء"
+    ],
+    "en": [
+     "Receive with back to goal and shield",
+     "Win headers and flick on to teammates"
+    ]
+   },
+   "def": {
+    "ar": [
+     "توجيه ضغط الخصم نحو جهة واحدة",
+     "إغلاق التمرير بين قلبي الدفاع"
+    ],
+    "en": [
+     "Steer the build-up to one side",
+     "Block the pass between centre-backs"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "الاحتفاظ بالكرة حتى وصول الدعم",
+     "الجري نحو القائم القريب"
+    ],
+    "en": [
+     "Hold the ball until support arrives",
+     "Near-post runs"
+    ]
+   },
+   "td": {
+    "ar": [
+     "الضغط الأول على المدافع المستلم",
+     "إغلاق الارتكاز"
+    ],
+    "en": [
+     "First press on the receiving defender",
+     "Screen the pivot"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "الهدف الرئيسي في الركنيات والعرضيات",
+    "الدفاع عن القائم القريب في الركنيات الدفاعية"
+   ],
+   "en": [
+    "Main target at corners and crosses",
+    "Near-post defender at defensive corners"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "الكرات الهوائية المكتسبة",
+    "الاحتفاظ بالكرة",
+    "التسديدات والأهداف",
+    "الأخطاء المكتسبة"
+   ],
+   "en": [
+    "Aerial duels won",
+    "Hold-up success",
+    "Shots and goals",
+    "Fouls won"
+   ]
+  },
+  "drills": [
+   "f-cross",
+   "f-finish"
+  ],
+  "z": {
+   "wb": [
+    0.86,
+    0,
+    0.1,
+    0.12
+   ],
+   "nb": [
+    0.66,
+    0,
+    0.12,
+    0.15
+   ]
+  },
+  "mv": {
+   "att": [
+    0.87,
+    null
+   ],
+   "ta": [
+    0.7,
+    null
+   ],
+   "td": [
+    0.8,
+    null
+   ]
+  }
+ },
+ {
+  "id": "st-poach",
+  "rs": "fb",
+  "fam": "ST",
+  "name": {
+   "ar": "مهاجم قنّاص",
+   "en": "Poacher"
+  },
+  "desc": {
+   "ar": "يعيش داخل منطقة الجزاء ويتحرك على كتف آخر مدافع.",
+   "en": "Lives in the box and plays on the last defender's shoulder."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "التحرك على كتف آخر مدافع وتجنب التسلل",
+     "الإنهاء بلمسة واحدة داخل المنطقة"
+    ],
+    "en": [
+     "Play on the last defender's shoulder, stay onside",
+     "One-touch finishing in the box"
+    ]
+   },
+   "def": {
+    "ar": [
+     "الضغط الموجّه دون استنزاف",
+     "البقاء متقدماً لتهديد المرتدة"
+    ],
+    "en": [
+     "Directed pressing without over-running",
+     "Stay high to threaten the counter"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "الجري خلف الدفاع مبكراً",
+     "التمركز بين قلبي الدفاع"
+    ],
+    "en": [
+     "Early run in behind",
+     "Position between the centre-backs"
+    ]
+   },
+   "td": {
+    "ar": [
+     "الضغط على الحارس أو المدافع المستلم",
+     "إغلاق التمرير الخلفي"
+    ],
+    "en": [
+     "Press the keeper or receiving defender",
+     "Block the back pass"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "التمركز على القائمين",
+    "متابعة الكرات المرتدة"
+   ],
+   "en": [
+    "Near and far post",
+    "Follow in rebounds"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "الأهداف",
+    "التسديدات على المرمى",
+    "الأهداف المتوقعة",
+    "حالات التسلل"
+   ],
+   "en": [
+    "Goals",
+    "Shots on target",
+    "Expected goals",
+    "Offsides"
+   ]
+  },
+  "drills": [
+   "f-finish",
+   "f-cross"
+  ],
+  "z": {
+   "wb": [
+    0.9,
+    0,
+    0.06,
+    0.1
+   ],
+   "nb": [
+    0.66,
+    0,
+    0.1,
+    0.12
+   ]
+  },
+  "mv": {
+   "att": [
+    0.9,
+    null
+   ],
+   "ta": [
+    0.8,
+    null
+   ],
+   "td": [
+    0.82,
+    null
+   ]
+  }
+ },
+ {
+  "id": "st-f9",
+  "rs": "fb",
+  "fam": "ST",
+  "name": {
+   "ar": "مهاجم وهمي",
+   "en": "False 9"
+  },
+  "desc": {
+   "ar": "ينزل من خط الهجوم نحو الوسط ليجذب قلب الدفاع ويفتح المساحة للأجنحة.",
+   "en": "Drops into midfield to drag a centre-back out and open space for wingers."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "النزول لخط الوسط لخلق تفوق عددي",
+     "التمرير للأجنحة المنطلقة للعمق"
+    ],
+    "en": [
+     "Drop into midfield to overload",
+     "Feed wingers running inside"
+    ]
+   },
+   "def": {
+    "ar": [
+     "تظليل الارتكاز المنافس",
+     "الضغط على قلب الدفاع المستلم"
+    ],
+    "en": [
+     "Shadow the opposing pivot",
+     "Press the receiving centre-back"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "الاستلام والتمريرة الأولى للأمام",
+     "الربط مع الأجنحة"
+    ],
+    "en": [
+     "Receive and play the first pass forward",
+     "Combine with the wingers"
+    ]
+   },
+   "td": {
+    "ar": [
+     "الضغط المعاكس في الوسط",
+     "إغلاق التمرير المركزي"
+    ],
+    "en": [
+     "Counter-press centrally",
+     "Block central passes"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "حافة المنطقة للكرات المرتدة",
+    "تنفيذ الحرة القريبة"
+   ],
+   "en": [
+    "Edge of the box for rebounds",
+    "Close-range free kicks"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "الاستلام بين الخطوط",
+    "التمريرات المفتاحية",
+    "الأهداف والتمريرات الحاسمة",
+    "الضغوط الناجحة"
+   ],
+   "en": [
+    "Receptions between lines",
+    "Key passes",
+    "Goals and assists",
+    "Successful pressures"
+   ]
+  },
+  "drills": [
+   "f-pos",
+   "f-rondo"
+  ],
+  "z": {
+   "wb": [
+    0.7,
+    0,
+    0.12,
+    0.15
+   ],
+   "nb": [
+    0.6,
+    0,
+    0.12,
+    0.15
+   ]
+  },
+  "mv": {
+   "att": [
+    0.72,
+    0
+   ],
+   "ta": [
+    0.62,
+    0
+   ],
+   "td": [
+    0.74,
+    0
+   ]
+  }
+ },
+ {
+  "id": "st-press",
+  "rs": "fb",
+  "fam": "ST",
+  "name": {
+   "ar": "مهاجم ضاغط",
+   "en": "Pressing forward"
+  },
+  "desc": {
+   "ar": "أول مدافع في الفريق، يقود الضغط العالي بتوقيت جماعي.",
+   "en": "The team's first defender who leads the high press on a shared trigger."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "التحرك خلف الدفاع لسحب الخط للخلف",
+     "الإنهاء السريع"
+    ],
+    "en": [
+     "Run in behind to push the line back",
+     "Quick finishing"
+    ]
+   },
+   "def": {
+    "ar": [
+     "قيادة الضغط العالي بالجري المقوّس لقطع التمرير",
+     "توجيه اللعب نحو الطرف (مصيدة الضغط)"
+    ],
+    "en": [
+     "Lead the high press with curved runs",
+     "Steer play into a wide pressing trap"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "الجري للمرمى فوراً",
+     "استغلال فقدان الخصم للتنظيم"
+    ],
+    "en": [
+     "Go straight at goal",
+     "Exploit the disorganised opponent"
+    ]
+   },
+   "td": {
+    "ar": [
+     "الضغط الفوري على حامل الكرة",
+     "إشارة البدء لضغط الفريق"
+    ],
+    "en": [
+     "Immediate pressure on the ball",
+     "Trigger the team press"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "القائم القريب في الركنيات",
+    "الضغط على المنفذ في الرميات"
+   ],
+   "en": [
+    "Near post at corners",
+    "Pressure the thrower"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "عدد الضغوط",
+    "الكرات المستعادة في الثلث الهجومي",
+    "الأهداف",
+    "المسافة بالسرعات العالية"
+   ],
+   "en": [
+    "Pressures",
+    "Final-third recoveries",
+    "Goals",
+    "High-speed running"
+   ]
+  },
+  "drills": [
+   "f-press",
+   "f-rsa"
+  ],
+  "z": {
+   "wb": [
+    0.86,
+    0,
+    0.1,
+    0.15
+   ],
+   "nb": [
+    0.76,
+    0,
+    0.15,
+    0.25
+   ]
+  },
+  "mv": {
+   "att": [
+    0.88,
+    null
+   ],
+   "ta": [
+    0.8,
+    null
+   ],
+   "td": [
+    0.82,
+    0.1
+   ],
+   "def": [
+    0.6,
+    null
+   ]
+  }
+ },
+ {
+  "id": "fs-gk",
+  "rs": "fs",
+  "fam": "GK",
+  "name": {
+   "ar": "حارس الصالات",
+   "en": "Goleiro"
+  },
+  "desc": {
+   "ar": "حارس ولاعب خامس في البناء؛ يبدأ الهجمات بالرمي الدقيق.",
+   "en": "Goalkeeper and fifth outfield player in build-up; starts attacks with accurate throws."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "الرمية السريعة للجناح البعيد",
+     "المشاركة كحارس لاعب عند الحاجة"
+    ],
+    "en": [
+     "Quick throw to the far ala",
+     "Play as a fly keeper when needed"
+    ]
+   },
+   "def": {
+    "ar": [
+     "وضع الاستعداد المنخفض والتمدد الجانبي",
+     "تنظيم الدفاع صوتياً"
+    ],
+    "en": [
+     "Low ready stance and lateral spread",
+     "Organise vocally"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "رمية مباشرة للمحور في المرتدة",
+     "قراءة لحظة التمرير قبل عودة الخصم"
+    ],
+    "en": [
+     "Direct throw to the pivot on the counter",
+     "Release before the opponent recovers"
+    ]
+   },
+   "td": {
+    "ar": [
+     "الخروج لقطع الكرات الطويلة",
+     "التعامل مع الانفراد بالتمدد"
+    ],
+    "en": [
+     "Come out to cut long balls",
+     "Spread to handle 1v1s"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "تنظيم الحائط في الحرة",
+    "ضربات الجزاء من 6م والجزاء الثاني من 10م"
+   ],
+   "en": [
+    "Organise the wall",
+    "Penalties from 6 m and second penalties from 10 m"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "نسبة التصديات",
+    "دقة الرميات",
+    "الانفرادات المتصدى لها",
+    "الأخطاء في البناء"
+   ],
+   "en": [
+    "Save %",
+    "Throw accuracy",
+    "1v1s saved",
+    "Build-up errors"
+   ]
+  },
+  "drills": [
+   "fs-rot",
+   "f-gk"
+  ],
+  "z": {
+   "wb": [
+    0.12,
+    0,
+    0.1,
+    0.3
+   ],
+   "nb": [
+    0.06,
+    0,
+    0.06,
+    0.25
+   ]
+  }
+ },
+ {
+  "id": "fs-fixo",
+  "rs": "fs",
+  "fam": "FIXO",
+  "name": {
+   "ar": "المدافع (فيكسو)",
+   "en": "Fixo"
+  },
+  "desc": {
+   "ar": "آخر لاعب قبل الحارس، ينظم الدفاع ويبدأ الدوران الهجومي.",
+   "en": "The last player before the keeper; organises defence and starts the rotation."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "بدء البناء وتحويل اللعب من جهة لأخرى",
+     "التمريرة الطويلة للمحور"
+    ],
+    "en": [
+     "Start build-up and switch sides",
+     "Long pass into the pivot"
+    ]
+   },
+   "def": {
+    "ar": [
+     "قيادة الدفاع ورقابة المحور المنافس",
+     "التغطية خلف الأجنحة"
+    ],
+    "en": [
+     "Lead the defence and mark the pivot",
+     "Cover behind the alas"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "تأمين الخلف ضد المرتدة المعاكسة",
+     "التمرير المبكر للأمام"
+    ],
+    "en": [
+     "Secure the back against counters",
+     "Early forward pass"
+    ]
+   },
+   "td": {
+    "ar": [
+     "أول مدافع يتراجع لحماية المرمى",
+     "تأخير الهجمة 2 ضد 1"
+    ],
+    "en": [
+     "First to drop and protect goal",
+     "Delay 2v1 situations"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "تأمين الخلف في الركنيات",
+    "رقابة المحور"
+   ],
+   "en": [
+    "Rest-defence at corners",
+    "Mark the pivot"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "الكرات المقطوعة",
+    "دقة تحويل اللعب",
+    "المرتدات التي أوقفها",
+    "الأخطاء"
+   ],
+   "en": [
+    "Interceptions",
+    "Switch accuracy",
+    "Counters stopped",
+    "Errors"
+   ]
+  },
+  "drills": [
+   "fs-rot",
+   "f-rondo"
+  ],
+  "z": {
+   "wb": [
+    0.4,
+    0,
+    0.15,
+    0.25
+   ],
+   "nb": [
+    0.22,
+    0,
+    0.1,
+    0.25
+   ]
+  }
+ },
+ {
+  "id": "fs-ala",
+  "rs": "fs",
+  "fam": "ALA",
+  "name": {
+   "ar": "الجناح (آلا)",
+   "en": "Ala"
+  },
+  "desc": {
+   "ar": "يعمل على الطرفين، يخلق التفوق العددي بالمراوغة والتبادل.",
+   "en": "Works the flanks and creates overloads by dribbling and rotating."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "المواجهة 1 ضد 1 على الطرف",
+     "التبادل مع المحور والجري القطري"
+    ],
+    "en": [
+     "1v1 on the flank",
+     "Rotate with the pivot and run diagonally"
+    ]
+   },
+   "def": {
+    "ar": [
+     "الضغط على حامل الكرة في الطرف",
+     "إغلاق الممر الداخلي"
+    ],
+    "en": [
+     "Press the ball-carrier wide",
+     "Close the inside lane"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "الانطلاق السريع على الطرف",
+     "الإنهاء في القائم البعيد"
+    ],
+    "en": [
+     "Fast break down the side",
+     "Finish at the far post"
+    ]
+   },
+   "td": {
+    "ar": [
+     "العودة لخط الدفاع",
+     "الضغط المعاكس"
+    ],
+    "en": [
+     "Recover to the defensive line",
+     "Counter-press"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "تنفيذ الركنيات والرميات الجانبية",
+    "التسديد من الحرة"
+   ],
+   "en": [
+    "Take corners and kick-ins",
+    "Shoot from free kicks"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "المراوغات الناجحة",
+    "التسديدات",
+    "التمريرات المفتاحية",
+    "الاسترجاع"
+   ],
+   "en": [
+    "Successful dribbles",
+    "Shots",
+    "Key passes",
+    "Recoveries"
+   ]
+  },
+  "drills": [
+   "fs-rot",
+   "f-1v1"
+  ],
+  "z": {
+   "wb": [
+    0.64,
+    0.05,
+    0.25,
+    0.15
+   ],
+   "nb": [
+    0.35,
+    0.05,
+    0.15,
+    0.15
+   ]
+  }
+ },
+ {
+  "id": "fs-pivo",
+  "rs": "fs",
+  "fam": "PIVO",
+  "name": {
+   "ar": "المحور (بيفو)",
+   "en": "Pivô"
+  },
+  "desc": {
+   "ar": "مهاجم متقدم يحمي الكرة بظهره للمرمى ويُنهي الهجمات.",
+   "en": "Advanced striker who shields with back to goal and finishes attacks."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "الاستلام بظهره للمرمى وحماية الكرة",
+     "الدوران والتسديد أو التمرير للجناح القادم"
+    ],
+    "en": [
+     "Receive with back to goal and shield",
+     "Turn and shoot or lay off to the arriving ala"
+    ]
+   },
+   "def": {
+    "ar": [
+     "الضغط الأول على الفيكسو",
+     "إغلاق خط التمرير المركزي"
+    ],
+    "en": [
+     "First pressure on the fixo",
+     "Block the central passing lane"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "التمركز كمحطة للمرتدة",
+     "متابعة التسديدات"
+    ],
+    "en": [
+     "Be the outlet for the counter",
+     "Follow up shots"
+    ]
+   },
+   "td": {
+    "ar": [
+     "الضغط الفوري",
+     "إبطاء بناء الخصم"
+    ],
+    "en": [
+     "Immediate press",
+     "Slow down the opponent's build-up"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "القائم البعيد في الركنيات",
+    "متابعة الكرات المرتدة"
+   ],
+   "en": [
+    "Far post at corners",
+    "Follow rebounds"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "الأهداف",
+    "الكرات المحتفظ بها",
+    "التسديدات على المرمى",
+    "التمريرات الحاسمة"
+   ],
+   "en": [
+    "Goals",
+    "Balls held up",
+    "Shots on target",
+    "Assists"
+   ]
+  },
+  "drills": [
+   "fs-pivot",
+   "f-finish"
+  ],
+  "z": {
+   "wb": [
+    0.86,
+    0,
+    0.1,
+    0.2
+   ],
+   "nb": [
+    0.6,
+    0,
+    0.12,
+    0.25
+   ]
+  }
+ },
+ {
+  "id": "pg-floor",
+  "rs": "bb",
+  "fam": "PG",
+  "name": {
+   "ar": "قائد منظّم",
+   "en": "Floor general"
+  },
+  "desc": {
+   "ar": "يدير الهجوم وينادي الخطط، ويضبط الإيقاع وتوزيع الكرة.",
+   "en": "Runs the offence, calls plays and controls tempo and distribution."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "نقل الكرة وإطلاق الخطة المطلوبة",
+     "قراءة الدفاع في البيك آند رول واختيار التمريرة الصحيحة"
+    ],
+    "en": [
+     "Bring the ball up and initiate the set",
+     "Read the pick-and-roll coverage and make the right pass"
+    ]
+   },
+   "def": {
+    "ar": [
+     "الضغط على حامل الكرة وتوجيهه للخط الجانبي",
+     "التواصل في التبديلات"
+    ],
+    "en": [
+     "Pressure the ball and force it to the sideline",
+     "Communicate on switches"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "دفع الكرة بسرعة بعد المتابعة الدفاعية",
+     "التمرير المبكر للمتقدم"
+    ],
+    "en": [
+     "Push the ball after the defensive rebound",
+     "Hit the leak-out early"
+    ]
+   },
+   "td": {
+    "ar": [
+     "العودة أولاً لحماية السلة",
+     "إيقاف الكرة قبل منتصف الملعب"
+    ],
+    "en": [
+     "Get back first to protect the basket",
+     "Stop the ball before half court"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "تنفيذ الرمية الجانبية بخطة محددة",
+    "الاستلام الآمن ضد الضغط"
+   ],
+   "en": [
+    "Run the sideline out-of-bounds play",
+    "Safe catch against pressure"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "التمريرات الحاسمة",
+    "نسبة الحاسمة إلى الأخطاء",
+    "الأخطاء (Turnovers)",
+    "نسبة التصويب"
+   ],
+   "en": [
+    "Assists",
+    "Assist-to-turnover ratio",
+    "Turnovers",
+    "Shooting %"
+   ]
+  },
+  "drills": [
+   "b-pnr",
+   "b-break",
+   "b-weave"
+  ],
+  "z": {
+   "wb": [
+    0.72,
+    0,
+    0.08,
+    0.2
+   ],
+   "nb": [
+    0.28,
+    0,
+    0.07,
+    0.2
+   ]
+  }
+ },
+ {
+  "id": "pg-score",
+  "rs": "bb",
+  "fam": "PG",
+  "name": {
+   "ar": "صانع مسجّل",
+   "en": "Scoring guard"
+  },
+  "desc": {
+   "ar": "يبحث عن التسجيل أولاً من الاختراق أو التصويب بعد الحجز.",
+   "en": "Looks to score first — drives or pull-ups off screens."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "الاختراق بعد الحجز والإنهاء أو التمرير للزاوية",
+     "التصويب بعد المحاورة"
+    ],
+    "en": [
+     "Attack off the screen, finish or kick to the corner",
+     "Pull-up shooting"
+    ]
+   },
+   "def": {
+    "ar": [
+     "الضغط على الكرة",
+     "المساندة ثم العودة"
+    ],
+    "en": [
+     "Ball pressure",
+     "Help and recover"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "الهجوم على السلة في التفوق العددي",
+     "التصويب المبكر عند الفرصة"
+    ],
+    "en": [
+     "Attack the rim in numbers",
+     "Early shot when open"
+    ]
+   },
+   "td": {
+    "ar": [
+     "العودة السريعة",
+     "إيقاف الكرة"
+    ],
+    "en": [
+     "Sprint back",
+     "Stop the ball"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "خيار التصويب الأول في الرميات الأخيرة",
+    "حجز لزميله ثم الخروج"
+   ],
+   "en": [
+    "First shooting option in late-game plays",
+    "Screen then pop"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "النقاط",
+    "نسبة التصويب الفعلية",
+    "الاختراقات",
+    "الأخطاء"
+   ],
+   "en": [
+    "Points",
+    "Effective FG%",
+    "Drives",
+    "Turnovers"
+   ]
+  },
+  "drills": [
+   "b-form",
+   "b-pnr"
+  ],
+  "z": {
+   "wb": [
+    0.74,
+    0,
+    0.1,
+    0.22
+   ],
+   "nb": [
+    0.28,
+    0,
+    0.07,
+    0.2
+   ]
+  }
+ },
+ {
+  "id": "sg-shoot",
+  "rs": "bb",
+  "fam": "SG",
+  "name": {
+   "ar": "مصوّب",
+   "en": "Shooter"
+  },
+  "desc": {
+   "ar": "يهدد من خارج القوس ويتحرك بدون كرة حول الحجوزات.",
+   "en": "Threatens from beyond the arc and runs off screens."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "الجري حول الحجوزات والاستلام جاهزاً للتصويب",
+     "التباعد في الزاوية لفتح الاختراق"
+    ],
+    "en": [
+     "Run off screens, catch shot-ready",
+     "Space the corner to open drives"
+    ]
+   },
+   "def": {
+    "ar": [
+     "الدفاع الفردي على الجناح",
+     "الخروج لإغلاق المصوّب"
+    ],
+    "en": [
+     "On-ball defence on the wing",
+     "Close out on shooters"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "ملء الممر الجانبي في الهجوم الخاطف",
+     "الوقوف في الزاوية للتصويب"
+    ],
+    "en": [
+     "Fill the wing lane",
+     "Run to the corner for the shot"
+    ]
+   },
+   "td": {
+    "ar": [
+     "العودة للمنطقة",
+     "حماية الجناح"
+    ],
+    "en": [
+     "Get back to the paint",
+     "Protect the wing"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "خيار الرمية الأخيرة في الزاوية",
+    "الاستلام بعد الحجز"
+   ],
+   "en": [
+    "Corner option on inbounds",
+    "Catch off the screen"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "نسبة التصويب الثلاثي",
+    "التصويب بعد الاستلام",
+    "النقاط",
+    "الأخطاء"
+   ],
+   "en": [
+    "3PT %",
+    "Catch-and-shoot %",
+    "Points",
+    "Turnovers"
+   ]
+  },
+  "drills": [
+   "b-form",
+   "b-closeout"
+  ],
+  "z": {
+   "wb": [
+    0.82,
+    0.12,
+    0.1,
+    0.18
+   ],
+   "nb": [
+    0.22,
+    0.05,
+    0.08,
+    0.15
+   ]
+  }
+ },
+ {
+  "id": "sg-3d",
+  "rs": "bb",
+  "fam": "SG",
+  "name": {
+   "ar": "مدافع ومصوّب",
+   "en": "3&D"
+  },
+  "desc": {
+   "ar": "يدافع على أخطر لاعب طرف في الخصم، ويعاقب الدفاع من الزاوية.",
+   "en": "Guards the best perimeter player and punishes from the corner."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "التمركز في الزاوية لتوفير التباعد",
+     "التصويب من الزاوية"
+    ],
+    "en": [
+     "Space the corner",
+     "Corner threes"
+    ]
+   },
+   "def": {
+    "ar": [
+     "الرقابة على أخطر لاعب طرف",
+     "الخروج السريع مع اليد العليا"
+    ],
+    "en": [
+     "Guard the best perimeter player",
+     "Fast closeouts with a high hand"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "الجري في الممر الجانبي",
+     "التصويب المبكر"
+    ],
+    "en": [
+     "Run the lane",
+     "Early threes"
+    ]
+   },
+   "td": {
+    "ar": [
+     "العودة للمنطقة",
+     "المساعدة في الوسط"
+    ],
+    "en": [
+     "Get back",
+     "Help in the middle"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "خيار الزاوية في الرميات",
+    "حجز لزميله"
+   ],
+   "en": [
+    "Corner option on inbounds",
+    "Screen for a teammate"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "نسبة ثلاثيات الزاوية",
+    "نقاط الخصم في رقابته",
+    "الكرات المقطوعة",
+    "الأخطاء الشخصية"
+   ],
+   "en": [
+    "Corner 3PT %",
+    "Points allowed",
+    "Steals",
+    "Fouls"
+   ]
+  },
+  "drills": [
+   "b-closeout",
+   "b-slides"
+  ],
+  "z": {
+   "wb": [
+    0.9,
+    0.3,
+    0.06,
+    0.1
+   ],
+   "nb": [
+    0.22,
+    0.05,
+    0.08,
+    0.15
+   ]
+  }
+ },
+ {
+  "id": "sf-slash",
+  "rs": "bb",
+  "fam": "SF",
+  "name": {
+   "ar": "جناح مخترق",
+   "en": "Slasher"
+  },
+  "desc": {
+   "ar": "يهاجم السلة بالاختراق والقطع الخلفي، وينهي قرب السلة.",
+   "en": "Attacks the rim with drives and back-cuts; finishes inside."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "القطع الخلفي عند إغلاق خط التمرير",
+     "الاختراق من الجناح والإنهاء أو التمرير الخارجي"
+    ],
+    "en": [
+     "Back-cut when denied",
+     "Drive from the wing, finish or kick out"
+    ]
+   },
+   "def": {
+    "ar": [
+     "الدفاع الفردي والمساندة",
+     "المتابعة الدفاعية"
+    ],
+    "en": [
+     "On-ball and help defence",
+     "Defensive rebounding"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "الجري في الممر للإنهاء السهل",
+     "تلقي التمريرة الطويلة"
+    ],
+    "en": [
+     "Run the lane for easy finishes",
+     "Catch the long outlet"
+    ]
+   },
+   "td": {
+    "ar": [
+     "العودة وحماية الممر",
+     "إيقاف الكرة عند الحاجة"
+    ],
+    "en": [
+     "Get back and protect the lane",
+     "Stop the ball if needed"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "القطع نحو السلة في الرمية الخلفية",
+    "خيار ثانٍ للتصويب"
+   ],
+   "en": [
+    "Basket cut on baseline inbounds",
+    "Second shooting option"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "النقاط قرب السلة",
+    "الرميات الحرة المكتسبة",
+    "المتابعات",
+    "الأخطاء"
+   ],
+   "en": [
+    "Points in the paint",
+    "Free throws drawn",
+    "Rebounds",
+    "Turnovers"
+   ]
+  },
+  "drills": [
+   "b-break",
+   "b-weave"
+  ],
+  "z": {
+   "wb": [
+    0.85,
+    0.05,
+    0.1,
+    0.2
+   ],
+   "nb": [
+    0.16,
+    0,
+    0.08,
+    0.15
+   ]
+  }
+ },
+ {
+  "id": "pf-stretch",
+  "rs": "bb",
+  "fam": "PF",
+  "name": {
+   "ar": "جناح قوي مصوّب",
+   "en": "Stretch 4"
+  },
+  "desc": {
+   "ar": "يسحب لاعب الارتكاز المنافس بعيداً عن السلة بالتصويب الخارجي.",
+   "en": "Pulls the opposing big away from the rim with outside shooting."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "الحجز ثم الخروج للتصويب (Pick & Pop)",
+     "التباعد لفتح المنطقة لزملائه"
+    ],
+    "en": [
+     "Screen and pop for the shot",
+     "Space to open the paint"
+    ]
+   },
+   "def": {
+    "ar": [
+     "الدفاع على لاعب الطول",
+     "إغلاق المنطقة (Box-out)"
+    ],
+    "en": [
+     "Defend the big",
+     "Box out"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "اللحاق بالهجمة كقادم متأخر للتصويب",
+     "المتابعة"
+    ],
+    "en": [
+     "Trail for the three",
+     "Crash the glass"
+    ]
+   },
+   "td": {
+    "ar": [
+     "العودة للمنطقة",
+     "المتابعة الدفاعية"
+    ],
+    "en": [
+     "Get back to the paint",
+     "Defensive rebounding"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "الحاجز في الرميات",
+    "خيار التصويب المتأخر"
+   ],
+   "en": [
+    "Screener on inbounds",
+    "Late shooting option"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "نسبة التصويب الثلاثي",
+    "المتابعات الدفاعية",
+    "النقاط",
+    "الحجوزات الفعالة"
+   ],
+   "en": [
+    "3PT %",
+    "Defensive rebounds",
+    "Points",
+    "Screen assists"
+   ]
+  },
+  "drills": [
+   "b-pnr",
+   "b-form"
+  ],
+  "z": {
+   "wb": [
+    0.84,
+    0,
+    0.08,
+    0.3
+   ],
+   "nb": [
+    0.1,
+    0,
+    0.05,
+    0.18
+   ]
+  }
+ },
+ {
+  "id": "pf-power",
+  "rs": "bb",
+  "fam": "PF",
+  "name": {
+   "ar": "جناح قوي تحت السلة",
+   "en": "Power forward"
+  },
+  "desc": {
+   "ar": "يعمل في المنطقة: متابعات وحجوزات وإنهاء قوي.",
+   "en": "Works inside: rebounds, screens and strong finishes."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "التمركز في المنطقة المنخفضة والاستلام",
+     "المتابعة الهجومية"
+    ],
+    "en": [
+     "Post up on the low block",
+     "Offensive rebounding"
+    ]
+   },
+   "def": {
+    "ar": [
+     "إغلاق المنطقة ومتابعة الكرة",
+     "حماية السلة مع لاعب الارتكاز"
+    ],
+    "en": [
+     "Box out and rebound",
+     "Protect the rim with the centre"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "التمريرة الأولى بعد المتابعة",
+     "الجري للمنطقة"
+    ],
+    "en": [
+     "Outlet pass after the rebound",
+     "Run to the paint"
+    ]
+   },
+   "td": {
+    "ar": [
+     "العودة للمنطقة أولاً",
+     "المتابعة"
+    ],
+    "en": [
+     "Paint first",
+     "Rebound"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "الحاجز الأساسي",
+    "القطع نحو السلة"
+   ],
+   "en": [
+    "Main screener",
+    "Basket cut"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "المتابعات",
+    "النقاط في المنطقة",
+    "الحجوزات",
+    "الأخطاء الشخصية"
+   ],
+   "en": [
+    "Rebounds",
+    "Paint points",
+    "Screens set",
+    "Fouls"
+   ]
+  },
+  "drills": [
+   "b-shell",
+   "b-pnr"
+  ],
+  "z": {
+   "wb": [
+    0.9,
+    0,
+    0.05,
+    0.22
+   ],
+   "nb": [
+    0.08,
+    0,
+    0.04,
+    0.18
+   ]
+  }
+ },
+ {
+  "id": "c-rim",
+  "rs": "bb",
+  "fam": "C",
+  "name": {
+   "ar": "حامي السلة",
+   "en": "Rim protector"
+  },
+  "desc": {
+   "ar": "يحمي السلة بالقفز والتمركز، ويقود الدفاع صوتياً من الخلف.",
+   "en": "Protects the rim with timing and positioning; directs the defence from behind."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "الحجز للحامل ثم الدحرجة نحو السلة",
+     "المتابعة الهجومية"
+    ],
+    "en": [
+     "Screen for the handler and roll",
+     "Offensive rebounding"
+    ]
+   },
+   "def": {
+    "ar": [
+     "التمركز في المنطقة المحظورة ومساندة الزملاء",
+     "صد التصويبات دون خطأ"
+    ],
+    "en": [
+     "Anchor the paint and help",
+     "Contest without fouling"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "المتابعة والتمرير السريع للصانع",
+     "الجري في منتصف الملعب"
+    ],
+    "en": [
+     "Rebound and outlet quickly",
+     "Rim-run down the middle"
+    ]
+   },
+   "td": {
+    "ar": [
+     "العودة أولاً لحماية السلة",
+     "التواصل مع الزملاء"
+    ],
+    "en": [
+     "Sprint back to the rim",
+     "Talk to teammates"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "الحاجز الرئيسي",
+    "الهدف في الرمية العلوية"
+   ],
+   "en": [
+    "Main screener",
+    "Lob target"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "الصدات",
+    "المتابعات الدفاعية",
+    "نسبة التصويب قرب السلة",
+    "الأخطاء الشخصية"
+   ],
+   "en": [
+    "Blocks",
+    "Defensive rebounds",
+    "FG% at the rim",
+    "Fouls"
+   ]
+  },
+  "drills": [
+   "b-shell",
+   "b-pnr"
+  ],
+  "z": {
+   "wb": [
+    0.9,
+    0,
+    0.05,
+    0.15
+   ],
+   "nb": [
+    0.08,
+    0,
+    0.04,
+    0.14
+   ]
+  }
+ },
+ {
+  "id": "c-post",
+  "rs": "bb",
+  "fam": "C",
+  "name": {
+   "ar": "لاعب ارتكاز ممرّر",
+   "en": "Playmaking big"
+  },
+  "desc": {
+   "ar": "يستلم في المرفق أو أعلى المنطقة ويصنع اللعب لزملائه القاطعين.",
+   "en": "Receives at the elbow or high post and creates for cutters."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "الاستلام في المرفق والتمرير للقاطعين",
+     "التسليم باليد للمصوّبين (Hand-off)"
+    ],
+    "en": [
+     "Catch at the elbow and hit cutters",
+     "Dribble hand-offs for shooters"
+    ]
+   },
+   "def": {
+    "ar": [
+     "الدفاع في المنطقة ومساندة الاختراق",
+     "الإغلاق على لاعب الطول"
+    ],
+    "en": [
+     "Paint defence and help on drives",
+     "Box out the big"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "التمريرة الطويلة بعد المتابعة",
+     "القدوم المتأخر"
+    ],
+    "en": [
+     "Long outlet after rebounds",
+     "Trail the play"
+    ]
+   },
+   "td": {
+    "ar": [
+     "العودة للمنطقة",
+     "المتابعة الدفاعية"
+    ],
+    "en": [
+     "Get back to the paint",
+     "Defensive rebound"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "المرّر في الرمية الخلفية",
+    "الحاجز"
+   ],
+   "en": [
+    "Inbounder on baseline plays",
+    "Screener"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "التمريرات الحاسمة",
+    "الحجوزات الناتجة عن نقاط",
+    "المتابعات",
+    "الأخطاء"
+   ],
+   "en": [
+    "Assists",
+    "Screen assists",
+    "Rebounds",
+    "Turnovers"
+   ]
+  },
+  "drills": [
+   "b-shell",
+   "b-weave"
+  ],
+  "z": {
+   "wb": [
+    0.8,
+    0,
+    0.06,
+    0.15
+   ],
+   "nb": [
+    0.1,
+    0,
+    0.05,
+    0.15
+   ]
+  }
+ },
+ {
+  "id": "vb-s",
+  "rs": "vb",
+  "fam": "S",
+  "name": {
+   "ar": "المعد",
+   "en": "Setter"
+  },
+  "desc": {
+   "ar": "عقل الفريق، يوزع الكرة الثانية ويختار الضارب حسب حائط الخصم.",
+   "en": "The team's brain; distributes the second ball based on the opposing block."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "الانتقال من الخلف لمنطقة الإعداد بين المركزين 2 و3",
+     "توزيع الإعداد لإبعاد الحائط عن الضارب"
+    ],
+    "en": [
+     "Penetrate to the target between zones 2 and 3",
+     "Set to beat the block"
+    ]
+   },
+   "def": {
+    "ar": [
+     "حائط الصد في المركز 2 عند وجوده في الصف الأمامي",
+     "الدفاع في المركز 1 عند وجوده في الخلف"
+    ],
+    "en": [
+     "Block in zone 2 when front row",
+     "Defend zone 1 when back row"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "الانتقال السريع من الدفاع إلى الشبكة",
+     "الإعداد من وضعيات غير مثالية"
+    ],
+    "en": [
+     "Transition fast from defence to the net",
+     "Set from out-of-system positions"
+    ]
+   },
+   "td": {
+    "ar": [
+     "تغطية الضارب بعد الإعداد",
+     "قراءة الكرة المرتدة من الحائط"
+    ],
+    "en": [
+     "Cover the hitter after setting",
+     "Read the ball off the block"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "إرسال موجّه يحدد مكان الاستقبال",
+    "الإعداد الخلفي المفاجئ للمقابل"
+   ],
+   "en": [
+    "Tactical serve to target a passer",
+    "Surprise back set to the opposite"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "دقة الإعداد",
+    "نسبة نجاح الهجوم بعد إعداده",
+    "أخطاء اللمس المزدوج",
+    "الإرسال الناجح"
+   ],
+   "en": [
+    "Set accuracy",
+    "Kill % from his sets",
+    "Ball-handling errors",
+    "Serve success"
+   ]
+  },
+  "drills": [
+   "v-setter",
+   "v-wash"
+  ],
+  "z": {
+   "wb": [
+    0.46,
+    0,
+    0.04,
+    0.14
+   ],
+   "nb": [
+    0.3,
+    0,
+    0.12,
+    0.2
+   ]
+  }
+ },
+ {
+  "id": "vb-oh",
+  "rs": "vb",
+  "fam": "OH",
+  "name": {
+   "ar": "الضارب الرئيسي",
+   "en": "Outside hitter"
+  },
+  "desc": {
+   "ar": "يستقبل الإرسال ويهاجم من المركز 4 ومن الخط الخلفي.",
+   "en": "Passes serve and attacks from zone 4 and the back row."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "الاستقبال في الممر المحدد له",
+     "الهجوم من المركز 4 والهجوم الخلفي (Pipe)"
+    ],
+    "en": [
+     "Pass in his lane",
+     "Attack from zone 4 and the pipe"
+    ]
+   },
+   "def": {
+    "ar": [
+     "حائط الصد مع لاعب الوسط",
+     "الدفاع في الممر الخطي أو القطري"
+    ],
+    "en": [
+     "Block with the middle",
+     "Dig line or cross-court"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "الانسحاب من الشبكة للاقتراب الكامل",
+     "الضرب من الإعداد العالي"
+    ],
+    "en": [
+     "Transition off the net for a full approach",
+     "Hit the high ball"
+    ]
+   },
+   "td": {
+    "ar": [
+     "تغطية الضارب",
+     "الاستعداد للكرة الثانية"
+    ],
+    "en": [
+     "Cover the hitter",
+     "Ready for the next ball"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "إرسال قوي بالقفز",
+    "استقبال الإرسال في المنطقة المخصصة"
+   ],
+   "en": [
+    "Jump serve",
+    "Serve receive in his zone"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "نسبة الاستقبال الإيجابي",
+    "كفاءة الهجوم (نقاط − أخطاء ÷ محاولات)",
+    "الحائط",
+    "أخطاء الإرسال"
+   ],
+   "en": [
+    "Positive reception %",
+    "Hitting efficiency (kills − errors ÷ attempts)",
+    "Blocks",
+    "Serve errors"
+   ]
+  },
+  "drills": [
+   "v-receive",
+   "v-pepper",
+   "v-wash"
+  ],
+  "z": {
+   "wb": [
+    0.42,
+    0,
+    0.08,
+    0.3
+   ],
+   "nb": [
+    0.18,
+    0,
+    0.12,
+    0.25
+   ]
+  }
+ },
+ {
+  "id": "vb-mb",
+  "rs": "vb",
+  "fam": "MB",
+  "name": {
+   "ar": "لاعب الوسط",
+   "en": "Middle blocker"
+  },
+  "desc": {
+   "ar": "أساس حائط الصد والهجوم السريع في الوسط.",
+   "en": "The anchor of the block and the quick attack."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "الاقتراب للضربة السريعة لتثبيت حائط الخصم",
+     "التحركات الوهمية لتحرير الضاربين"
+    ],
+    "en": [
+     "Approach for the quick to hold their block",
+     "Decoy runs to free the hitters"
+    ]
+   },
+   "def": {
+    "ar": [
+     "قراءة المعد والتحرك الجانبي لغلق الحائط المزدوج",
+     "الضغط على الشبكة بيدين فوقها"
+    ],
+    "en": [
+     "Read the setter and close the double block",
+     "Penetrate the net with both hands"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "الانسحاب من الحائط والاقتراب السريع",
+     "خيار الضربة السريعة دائماً"
+    ],
+    "en": [
+     "Transition off the block for the quick",
+     "Always be a quick option"
+    ]
+   },
+   "td": {
+    "ar": [
+     "تغطية الضارب من الوسط",
+     "الاستعداد للحائط التالي"
+    ],
+    "en": [
+     "Cover from the middle",
+     "Ready for the next block"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "الإرسال ثم الخروج لصالح الليبرو",
+    "الإرسال التكتيكي نحو المنطقة الضعيفة"
+   ],
+   "en": [
+    "Serve, then sub off for the libero",
+    "Tactical serve to a weak zone"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "نقاط الحائط",
+    "اللمسات على الحائط",
+    "كفاءة الهجوم السريع",
+    "أخطاء لمس الشبكة"
+   ],
+   "en": [
+    "Stuff blocks",
+    "Block touches",
+    "Quick-attack efficiency",
+    "Net faults"
+   ]
+  },
+  "drills": [
+   "v-block",
+   "v-wash"
+  ],
+  "z": {
+   "wb": [
+    0.47,
+    0,
+    0.03,
+    0.3
+   ],
+   "nb": [
+    0.46,
+    0,
+    0.03,
+    0.4
+   ]
+  }
+ },
+ {
+  "id": "vb-opp",
+  "rs": "vb",
+  "fam": "OPP",
+  "name": {
+   "ar": "الضارب المقابل",
+   "en": "Opposite"
+  },
+  "desc": {
+   "ar": "المسجل الأول، يهاجم من المركز 2 والخلفي من المركز 1 ولا يستقبل غالباً.",
+   "en": "The main scorer — attacks from zone 2 and back-row zone 1; rarely passes."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "الهجوم من المركز 2 ومن الخلف (منطقة D)",
+     "الضرب ضد حائط ثنائي"
+    ],
+    "en": [
+     "Attack from zone 2 and the back row (D)",
+     "Score against a double block"
+    ]
+   },
+   "def": {
+    "ar": [
+     "حائط ضد ضارب الخصم الرئيسي",
+     "الدفاع في المركز 1"
+    ],
+    "en": [
+     "Block the opposing outside hitter",
+     "Defend zone 1"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "الخيار الأول للكرة العالية في التحول",
+     "الهجوم الخلفي"
+    ],
+    "en": [
+     "First option for the high ball in transition",
+     "Back-row attack"
+    ]
+   },
+   "td": {
+    "ar": [
+     "تغطية المعد",
+     "إعادة التمركز"
+    ],
+    "en": [
+     "Cover the setter",
+     "Reset position"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "إرسال قوي بالقفز",
+    "الإعداد الطارئ إذا لمس المعد الكرة الأولى"
+   ],
+   "en": [
+    "Jump serve",
+    "Emergency set when the setter digs"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "كفاءة الهجوم",
+    "النقاط",
+    "الحائط",
+    "أخطاء الإرسال"
+   ],
+   "en": [
+    "Hitting efficiency",
+    "Points",
+    "Blocks",
+    "Serve errors"
+   ]
+  },
+  "drills": [
+   "v-serve",
+   "v-wash"
+  ],
+  "z": {
+   "wb": [
+    0.42,
+    0,
+    0.08,
+    0.2
+   ],
+   "nb": [
+    0.2,
+    0,
+    0.1,
+    0.2
+   ]
+  }
+ },
+ {
+  "id": "vb-l",
+  "rs": "vb",
+  "fam": "L",
+  "name": {
+   "ar": "الليبرو",
+   "en": "Libero"
+  },
+  "desc": {
+   "ar": "اختصاصي الاستقبال والدفاع في الصف الخلفي، لا يرسل ولا يهاجم فوق الشبكة.",
+   "en": "Back-row reception and defence specialist; does not attack above the net."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "قيادة منظومة الاستقبال وأخذ المساحة الأكبر",
+     "الإعداد بالساعدين من خلف خط 3م عند الحاجة"
+    ],
+    "en": [
+     "Lead the reception and take the biggest area",
+     "Forearm set from behind the 3 m line when needed"
+    ]
+   },
+   "def": {
+    "ar": [
+     "الدفاع في المركز 6 أو 5 حسب النظام",
+     "قراءة الضارب واتجاه الذراع"
+    ],
+    "en": [
+     "Defend zone 6 or 5 per system",
+     "Read the hitter's arm"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "تحويل الدفاع إلى كرة قابلة للإعداد",
+     "التواصل مع المعد"
+    ],
+    "en": [
+     "Turn digs into settable balls",
+     "Talk to the setter"
+    ]
+   },
+   "td": {
+    "ar": [
+     "تغطية الضاربين",
+     "الاستعداد للكرة المرتدة"
+    ],
+    "en": [
+     "Cover the hitters",
+     "Ready for the rebound"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "يدخل بدل لاعب الوسط في الصف الخلفي دون تسجيل تبديل",
+    "لا يرسل في أغلب المسابقات"
+   ],
+   "en": [
+    "Replaces the middle in the back row without a sub",
+    "Does not serve in most competitions"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "نسبة الاستقبال الممتاز",
+    "الدفاعات الناجحة",
+    "أخطاء الاستقبال",
+    "التغطية"
+   ],
+   "en": [
+    "Perfect pass %",
+    "Digs",
+    "Reception errors",
+    "Coverage"
+   ]
+  },
+  "drills": [
+   "v-receive",
+   "v-pepper"
+  ],
+  "z": {
+   "wb": [
+    0.18,
+    0,
+    0.12,
+    0.4
+   ],
+   "nb": [
+    0.15,
+    0,
+    0.12,
+    0.4
+   ]
+  }
+ },
+ {
+  "id": "hb-gk",
+  "rs": "hb",
+  "fam": "GK",
+  "name": {
+   "ar": "حارس المرمى",
+   "en": "Goalkeeper"
+  },
+  "desc": {
+   "ar": "آخر خط دفاع وأول مهاجم في الهجوم الخاطف.",
+   "en": "The last line of defence and the first attacker on the break."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "التمريرة الطويلة السريعة للجناح المنطلق",
+     "التبديل مع لاعب سابع عند اللعب بلا حارس"
+    ],
+    "en": [
+     "Fast long pass to the breaking wing",
+     "Swap for a 7th field player when needed"
+    ]
+   },
+   "def": {
+    "ar": [
+     "التمركز على المنصّف بين الكرة والمرمى",
+     "التنسيق مع الحائط الدفاعي لتقسيم المرمى"
+    ],
+    "en": [
+     "Position on the ball–goal bisector",
+     "Coordinate with the block to split the goal"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "رمية فورية بعد التصدي",
+     "قراءة الجناح المنطلق"
+    ],
+    "en": [
+     "Immediate throw after the save",
+     "Read the breaking wing"
+    ]
+   },
+   "td": {
+    "ar": [
+     "العودة للمرمى بسرعة عند التقدم",
+     "التمركز ضد التسديد البعيد"
+    ],
+    "en": [
+     "Sprint back to goal when out",
+     "Set against long shots"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "رميات 7 أمتار: الصبر وتضييق الزاوية",
+    "تنظيم الحائط في الرمية الحرة"
+   ],
+   "en": [
+    "7 m throws: patience, narrow the angle",
+    "Organise the free-throw wall"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "نسبة التصديات",
+    "تصديات 7 أمتار",
+    "التمريرات الطويلة الناجحة",
+    "التصديات من الأجنحة"
+   ],
+   "en": [
+    "Save %",
+    "7 m saves",
+    "Successful outlets",
+    "Wing saves"
+   ]
+  },
+  "drills": [
+   "h-gk",
+   "h-break"
+  ],
+  "z": {
+   "wb": [
+    0.05,
+    0,
+    0.04,
+    0.14
+   ],
+   "nb": [
+    0.03,
+    0,
+    0.03,
+    0.16
+   ],
+   "own": true
+  }
+ },
+ {
+  "id": "hb-wing-fast",
+  "rs": "hb",
+  "fam": "WING",
+  "name": {
+   "ar": "جناح سريع",
+   "en": "Fast-break wing"
+  },
+  "desc": {
+   "ar": "أول المنطلقين في الهجوم الخاطف، والمدافع الخارجي في منظومة الدفاع.",
+   "en": "First to break on the counter and the outside defender in the system."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "الاتساع على الخط وتثبيت المدافع الخارجي",
+     "الدخول للدائرة الثانية"
+    ],
+    "en": [
+     "Hold width to pin the outside defender",
+     "Run in as a second pivot"
+    ]
+   },
+   "def": {
+    "ar": [
+     "الدفاع في المركز الخارجي (1)",
+     "منع اختراق الجناح المنافس"
+    ],
+    "en": [
+     "Defend position 1 (outside)",
+     "Stop the wing's penetration"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "الانطلاق الفوري بعد استعادة الكرة",
+     "الاستلام والتسديد من الزاوية"
+    ],
+    "en": [
+     "Break immediately on possession",
+     "Catch and shoot from the angle"
+    ]
+   },
+   "td": {
+    "ar": [
+     "العودة وإغلاق الطرف",
+     "الضغط على الجناح المنافس"
+    ],
+    "en": [
+     "Get back and close the side",
+     "Pressure the opposing wing"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "التمركز في الجناح في الرمية الحرة",
+    "خيار التسديد من الزاوية"
+   ],
+   "en": [
+    "Wide position on free throws",
+    "Angle-shot option"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "أهداف الهجوم الخاطف",
+    "نسبة التسديد من الجناح",
+    "الكرات المقطوعة",
+    "الأخطاء التقنية"
+   ],
+   "en": [
+    "Fast-break goals",
+    "Wing shooting %",
+    "Steals",
+    "Technical faults"
+   ]
+  },
+  "drills": [
+   "h-break",
+   "h-shoot9"
+  ],
+  "z": {
+   "wb": [
+    0.94,
+    0.04,
+    0.05,
+    0.1
+   ],
+   "nb": [
+    0.07,
+    0,
+    0.04,
+    0.1
+   ]
+  }
+ },
+ {
+  "id": "hb-wing-corner",
+  "rs": "hb",
+  "fam": "WING",
+  "name": {
+   "ar": "جناح زاوية",
+   "en": "Corner specialist"
+  },
+  "desc": {
+   "ar": "يتقن التسديد من الزوايا الضيقة بالقفز داخل المنطقة.",
+   "en": "Masters tight-angle shots by jumping into the area."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "القفز داخل منطقة المرمى لفتح الزاوية",
+     "التسديد الملتف أو الساقط"
+    ],
+    "en": [
+     "Jump into the area to open the angle",
+     "Spin or lob shots"
+    ]
+   },
+   "def": {
+    "ar": [
+     "الدفاع الخارجي ومنع التمرير للجناح",
+     "المساعدة للداخل"
+    ],
+    "en": [
+     "Outside defence, deny the wing",
+     "Help inside"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "الانطلاق على الطرف",
+     "الاستلام خلف المدافع"
+    ],
+    "en": [
+     "Break down the side",
+     "Receive behind the defender"
+    ]
+   },
+   "td": {
+    "ar": [
+     "العودة للخط",
+     "إغلاق الطرف"
+    ],
+    "en": [
+     "Back to the line",
+     "Close the side"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "الرمية الحرة من الجانب",
+    "منفذ 7 أمتار البديل"
+   ],
+   "en": [
+    "Side free throws",
+    "Backup 7 m taker"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "نسبة التسديد من الزاوية",
+    "الأهداف",
+    "الأخطاء",
+    "الاعتراضات"
+   ],
+   "en": [
+    "Angle shooting %",
+    "Goals",
+    "Errors",
+    "Interceptions"
+   ]
+  },
+  "drills": [
+   "h-shoot9",
+   "h-feint"
+  ],
+  "z": {
+   "wb": [
+    0.96,
+    0.08,
+    0.03,
+    0.08
+   ],
+   "nb": [
+    0.07,
+    0,
+    0.04,
+    0.1
+   ]
+  }
+ },
+ {
+  "id": "hb-back-shoot",
+  "rs": "hb",
+  "fam": "BACK",
+  "name": {
+   "ar": "ظهير مصوّب",
+   "en": "Back shooter"
+  },
+  "desc": {
+   "ar": "مسجّل من خارج 9 أمتار بالقفز فوق الحائط.",
+   "en": "Scores from beyond 9 m with jump shots over the block."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "التسديد بالقفز من خلف 9م",
+     "الاختراق بين مدافعين عند تقدمهما"
+    ],
+    "en": [
+     "Jump shots from beyond 9 m",
+     "Break through when two defenders step out"
+    ]
+   },
+   "def": {
+    "ar": [
+     "الدفاع في المركز 2 (نصف)",
+     "الخروج لمواجهة الظهير المنافس"
+    ],
+    "en": [
+     "Defend position 2 (half)",
+     "Step out on the opposing back"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "الاستلام في منتصف الملعب والتسديد البعيد",
+     "الموجة الثانية من الهجوم"
+    ],
+    "en": [
+     "Receive at half court and shoot long",
+     "Second wave of the attack"
+    ]
+   },
+   "td": {
+    "ar": [
+     "العودة للمركز الدفاعي",
+     "إيقاف الظهير المنافس"
+    ],
+    "en": [
+     "Return to the defensive spot",
+     "Stop the opposing back"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "منفذ الرمية الحرة 9 أمتار",
+    "منفذ 7 أمتار"
+   ],
+   "en": [
+    "9 m free-throw shooter",
+    "7 m taker"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "الأهداف من خارج 9م",
+    "نسبة التسديد",
+    "التمريرات الحاسمة",
+    "الإيقافات الدفاعية"
+   ],
+   "en": [
+    "Goals from 9 m+",
+    "Shooting %",
+    "Assists",
+    "Defensive stops"
+   ]
+  },
+  "drills": [
+   "h-shoot9",
+   "h-60"
+  ],
+  "z": {
+   "wb": [
+    0.75,
+    0,
+    0.08,
+    0.15
+   ],
+   "nb": [
+    0.16,
+    0,
+    0.05,
+    0.12
+   ]
+  }
+ },
+ {
+  "id": "hb-back-pen",
+  "rs": "hb",
+  "fam": "BACK",
+  "name": {
+   "ar": "ظهير مخترق",
+   "en": "Penetrating back"
+  },
+  "desc": {
+   "ar": "يهاجم الفراغات بالخداع ويصنع للدائرة والجناح.",
+   "en": "Attacks gaps with feints and creates for the pivot and wing."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "الخداع 1 ضد 1 والاختراق",
+     "التمرير للدائرة بعد جذب مدافعين"
+    ],
+    "en": [
+     "1v1 feints and penetration",
+     "Feed the pivot after drawing two"
+    ]
+   },
+   "def": {
+    "ar": [
+     "الدفاع النشط والتقدم لمواجهة الظهير",
+     "المساندة للداخل"
+    ],
+    "en": [
+     "Active defence stepping out",
+     "Help inside"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "حمل الكرة للأمام في الموجة الثانية",
+     "التمرير للجناح"
+    ],
+    "en": [
+     "Carry in the second wave",
+     "Feed the wing"
+    ]
+   },
+   "td": {
+    "ar": [
+     "العودة للخط",
+     "إغلاق الفراغ"
+    ],
+    "en": [
+     "Back to the line",
+     "Close the gap"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "التمرير للدائرة في الرمية الحرة",
+    "الحجز لزميله"
+   ],
+   "en": [
+    "Pivot pass on free throws",
+    "Screen for a teammate"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "الاختراقات الناجحة",
+    "رميات 7 أمتار المكتسبة",
+    "التمريرات الحاسمة",
+    "الأخطاء التقنية"
+   ],
+   "en": [
+    "Successful breakthroughs",
+    "7 m drawn",
+    "Assists",
+    "Technical faults"
+   ]
+  },
+  "drills": [
+   "h-feint",
+   "h-pivot"
+  ],
+  "z": {
+   "wb": [
+    0.8,
+    0,
+    0.07,
+    0.15
+   ],
+   "nb": [
+    0.16,
+    0,
+    0.05,
+    0.12
+   ]
+  }
+ },
+ {
+  "id": "hb-cb",
+  "rs": "hb",
+  "fam": "CB",
+  "name": {
+   "ar": "صانع الألعاب",
+   "en": "Centre back"
+  },
+  "desc": {
+   "ar": "ينادي الخطط وينظم الهجوم، وقد يكون المدافع المتقدم في دفاع 5:1.",
+   "en": "Calls plays and organises the attack; often the advanced defender in 5:1."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "تنظيم الهجوم ومناداة الجملة المناسبة للدفاع",
+     "اللعب الثنائي مع الدائرة"
+    ],
+    "en": [
+     "Organise and call the play for the defence faced",
+     "Two-man game with the pivot"
+    ]
+   },
+   "def": {
+    "ar": [
+     "المدافع المتقدم في 5:1 أو 3:2:1 لقطع التمرير",
+     "تنظيم الدفاع صوتياً"
+    ],
+    "en": [
+     "Advanced defender in 5:1 or 3:2:1",
+     "Organise the defence vocally"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "بدء الموجة الثانية بسرعة",
+     "التمريرة الطويلة للجناح"
+    ],
+    "en": [
+     "Start the second wave fast",
+     "Long pass to the wing"
+    ]
+   },
+   "td": {
+    "ar": [
+     "العودة للمركز الأوسط",
+     "إيقاف صانع ألعاب الخصم"
+    ],
+    "en": [
+     "Return to the centre",
+     "Stop the opposing playmaker"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "منفذ الرمية الحرة وتنظيم الحائط الهجومي",
+    "ضربة البداية السريعة"
+   ],
+   "en": [
+    "Free-throw organiser",
+    "Quick throw-off"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "التمريرات الحاسمة",
+    "الأهداف",
+    "الأخطاء التقنية",
+    "الكرات المقطوعة كمدافع متقدم"
+   ],
+   "en": [
+    "Assists",
+    "Goals",
+    "Technical faults",
+    "Interceptions as advanced defender"
+   ]
+  },
+  "drills": [
+   "h-pivot",
+   "h-pass",
+   "h-60"
+  ],
+  "z": {
+   "wb": [
+    0.73,
+    0,
+    0.07,
+    0.18
+   ],
+   "nb": [
+    0.22,
+    0,
+    0.08,
+    0.12
+   ]
+  }
+ },
+ {
+  "id": "hb-pv",
+  "rs": "hb",
+  "fam": "PV",
+  "name": {
+   "ar": "لاعب الدائرة",
+   "en": "Pivot"
+  },
+  "desc": {
+   "ar": "يعمل بين المدافعين على خط 6م، يحجز ويفتح الفراغات ويسجل.",
+   "en": "Works between defenders on the 6 m line — screens, opens gaps and scores."
+  },
+  "ph": {
+   "att": {
+    "ar": [
+     "الحجز للظهير ثم الالتفاف لاستلام الكرة",
+     "التحرك على الخط لفصل المدافعين"
+    ],
+    "en": [
+     "Screen for the back, then roll for the ball",
+     "Move along the line to split defenders"
+    ]
+   },
+   "def": {
+    "ar": [
+     "الدفاع في المركز الأوسط والالتحام",
+     "إغلاق خط التمرير للدائرة المنافسة"
+    ],
+    "en": [
+     "Defend the central position with contact",
+     "Deny passes to the opposing pivot"
+    ]
+   },
+   "ta": {
+    "ar": [
+     "الانطلاق كقادم ثانٍ",
+     "استلام الكرة في المنطقة"
+    ],
+    "en": [
+     "Run as the trailer",
+     "Receive near the area"
+    ]
+   },
+   "td": {
+    "ar": [
+     "العودة للمركز الأوسط",
+     "التواصل الدفاعي"
+    ],
+    "en": [
+     "Get back to the centre",
+     "Defensive communication"
+    ]
+   }
+  },
+  "sp": {
+   "ar": [
+    "الحجز في الرمية الحرة",
+    "كسب رميات 7 أمتار"
+   ],
+   "en": [
+    "Screen on free throws",
+    "Draw 7 m throws"
+   ]
+  },
+  "kpi": {
+   "ar": [
+    "الأهداف من الدائرة",
+    "رميات 7 أمتار المكتسبة",
+    "الحجوزات الفعالة",
+    "الإيقافات الدفاعية"
+   ],
+   "en": [
+    "Goals from the line",
+    "7 m drawn",
+    "Effective screens",
+    "Defensive stops"
+   ]
+  },
+  "drills": [
+   "h-pivot",
+   "h-60"
+  ],
+  "z": {
+   "wb": [
+    0.86,
+    0,
+    0.04,
+    0.2
+   ],
+   "nb": [
+    0.16,
+    0,
+    0.04,
+    0.1
+   ]
+  }
+ }
+]
