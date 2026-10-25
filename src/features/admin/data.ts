@@ -111,6 +111,20 @@ export async function createOrg(v: { name_ar: string; name_en: string; org_type:
   return error ? error.message : null
 }
 
+export interface OrgFields { name_ar: string; name_en: string; org_type: OrgType; country: string; city: string }
+
+/** Edit an organization — owner only (or a person the owner delegated 'org_edit' to). */
+export async function updateOrg(id: string, v: OrgFields): Promise<string | null> {
+  const { error } = await supabase.from("organizations").update({ ...v, name_en: v.name_en || null, city: v.city || null }).eq("id", id)
+  return error ? error.message : null
+}
+
+/** Suspend or re-activate — the platform never deletes an organization, so its history stays. */
+export async function setOrgActive(id: string, active: boolean): Promise<string | null> {
+  const { error } = await supabase.from("organizations").update({ is_active: active }).eq("id", id)
+  return error ? error.message : null
+}
+
 const CODE_LEN = 8
 export const DAY_MS = 86_400_000
 const ALPHA = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"

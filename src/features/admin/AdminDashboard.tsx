@@ -227,15 +227,16 @@ export function Board({ data }: { data: AdminData }): React.JSX.Element {
               })}</div>
               <div className="leg"><span><i className="lg-g" />بياناته جاهزة / مبني</span><span><i className="lg-a" />تصميم تحت المراجعة</span><span><i className="lg-w" />قيد البناء · مُخطَّط</span></div></div>
             <div className="c orgc"><h3>الجهات <span className="en">Organizations</span></h3>
-              {activeOrgs.map((o) => {
+              {snap.orgs.map((o) => {
                 const h = orgHealth(data, o)
                 const mem = data.members.filter((m) => m.org_id === o.id && m.status === "approved")
                 return (
-                  <div className="org" key={o.id} onClick={() => open({ k: "inv", orgId: o.id })}>
-                    <div className="t"><span className="bd">{(o.name_en ?? o.name_ar ?? "").split(" ").map((w) => w[0]).join("").slice(0, "AQ".length).toUpperCase()}</span><div><h4>{o.name_ar}</h4><p>{ORG_TYPES[o.org_type]} · {countryAr(o.country)}{o.city ? ` · ${o.city}` : ""} · نشطة</p></div></div>
+                  <div className={`org${o.is_active ? "" : " off"}`} key={o.id} onClick={() => open({ k: "inv", orgId: o.id })}>
+                    <div className="t"><span className="bd">{(o.name_en ?? o.name_ar ?? "").split(" ").map((w) => w[0]).join("").slice(0, "AQ".length).toUpperCase()}</span><div><h4>{o.name_ar}</h4><p>{ORG_TYPES[o.org_type]} · {countryAr(o.country)}{o.city ? ` · ${o.city}` : ""} · {o.is_active ? "نشطة" : "موقوفة"}</p></div></div>
                     <div className="rl"><span className="ok">{mem.length} عضو</span><span>{mem.filter((m) => m.role.includes("coach")).length} مدربين</span><span>{data.invites.filter((i) => i.org_id === o.id && inviteLive(i)).length} رمز نشط</span></div>
                     <div className="health"><Svg viewBox="0 0 96 96" w="96" h="96" html={healthSvg(h.parts, h.score)} />
                       <div className="hl"><b>صحة الجهة <span className="en">Health {h.score}/100</span></b>{h.parts.map((p) => <span key={p.label}><i style={{ background: p.color }} />{p.label} · {p.value}%</span>)}</div></div>
+                    <button className="edit" title="تعديل بيانات الجهة" onClick={(e) => { e.stopPropagation(); open({ k: "org", org: o }) }}>✎ تعديل بيانات الجهة <span className="en">Edit</span></button>
                   </div>
                 )
               })}

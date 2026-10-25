@@ -3,12 +3,12 @@
 import { useState } from "react"
 import cfg from "./sections.json"
 import {
-  COUNTRIES, ORG_TYPES, ROLE_AR, createInvite, createOrg, deactivateInvite, inviteLive, setMemberStatus,
-  type AdminData, type MemberRole, type OrgType,
+  COUNTRIES, ORG_TYPES, ROLE_AR, createInvite, createOrg, deactivateInvite, inviteLive, setMemberStatus, setOrgActive, updateOrg,
+  type AdminData, type MemberRole, type Org, type OrgFields, type OrgType,
 } from "./data"
 import type { Alert } from "./model"
 
-export type DrawerKind = { k: "org" } | { k: "inv"; orgId?: string } | { k: "app" } | { k: "sec"; title: string; to: string; ready: boolean }
+export type DrawerKind = { k: "org"; org?: Org } | { k: "inv"; orgId?: string } | { k: "app" } | { k: "sec"; title: string; to: string; ready: boolean }
 
 const R = cfg.rules
 const GAP: React.CSSProperties = { marginTop: "20px" }
@@ -18,21 +18,33 @@ function Pills<T extends string | number>({ items, value, label, onPick }: { ite
   return <div>{items.map((v) => <button type="button" key={String(v)} className={`pill${v === value ? " on" : ""}`} onClick={() => onPick(v)}>{label(v)}</button>)}</div>
 }
 
-function NewOrg({ done }: { done: () => void }): React.JSX.Element {
-  const [f, setF] = useState({ name_ar: "", name_en: "", org_type: "school" as OrgType, country: "SA", city: "" })
+/** New organization, or edit an existing one (owner-only right; the owner can delegate it). */
+function OrgForm({ org, done }: { org?: Org; done: () => void }): React.JSX.Element {
+  const [f, setF] = useState<OrgFields>({
+    name_ar: org?.name_ar ?? "", name_en: org?.name_en ?? "", org_type: org?.org_type ?? "school", country: org?.country ?? "SA", city: org?.city ?? "",
+  })
   const [err, setErr] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
+  const [confirm, setConfirm] = useState(false)
   const submit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault()
     if (!f.name_ar.trim()) { setErr("اكتب اسم الجهة بالعربي."); return }
     setBusy(true)
-    const r = await createOrg({ ...f, name_ar: f.name_ar.trim(), name_en: f.name_en.trim(), city: f.city.trim() })
+    const v = { ...f, name_ar: f.name_ar.trim(), name_en: f.name_en.trim(), city: f.city.trim() }
+    const r = org ? await updateOrg(org.id, v) : await createOrg(v)
     setBusy(false)
-    if (r) setErr(`ما اتسجّلتش: ${r}`); else done()
+    if (r) setErr(`ما اتحفظش: ${r}`); else done()
+  }
+  const toggleActive = async (): Promise<void> => {
+    if (!org) return
+    if (org.is_active && !confirm) { setConfirm(true); return }
+    const r = await setOrgActive(org.id, !org.is_active)
+    if (r) setErr(`ما اتنفّذش: ${r}`); else done()
   }
   return (
     <form onSubmit={(e) => void submit(e)}>
-      <h3>جهة جديدة<span className="en">New organization</span></h3>
+      <h3>{org ? "تعديل بيانات الجهة" : "جهة جديدة"}<span className="en">{org ? "Edit organization" : "New organization"}</span></h3>
+      {org && <p className="fld">صلاحية التعديل لك أنت فقط كمالك، وتقدر تمنحها لمن تختار. <span className="en">Owner only</span></p>}
       <p className="fld">نوع الجهة <span className="en">Type</span></p>
       <Pills items={Object.keys(ORG_TYPES) as OrgType[]} value={f.org_type} label={(v) => ORG_TYPES[v]} onPick={(v) => setF({ ...f, org_type: v })} />
       <label className="fld">الاسم بالعربي <span className="en">Arabic name</span><input value={f.name_ar} onChange={(e) => setF({ ...f, name_ar: e.target.value })} required /></label>
@@ -41,7 +53,14 @@ function NewOrg({ done }: { done: () => void }): React.JSX.Element {
         <select value={f.country} onChange={(e) => setF({ ...f, country: e.target.value })}>{Object.entries(COUNTRIES).map(([c, ar]) => <option key={c} value={c}>{ar}</option>)}</select></label>
       <label className="fld">المدينة <span className="en">City</span><input value={f.city} onChange={(e) => setF({ ...f, city: e.target.value })} /></label>
       {err && <p className="err">{err}</p>}
-      <button className="btn p" style={GAP} disabled={busy}>{busy ? "جارٍ الحفظ…" : "تسجيل الجهة"}</button>
+      <button className="btn p" style={GAP} disabled={busy}>{busy ? "جارٍ الحفظ…" : org ? "حفظ التعديل" : "تسجيل الجهة"}</button>
+      {org && (
+        <div className="danger">
+          <p>{org.is_active ? "إيقاف الجهة يخفيها من الاستخدام من غير ما يمسح أي بيانات — وتقدر ترجّعها في أي وقت." : "الجهة موقوفة حاليًا."}</p>
+          <button type="button" className="btn" onClick={() => void toggleActive()}>
+            {org.is_active ? (confirm ? "متأكد؟ اضغط تاني للإيقاف" : "إيقاف الجهة") : "إعادة تفعيل الجهة"}</button>
+        </div>
+      )}
     </form>
   )
 }
@@ -118,7 +137,7 @@ function Approvals({ data, alerts }: { data: AdminData; alerts: Alert[] }): Reac
 }
 
 export function DrawerBody({ kind, data, alerts, close }: { kind: DrawerKind; data: AdminData; alerts: Alert[]; close: () => void }): React.JSX.Element {
-  if (kind.k === "org") return <NewOrg done={close} />
+  if (kind.k === "org") return <OrgForm org={kind.org} done={close} />
   if (kind.k === "inv") return <NewInvite data={data} orgId={kind.orgId} />
   if (kind.k === "app") return <Approvals data={data} alerts={alerts} />
   return (
