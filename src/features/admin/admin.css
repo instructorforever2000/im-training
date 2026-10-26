@@ -230,3 +230,20 @@
 .adm .org.off{opacity:.55;border-color:var(--ln2)}
 .adm .danger{margin-top:28px;padding:14px;border-radius:14px;border:1px solid #ef5b5044;background:#ef5b500d}
 .adm .danger p{font-size:12.5px;color:var(--mu);line-height:1.8;margin-bottom:10px}
+
+/* ===== views: one screen each, no long scrolling ===== */
+.adm .agrid>[data-v]{display:none}
+.adm .agrid.v-overview>[data-v~=overview],.adm .agrid.v-orgs>[data-v~=orgs],.adm .agrid.v-members>[data-v~=members],.adm .agrid.v-content>[data-v~=content],.adm .agrid.v-activity>[data-v~=activity]{display:block;animation:vin .35s ease both}
+@keyframes vin{from{opacity:0;transform:translateY(8px)}}
+.adm .vhead{display:flex;align-items:baseline;gap:10px;margin:-4px 0 14px}.adm .vhead h2{font-size:20px}
+.adm .sub a .vn{display:flex;align-items:center;gap:8px}.adm .sub a .vn svg{width:15px;height:15px}.adm .sub a .en{font-size:10.5px;opacity:.7}
+.adm .pres-b.live{border-color:var(--teal);color:var(--teal2)}
+@media(min-width:1251px){
+.adm .v-overview .alerts{grid-column:1/4}
+.adm .agrid.v-orgs{grid-template-columns:380px 1fr}.adm .v-orgs .orgc{grid-column:1}.adm .v-orgs .geo{grid-column:2}
+.adm .agrid.v-members{grid-template-columns:300px 1fr 1fr}.adm .v-members .jc{grid-column:1;grid-row:1/3}.adm .v-members .reqc{grid-row:2}
+.adm .agrid.v-content{grid-template-columns:1fr}.adm .v-content .chart,.adm .v-content .mapc{grid-column:1}.adm .v-content .bars{height:150px}
+.adm .agrid.v-activity{grid-template-columns:1fr 1fr 300px}.adm .v-activity .pulsec,.adm .v-activity .logc{grid-column:1/3}.adm .v-activity .voice{grid-column:3;grid-row:1}.adm .v-activity .aic{grid-column:3;grid-row:2}
+}
+.adm .reqc .req{margin-top:10px}
+.adm .pres-b,.adm .me b,.adm .me small{white-space:nowrap}

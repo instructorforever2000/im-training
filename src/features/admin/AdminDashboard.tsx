@@ -16,6 +16,14 @@ const COUNT_MS = 40
 const BAR_DELAY_MS = 30
 const HR_AT = 4
 const WAVE_PHASES = 7
+export type View = "overview" | "orgs" | "members" | "content" | "activity"
+const VIEWS: readonly { id: View; ar: string; en: string; ic: string }[] = [
+  { id: "overview", ar: "نظرة عامة", en: "Overview", ic: "home" },
+  { id: "orgs", ar: "الجهات", en: "Organizations", ic: "org" },
+  { id: "members", ar: "الأعضاء والطلبات", en: "Members", ic: "user" },
+  { id: "content", ar: "المحتوى والأقسام", en: "Content", ic: "book" },
+  { id: "activity", ar: "النبض والسجل", en: "Activity", ic: "clock" },
+]
 type SportKey = keyof typeof CONTENT_BY_SPORT
 const SEG: readonly [SportKey, string][] = [["skills", "مهارات"], ["plays", "خطط متحركة"], ["roles", "مراكز"]]
 const NAV_ST = cfg.navStatus as Record<string, string>
@@ -41,13 +49,19 @@ function Canvas({ start }: { start: (c: HTMLCanvasElement) => () => void }): Rea
   return <canvas ref={ref} />
 }
 
-function Sidebar({ ask }: { ask: () => void }): React.JSX.Element {
-  const [open, setOpen] = useState<number>(0)
+function Sidebar({ view, setView }: { view: View; setView: (v: View) => void }): React.JSX.Element {
+  const [open, setOpen] = useState<number>(-1)
+  const [adm, setAdm] = useState(true)
   const logo = `${import.meta.env.BASE_URL}icon-192.png`
   return (
     <aside className="side">
       <div className="brand"><span className="mark"><img src={logo} alt="IM Training" /></span><div><b>IM <span>Training</span></b><small>منصة التدريب · by Instructor Motion</small></div></div>
-      <button className="nav-a on"><Icon id="home" /><span>لوحة المدير</span></button>
+      <div className={`grp${adm ? " open" : ""}`}>
+        <button className="nav-a on" onClick={() => setAdm(!adm)}><Icon id="shield" /><span>لوحة المدير</span><Icon id="chev" className="ch" /></button>
+        <div className="sub"><div>{VIEWS.map((v) => (
+          <a key={v.id} className={view === v.id ? "cur" : ""} onClick={() => setView(v.id)}><span className="vn"><Icon id={v.ic} />{v.ar}</span><span className="en">{v.en}</span></a>
+        ))}</div></div>
+      </div>
       <div className="lbl">المنصة · كل الأقسام</div>
       {cfg.nav.map((g, i) => (
         <div key={g.ar} className={`grp${open === i ? " open" : ""}`}>
@@ -55,7 +69,6 @@ function Sidebar({ ask }: { ask: () => void }): React.JSX.Element {
           <div className="sub"><div>{g.items.map((x) => <a key={x.ar}>{x.ar}<span className={`st ${x.st === "b" ? "d" : x.st}`}>{NAV_ST[x.st]}</span></a>)}</div></div>
         </div>
       ))}
-      <div className="ai-side"><b>المساعد الذكي</b><p>اسأله عن أي جهة أو مدرب أو قسم.</p><button onClick={ask}>اسأل المساعد</button></div>
     </aside>
   )
 }
@@ -104,6 +117,7 @@ export function Board({ data }: { data: AdminData }): React.JSX.Element {
   const [present, setPresent] = useState(false)
   const [speaking, setSpeaking] = useState(false)
   const [aiNote, setAiNote] = useState(false)
+  const [view, setView] = useState<View>("overview")
   const days = useMemo(() => timeline(data), [data])
   const [dayIdx, setDayIdx] = useState<number | null>(null)
   const idx = dayIdx ?? days.length - 1
@@ -163,12 +177,14 @@ export function Board({ data }: { data: AdminData }): React.JSX.Element {
     <div className={`adm${present ? " present" : ""}`} dir="rtl" lang="ar">
       <Icons />
       <div className={`app ${nav}${live ? "" : " past"}`}>
-        <Sidebar ask={() => setAiNote(true)} />
+        <Sidebar view={view} setView={(v) => { setView(v); setNav(nav === "mob" ? "" : nav) }} />
         <main>
           <div className="top">
             <button className="ib" onClick={() => { const want = window.innerWidth < MOBILE_PX ? "mob" : "mini"; setNav(nav === want ? "" : want) }} title="طيّ القائمة"><Icon id="menu" /></button>
             <Search data={data} open={open} />
             <div className="sp" />
+            <button className={`pres-b${speaking ? " live" : ""}`} onClick={speak} title="الملخص الصوتي"><Icon id="bell" /><span>{speaking ? "■ إيقاف" : "الملخص الصوتي"}</span></button>
+            <button className="pres-b" onClick={() => setView("activity")} title="المساعد الذكي"><Icon id="screen" /><span>المساعد</span></button>
             <button className="pres-b" onClick={() => setPresent(true)} title="وضع العرض"><Icon id="screen" /><span>وضع العرض</span></button>
             <div className="create"><button onClick={() => setMenu(!menu)}><Icon id="plus" />إنشاء <span className="en dark">Create</span></button>
               <div className={`menu${menu ? " open" : ""}`}>
@@ -183,27 +199,28 @@ export function Board({ data }: { data: AdminData }): React.JSX.Element {
             <div className="me"><div><b>{data.me.name || "المالك"}</b><small>المالك · كل الصلاحيات</small></div><span className="av">{(data.me.name || "IM").split(" ").map((w) => w[0]).join("").slice(0, "MA".length)}</span></div>
           </div>
 
-          <div className="agrid">
-            <div className="c hero"><Canvas start={startNetwork} /><div className="in">
+          <div className="vhead"><h2>{VIEWS.find((v) => v.id === view)?.ar}</h2><span className="en">{VIEWS.find((v) => v.id === view)?.en}</span></div>
+          <div className={`agrid v-${view}`}>
+            <div data-v="overview" className="c hero"><Canvas start={startNetwork} /><div className="in">
               <span className="pulse"><i />المنظومة تعمل · <span className="en">All systems live</span></span>
               <small className="greet">{greeting()}، كابتن {name}</small>
               <h1>كل المنظومة<br />تحت <em>عينك</em>.</h1>
               <p>{activeOrgs.length} جهة نشطة، و{pending ? `${pending} طلب مستني قرارك` : "ولا يوجد طلبات مستنية قرارك"}. المحتوى القديم كله اتنقل، و{READY_SECTIONS} أقسام من {TILES.length} بياناتها جاهزة جوه المنصة الجديدة.</p>
               <div className="acts"><button className="btn p" onClick={() => open({ k: "inv" })}>+ رمز دعوة</button><button className="btn" onClick={() => open({ k: "org" })}>+ جهة</button><button className="btn" onClick={() => mapRef.current?.scrollIntoView({ behavior: "smooth" })}>خريطة النقل</button></div></div></div>
-            <div className="c kpi"><span className="ic"><Icon id="org" /></span><div className="v"><Count n={activeOrgs.length} /></div><div className="l">جهات نشطة <span className="en">Orgs</span></div></div>
-            <div className="c kpi ro"><span className="ic"><Icon id="user" /></span><div className="v"><Count n={snap.members.filter((m) => m.status === "approved").length} /></div><div className="l">أعضاء <span className="en">Members</span></div></div>
-            <div className="c gauge span2"><h3>المحتوى المنقول <span className="en">Migrated</span></h3>
+            <div data-v="overview" className="c kpi"><span className="ic"><Icon id="org" /></span><div className="v"><Count n={activeOrgs.length} /></div><div className="l">جهات نشطة <span className="en">Orgs</span></div></div>
+            <div data-v="overview" className="c kpi ro"><span className="ic"><Icon id="user" /></span><div className="v"><Count n={snap.members.filter((m) => m.status === "approved").length} /></div><div className="l">أعضاء <span className="en">Members</span></div></div>
+            <div data-v="overview" className="c gauge span2"><h3>المحتوى المنقول <span className="en">Migrated</span></h3>
               <Svg key={`g1${idx}`} viewBox="0 0 250 150" w="250" h="150" html={gaugeSvg("g1", snap.migrated, CONTENT_TOTAL, "#1FB5A8", String(snap.migrated))} /><div className="sub2">عنصر من v28 — لا شيء ضاع</div>
               <Svg key={`g2${idx}`} className="g2" viewBox="0 0 250 150" w="250" h="150" html={gaugeSvg("g2", snap.ready, TILES.length, "#5b6fe0", `${snap.ready}/${TILES.length}`)} /><div className="sub2">قسم بياناته جاهزة من {TILES.length}</div></div>
-            <div className="c kpi am"><span className="ic"><Icon id="clock" /></span><div className="v"><Count n={pending} /></div><div className="l">بانتظار موافقتك <span className="en">Pending</span></div><span className="go" onClick={() => open({ k: "app" })}>↗</span></div>
-            <div className="c kpi"><span className="ic"><Icon id="key" /></span><div className="v"><Count n={invitesLive} /></div><div className="l">رموز دعوة نشطة <span className="en">Invites</span></div><span className="go" onClick={() => open({ k: "inv" })}>↗</span></div>
+            <div data-v="overview members" className="c kpi am"><span className="ic"><Icon id="clock" /></span><div className="v"><Count n={pending} /></div><div className="l">بانتظار موافقتك <span className="en">Pending</span></div><span className="go" onClick={() => open({ k: "app" })}>↗</span></div>
+            <div data-v="overview members" className="c kpi"><span className="ic"><Icon id="key" /></span><div className="v"><Count n={invitesLive} /></div><div className="l">رموز دعوة نشطة <span className="en">Invites</span></div><span className="go" onClick={() => open({ k: "inv" })}>↗</span></div>
 
-            <div className="c chart"><div className="row"><h3>تغطية المحتوى حسب اللعبة <span className="en">Content by sport</span></h3>
+            <div data-v="content" className="c chart"><div className="row"><h3>تغطية المحتوى حسب اللعبة <span className="en">Content by sport</span></h3>
               <div className="seg">{SEG.map(([k, l]) => <button key={k} className={seg === k ? "on" : ""} onClick={() => setSeg(k)}>{l}</button>)}</div></div>
               <div className="bars"><div className="gl q1" /><div className="gl q2" /><div className="gl q3" />
                 {vals.map((v, i) => <div className="bar" key={SPORT_LABELS[i]}><b>{v}</b><div className="f" style={{ height: grow ? `${(v / maxV) * BAR_FILL * pct100}%` : "0%" }} /></div>)}</div>
               <div className="xl">{SPORT_LABELS.map((s) => <span key={s}>{s}</span>)}</div></div>
-            <div className="c jc span2"><h3>رحلة العضو <span className="en">Member journey</span></h3>
+            <div data-v="members" className="c jc span2"><h3>رحلة العضو <span className="en">Member journey</span></h3>
               <div className="flow"><span className="dotrun" />
                 <div className="fs"><b>{j.issued}</b><span>رموز صادرة</span><small>Issued</small></div>
                 <div className="fs"><b>{j.signed}</b><span>سجّلوا</span><small>Signed up</small></div>
@@ -214,7 +231,7 @@ export function Board({ data }: { data: AdminData }): React.JSX.Element {
               <div className="rl"><span className="ok">المالك · 1</span>
                 {(["org_admin", "coach", "player"] as const).map((r) => <span key={r}>{({ org_admin: "مدير جهة", coach: "مدرب", player: "لاعب" })[r]} · {data.members.filter((m) => m.role === r && m.status === "approved").length}</span>)}</div></div>
 
-            <div className="c mapc" ref={mapRef}><h3>خريطة المنصة — أقسام v28 الـ{TILES.length} <span className="en">Platform map</span></h3>
+            <div data-v="content" className="c mapc" ref={mapRef}><h3>خريطة المنصة — أقسام v28 الـ{TILES.length} <span className="en">Platform map</span></h3>
               <div className="tiles">{TILES.map((t) => {
                 const v = (cfg.progress as Record<TileStatus, number>)[t.st]
                 const stage = (cfg.stageAr as Record<TileStatus, string>)[t.st]
@@ -226,7 +243,11 @@ export function Board({ data }: { data: AdminData }): React.JSX.Element {
                 )
               })}</div>
               <div className="leg"><span><i className="lg-g" />بياناته جاهزة / مبني</span><span><i className="lg-a" />تصميم تحت المراجعة</span><span><i className="lg-w" />قيد البناء · مُخطَّط</span></div></div>
-            <div className="c orgc"><h3>الجهات <span className="en">Organizations</span></h3>
+            <div data-v="members" className="c reqc">
+              <DrawerBody kind={{ k: "app" }} data={data} alerts={[]} close={() => undefined} /></div>
+            <div data-v="members" className="c reqc">
+              <DrawerBody kind={{ k: "inv" }} data={data} alerts={[]} close={() => undefined} /></div>
+            <div data-v="orgs" className="c orgc"><h3>الجهات <span className="en">Organizations</span></h3>
               {snap.orgs.map((o) => {
                 const h = orgHealth(data, o)
                 const mem = data.members.filter((m) => m.org_id === o.id && m.status === "approved")
@@ -242,28 +263,28 @@ export function Board({ data }: { data: AdminData }): React.JSX.Element {
               })}
               <div className="addorg" onClick={() => open({ k: "org" })}>+ جهة جديدة</div></div>
 
-            <div className="c pulsec"><h3>نبض المنظومة <span className="en">System pulse — live</span></h3>
+            <div data-v="activity" className="c pulsec"><h3>نبض المنظومة <span className="en">System pulse — live</span></h3>
               <Canvas start={startPulseRef} />
               <div className="pmeta"><span>أحداث مسجّلة <b>{snap.events}</b></span><span>آخر حدث <b>{lastEvent ? lastEvent.action : "—"}</b></span><span>الاتصال <b>Live</b></span><span>كل نبضة عالية = حدث حقيقي في سجل العمليات</span></div></div>
-            <div className={`c voice${speaking ? " on" : ""}`}><h3>الملخص الصوتي <span className="en">Voice briefing</span></h3>
+            <div data-v="activity" className={`c voice${speaking ? " on" : ""}`}><h3>الملخص الصوتي <span className="en">Voice briefing</span></h3>
               <div className="wave">{Array.from({ length: COUNT_STEPS }, (_, i) => <i key={i} className={`w${i % WAVE_PHASES}`} />)}</div>
               <p>{brief}</p><button className="btn p wide" onClick={speak}>{speaking ? "■ إيقاف" : "▶ اسمع ملخص اليوم"}</button></div>
-            <div className="c geo"><h3>خريطة الجهات <span className="en">Organizations map</span></h3><Svg viewBox={geo.viewBox} html={geo.html} />
+            <div data-v="orgs" className="c geo"><h3>خريطة الجهات <span className="en">Organizations map</span></h3><Svg viewBox={geo.viewBox} html={geo.html} />
               <div className="leg"><span><i className="lg-t" />جهة نشطة · {activeOrgs.length}</span><span><i className="lg-s" />السعودية</span><span><i className="lg-r" />الخليج ومصر — جاهزة لاستقبال جهات</span></div></div>
-            <div className="c alerts"><h3>تنبيهات ذكية <span className="en">Smart alerts</span></h3><AlertsList alerts={alerts} act={actAlert} /></div>
-            <div className="c logc"><h3>سجل العمليات <span className="en">Audit log — live</span></h3>
+            <div data-v="overview" className="c alerts"><h3>تنبيهات ذكية <span className="en">Smart alerts</span></h3><AlertsList alerts={alerts} act={actAlert} /></div>
+            <div data-v="activity" className="c logc"><h3>سجل العمليات <span className="en">Audit log — live</span></h3>
               <div className="tl">
                 {data.audit.slice(0, cfg.rules.auditShown).reverse().map((a) => <div className="ev" key={a.id}>{a.action}<small>{a.target_table ?? ""} · {new Date(a.created_at).toLocaleString("ar")}</small></div>)}
                 {data.orgs.slice(0, cfg.rules.auditShown).map((o) => <div className="ev" key={o.id}>تسجيل جهة: {o.name_ar}<small>جهة · {new Date(o.created_at).toLocaleDateString("ar")}</small></div>)}
                 <div className="ev">نقل محتوى v28 ({CONTENT_TOTAL} عنصر)<small>محتوى · 2026-10-25</small></div>
                 <div className="ev nx">الحدث الجاي هيظهر هنا<small>مباشر · Live</small></div></div></div>
-            <div className="c aic"><h3 className="center">المساعد الذكي <span className="en">AI Assistant</span></h3><div className="orb" /><b>اسأل عن أي حاجة في المنظومة</b><p>«مين الجهات اللي ما فيهاش مدرب؟»</p>
+            <div data-v="activity" className="c aic"><h3 className="center">المساعد الذكي <span className="en">AI Assistant</span></h3><div className="orb" /><b>اسأل عن أي حاجة في المنظومة</b><p>«مين الجهات اللي ما فيهاش مدرب؟»</p>
               <div className="ask" onClick={() => setAiNote(true)}><span>اكتب سؤالك…</span><button>➤</button></div>
               {aiNote && <p className="ok-msg soon-note">المساعد قيد البناء — هيتربط ببيانات المنظومة في مرحلة لاحقة. <span className="en">Coming soon</span></p>}</div>
           </div>
-          <div className="tbar"><span>⟲ آلة الزمن <span className="en">Time machine</span></span>
+          {view === "activity" && <div className="tbar"><span>⟲ آلة الزمن <span className="en">Time machine</span></span>
             <input type="range" min="0" max={days.length - 1} step="1" value={idx} onChange={(e) => setDayIdx(Number(e.target.value))} />
-            <b>{days[idx]}</b><span className="tag">{live ? "الآن · Live" : "لقطة من الماضي"}</span></div>
+            <b>{days[idx]}</b><span className="tag">{live ? "الآن · Live" : "لقطة من الماضي"}</span></div>}
           <div className="note"><span>IM Training · لوحة المدير — كل الأرقام حقيقية: قاعدة البيانات + المحتوى المنقول.</span><span className="en">Instructor: Mohamed Ayad</span></div>
           <button className="btn exitp" onClick={() => setPresent(false)}>✕ خروج من العرض (Esc)</button>
         </main>
