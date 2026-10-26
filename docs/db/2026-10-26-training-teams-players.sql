@@ -1,4 +1,4 @@
--- PENDING (needs the owner's explicit approval) — IM Training: Teams & Players (الفرق واللاعبين)
+-- APPLIED 2026-10-26 12:18 (owner approved) as migration training_teams_players.
 -- Lives in its own schema "training" inside the shared parent project (decision 2026-10-24).
 -- Rules: no delete policies (suspend instead) · staff-only access (players/parents can't browse rosters)
 --        · the owner sees everything · each row belongs to exactly one organization.
