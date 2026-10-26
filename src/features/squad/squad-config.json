@@ -1,0 +1,222 @@
+{
+ "_source": "legacy/v28 POSITIONS (unchanged). sport id → position set.",
+ "sportSet": {
+  "football": "fb",
+  "futsal": "fs",
+  "basketball": "bb",
+  "volleyball": "vb",
+  "handball": "hb"
+ },
+ "positions": {
+  "fb": [
+   {
+    "code": "GK",
+    "ar": "حارس",
+    "en": "Goalkeeper"
+   },
+   {
+    "code": "CB",
+    "ar": "قلب دفاع",
+    "en": "Centre-back"
+   },
+   {
+    "code": "FB",
+    "ar": "ظهير",
+    "en": "Full-back"
+   },
+   {
+    "code": "WB",
+    "ar": "ظهير جناح",
+    "en": "Wing-back"
+   },
+   {
+    "code": "DM",
+    "ar": "ارتكاز",
+    "en": "Defensive mid"
+   },
+   {
+    "code": "CM",
+    "ar": "وسط",
+    "en": "Central mid"
+   },
+   {
+    "code": "AM",
+    "ar": "صانع ألعاب",
+    "en": "Attacking mid"
+   },
+   {
+    "code": "W",
+    "ar": "جناح",
+    "en": "Winger"
+   },
+   {
+    "code": "ST",
+    "ar": "مهاجم",
+    "en": "Striker"
+   }
+  ],
+  "fs": [
+   {
+    "code": "GK",
+    "ar": "حارس",
+    "en": "Goalkeeper"
+   },
+   {
+    "code": "FIXO",
+    "ar": "فيكسو",
+    "en": "Fixo"
+   },
+   {
+    "code": "ALA",
+    "ar": "جناح",
+    "en": "Ala"
+   },
+   {
+    "code": "PIVO",
+    "ar": "محور",
+    "en": "Pivot"
+   }
+  ],
+  "bb": [
+   {
+    "code": "PG",
+    "ar": "صانع ألعاب",
+    "en": "Point guard"
+   },
+   {
+    "code": "SG",
+    "ar": "حارس مسجل",
+    "en": "Shooting guard"
+   },
+   {
+    "code": "SF",
+    "ar": "جناح صغير",
+    "en": "Small forward"
+   },
+   {
+    "code": "PF",
+    "ar": "جناح قوي",
+    "en": "Power forward"
+   },
+   {
+    "code": "C",
+    "ar": "ارتكاز",
+    "en": "Centre"
+   }
+  ],
+  "vb": [
+   {
+    "code": "S",
+    "ar": "معد",
+    "en": "Setter"
+   },
+   {
+    "code": "OH",
+    "ar": "ضارب رئيسي",
+    "en": "Outside hitter"
+   },
+   {
+    "code": "MB",
+    "ar": "وسط",
+    "en": "Middle blocker"
+   },
+   {
+    "code": "OPP",
+    "ar": "مقابل",
+    "en": "Opposite"
+   },
+   {
+    "code": "L",
+    "ar": "ليبرو",
+    "en": "Libero"
+   }
+  ],
+  "hb": [
+   {
+    "code": "GK",
+    "ar": "حارس",
+    "en": "Goalkeeper"
+   },
+   {
+    "code": "WING",
+    "ar": "جناح",
+    "en": "Wing"
+   },
+   {
+    "code": "BACK",
+    "ar": "ظهير",
+    "en": "Back"
+   },
+   {
+    "code": "CB",
+    "ar": "صانع ألعاب",
+    "en": "Centre back"
+   },
+   {
+    "code": "PV",
+    "ar": "دائرة",
+    "en": "Pivot"
+   }
+  ]
+ },
+ "ageGroups": [
+  "U6",
+  "U7",
+  "U8",
+  "U9",
+  "U10",
+  "U11",
+  "U12",
+  "U13",
+  "U14",
+  "U15",
+  "U16",
+  "U17",
+  "U18",
+  "U19",
+  "U21",
+  "U23",
+  "senior"
+ ],
+ "colors": [
+  "#1FB5A8",
+  "#E09A1C",
+  "#5B6FE0",
+  "#D9483B",
+  "#2FA36B",
+  "#B18CF0",
+  "#0B1B33"
+ ],
+ "status": {
+  "ready": {
+   "ar": "جاهز",
+   "en": "Ready",
+   "color": "#2fa36b"
+  },
+  "limited": {
+   "ar": "محدود",
+   "en": "Limited",
+   "color": "#e09a1c"
+  },
+  "injured": {
+   "ar": "مصاب",
+   "en": "Injured",
+   "color": "#d9483b"
+  },
+  "absent": {
+   "ar": "غائب",
+   "en": "Absent",
+   "color": "#94a3b8"
+  }
+ },
+ "gender": {
+  "m": "بنين",
+  "f": "بنات",
+  "x": "مختلط"
+ },
+ "limits": {
+  "shirtMax": 99,
+  "bulkMax": 60,
+  "adultAge": 18
+ }
+}

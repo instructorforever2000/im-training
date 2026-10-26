@@ -66,7 +66,7 @@ function Sidebar({ view, setView }: { view: View; setView: (v: View) => void }):
       {cfg.nav.map((g, i) => (
         <div key={g.ar} className={`grp${open === i ? " open" : ""}`}>
           <button className="nav-a" onClick={() => setOpen(open === i ? -1 : i)}><Icon id={g.icon.replace("i-", "")} /><span>{g.ar}</span><Icon id="chev" className="ch" /></button>
-          <div className="sub"><div>{g.items.map((x) => <a key={x.ar}>{x.ar}<span className={`st ${x.st === "b" ? "d" : x.st}`}>{NAV_ST[x.st]}</span></a>)}</div></div>
+          <div className="sub"><div>{g.items.map((x) => <a key={x.ar} href={(x as { href?: string }).href}>{x.ar}<span className={`st ${x.st === "b" ? "d" : x.st}`}>{NAV_ST[x.st]}</span></a>)}</div></div>
         </div>
       ))}
     </aside>
