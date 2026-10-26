@@ -1,4 +1,4 @@
--- PENDING (needs the owner's approval to apply on Supabase "instructor-motion").
+-- APPLIED 2026-10-26 12:03 (owner approved) as migration org_edit_owner_only_delegable.
 -- Rule from Mohamed (2026-10-26): editing an organization is the owner's right only;
 -- he can delegate it to a specific person by adding 'org_edit' to that person's approved
 -- membership sections. Only the owner can change sections. (Today org_admin can also edit.)
