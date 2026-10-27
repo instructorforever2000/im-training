@@ -93,7 +93,7 @@ export function briefing(d: AdminData, name: string): string {
   const alerts = smartAlerts(d).filter((a) => a.tone !== "i")
   const orgLine = orgs.length ? `المنظومة فيها ${orgs.length} جهة نشطة: ${orgs.map((o) => o.name_ar).join("، ")}.` : "لسه مفيش جهات مسجّلة."
   const memLine = `الأعضاء النشطين ${j.active}، وبانتظار الموافقة ${j.pending}.`
-  const content = `اتنقل ${CONTENT_TOTAL} عنصر من المنصة القديمة، و${READY_SECTIONS} أقسام من ${TILES.length} بياناتها جاهزة.`
+  const content = `المنصة فيها ${CONTENT_TOTAL} عنصر محتوى تدريبي، و${READY_SECTIONS} أقسام من ${TILES.length} محتواها جاهز.`
   const al = alerts.length ? `فيه تنبيه مهم: ${alerts[0].title}.` : "مفيش تنبيهات مهمة."
   return `${greeting()} يا كابتن ${name}. ${orgLine} ${memLine} ${content} ${al}`
 }

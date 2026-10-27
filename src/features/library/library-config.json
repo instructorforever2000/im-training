@@ -1,0 +1,265 @@
+{
+ "example": "وحدة سرعة ورشاقة لكرة القدم تحت 12 سنة، 60 دقيقة، أدوات قليلة",
+ "lanes": [
+  {
+   "ar": "افتتاح",
+   "cats": [
+    "warm"
+   ],
+   "color": "#e09a1c",
+   "take": 5
+  },
+  {
+   "ar": "الجزء الرئيسي",
+   "cats": [
+    "phys",
+    "tech",
+    "game",
+    "tact"
+   ],
+   "color": "#1FB5A8",
+   "take": 7
+  },
+  {
+   "ar": "الختام",
+   "cats": [
+    "cool"
+   ],
+   "color": "#7c8ea3",
+   "take": 5
+  }
+ ],
+ "autoPick": [
+  {
+   "cats": [
+    "warm"
+   ],
+   "n": 1
+  },
+  {
+   "cats": [
+    "phys"
+   ],
+   "n": 2
+  },
+  {
+   "cats": [
+    "tech",
+    "game"
+   ],
+   "n": 2
+  },
+  {
+   "cats": [
+    "cool"
+   ],
+   "n": 1
+  }
+ ],
+ "sideTake": 5,
+ "ring": {
+  "box": 44,
+  "r": 19,
+  "w": 4,
+  "stagger": 50
+ },
+ "curve": {
+  "w": 380,
+  "h": 90,
+  "base": 80,
+  "perRpe": 8.5
+ },
+ "radar": {
+  "box": 60,
+  "r": 48,
+  "levels": [
+   0.33,
+   0.66,
+   1
+  ],
+  "floor": 0.08
+ },
+ "map": {
+  "dock": 104,
+  "panel": 400,
+  "gap": 20,
+  "top": 30,
+  "r1": 0.2,
+  "r2": 0.36,
+  "sx": 1.25,
+  "sx2": 1.3,
+  "maxOuter": 22,
+  "node": [
+   34,
+   15,
+   8
+  ],
+  "label": [
+   17,
+   13,
+   11
+  ],
+  "labelGap": 18,
+  "cut": 18,
+  "halo": 10,
+  "hist": 5,
+  "bend": 0.12,
+  "skew": 0.12,
+  "gal": {
+   "cx": [
+    40,
+    100,
+    160,
+    65,
+    135
+   ],
+   "cy": [
+    45,
+    40,
+    45,
+    110,
+    110
+   ],
+   "step": 2.4,
+   "r0": 3,
+   "rk": 3.2,
+   "squash": 0.8,
+   "lblY": 34,
+   "on": 4,
+   "off": 1.7,
+   "dim": 0.45
+  },
+  "levelOpacity": [
+   1,
+   1,
+   0.75
+  ],
+  "levelWeight": [
+   700,
+   700,
+   400
+  ],
+  "edge": {
+   "hot": 0.7,
+   "cold": 0.22
+  }
+ },
+ "lab": {
+  "az": -0.3,
+  "el": 1.0,
+  "dist": 150,
+  "minDist": 50,
+  "maxDist": 180,
+  "minEl": 0.3,
+  "maxEl": 1.45,
+  "lerp": 0.06,
+  "ballLerp": 0.12,
+  "stepMs": 2000,
+  "shift": -14,
+  "dims": {
+   "fb11": [
+    105,
+    68
+   ],
+   "fb7": [
+    55,
+    36
+   ],
+   "futsal": [
+    40,
+    20
+   ],
+   "hb": [
+    40,
+    20
+   ],
+   "bb": [
+    28,
+    15
+   ],
+   "vb": [
+    18,
+    9
+   ]
+  },
+  "fov": 38,
+  "near": 1,
+  "far": 1000,
+  "pad": 8,
+  "stripes": 10,
+  "lineY": 0.03,
+  "stripeY": 0.01,
+  "circle": 48,
+  "circleR": 0.135,
+  "box": [
+   0.157,
+   0.204
+  ],
+  "six": [
+   0.052,
+   0.27
+  ],
+  "goalW": 0.107,
+  "body": {
+   "r": 0.75,
+   "len": 1.6,
+   "y": 1.55
+  },
+  "ring": [
+   1.3,
+   1.6
+  ],
+  "label": {
+   "y": 4.3,
+   "s": 3.4,
+   "px": 128
+  },
+  "ball": {
+   "r": 0.55,
+   "dx": 1.1,
+   "dz": 0.6
+  },
+  "fogNear": 140,
+  "fogFar": 260,
+  "light": [
+   30,
+   80,
+   40
+  ],
+  "lookZ": 6,
+  "rotK": 0.005,
+  "elK": 0.004,
+  "wheelK": 0.06,
+  "scaleRef": 105,
+  "colors": {
+   "turfA": "#2d8a5e",
+   "turfB": "#33966a",
+   "woodA": "#c98a5a",
+   "woodB": "#bf7d50",
+   "a": "#1FB5A8",
+   "b": "#d9483b",
+   "aLbl": "#0f8f84",
+   "bLbl": "#b8352a",
+   "trail": "#ffe08a",
+   "light": "#eef2f6",
+   "dark": "#060b13",
+   "line": "#ffffff"
+  },
+  "look": {
+   "ground": "#8888aa",
+   "hemi": 1.1,
+   "sun": 1.6,
+   "lineOpacity": 0.85,
+   "capSeg": 6,
+   "radialSeg": 14,
+   "rough": 0.4,
+   "ringSeg": 32,
+   "ringOpacity": 0.55,
+   "ballSeg": 20
+  },
+  "mobile": {
+   "bp": 760,
+   "zoom": 1.7
+  }
+ }
+}

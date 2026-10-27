@@ -143,7 +143,7 @@ export function DrawerBody({ kind, data, alerts, close }: { kind: DrawerKind; da
   return (
     <>
       <h3>{kind.title}<span className="en">Section</span></h3>
-      <div className="empty">المكان الجديد: {kind.to}<br />{kind.ready ? "البيانات منقولة وجاهزة — شاشة القسم هتتبني بعد اعتماد تصميمها." : "القسم في الانتظار حسب ترتيب خريطة النقل."}</div>
+      <div className="empty">المكان الجديد: {kind.to}<br />{kind.ready ? "المحتوى جاهز — شاشة القسم هتتبني بعد اعتماد تصميمها." : "القسم في خطة البناء."}</div>
     </>
   )
 }

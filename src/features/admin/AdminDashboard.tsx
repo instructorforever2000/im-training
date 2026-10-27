@@ -205,12 +205,12 @@ export function Board({ data }: { data: AdminData }): React.JSX.Element {
               <span className="pulse"><i />المنظومة تعمل · <span className="en">All systems live</span></span>
               <small className="greet">{greeting()}، كابتن {name}</small>
               <h1>كل المنظومة<br />تحت <em>عينك</em>.</h1>
-              <p>{activeOrgs.length} جهة نشطة، و{pending ? `${pending} طلب مستني قرارك` : "ولا يوجد طلبات مستنية قرارك"}. المحتوى القديم كله اتنقل، و{READY_SECTIONS} أقسام من {TILES.length} بياناتها جاهزة جوه المنصة الجديدة.</p>
+              <p>{activeOrgs.length} جهة نشطة، و{pending ? `${pending} طلب مستني قرارك` : "ولا يوجد طلبات مستنية قرارك"}. المنصة فيها {CONTENT_TOTAL} عنصر محتوى تدريبي، و{READY_SECTIONS} أقسام من {TILES.length} محتواها جاهز.</p>
               <div className="acts"><button className="btn p" onClick={() => open({ k: "inv" })}>+ رمز دعوة</button><button className="btn" onClick={() => open({ k: "org" })}>+ جهة</button><button className="btn" onClick={() => mapRef.current?.scrollIntoView({ behavior: "smooth" })}>خريطة النقل</button></div></div></div>
             <div data-v="overview" className="c kpi"><span className="ic"><Icon id="org" /></span><div className="v"><Count n={activeOrgs.length} /></div><div className="l">جهات نشطة <span className="en">Orgs</span></div></div>
             <div data-v="overview" className="c kpi ro"><span className="ic"><Icon id="user" /></span><div className="v"><Count n={snap.members.filter((m) => m.status === "approved").length} /></div><div className="l">أعضاء <span className="en">Members</span></div></div>
-            <div data-v="overview" className="c gauge span2"><h3>المحتوى المنقول <span className="en">Migrated</span></h3>
-              <Svg key={`g1${idx}`} viewBox="0 0 250 150" w="250" h="150" html={gaugeSvg("g1", snap.migrated, CONTENT_TOTAL, "#1FB5A8", String(snap.migrated))} /><div className="sub2">عنصر من v28 — لا شيء ضاع</div>
+            <div data-v="overview" className="c gauge span2"><h3>محتوى المنصة <span className="en">Content</span></h3>
+              <Svg key={`g1${idx}`} viewBox="0 0 250 150" w="250" h="150" html={gaugeSvg("g1", snap.migrated, CONTENT_TOTAL, "#1FB5A8", String(snap.migrated))} /><div className="sub2">عنصر تدريبي جاهز</div>
               <Svg key={`g2${idx}`} className="g2" viewBox="0 0 250 150" w="250" h="150" html={gaugeSvg("g2", snap.ready, TILES.length, "#5b6fe0", `${snap.ready}/${TILES.length}`)} /><div className="sub2">قسم بياناته جاهزة من {TILES.length}</div></div>
             <div data-v="overview members" className="c kpi am"><span className="ic"><Icon id="clock" /></span><div className="v"><Count n={pending} /></div><div className="l">بانتظار موافقتك <span className="en">Pending</span></div><span className="go" onClick={() => open({ k: "app" })}>↗</span></div>
             <div data-v="overview members" className="c kpi"><span className="ic"><Icon id="key" /></span><div className="v"><Count n={invitesLive} /></div><div className="l">رموز دعوة نشطة <span className="en">Invites</span></div><span className="go" onClick={() => open({ k: "inv" })}>↗</span></div>
@@ -231,7 +231,7 @@ export function Board({ data }: { data: AdminData }): React.JSX.Element {
               <div className="rl"><span className="ok">المالك · 1</span>
                 {(["org_admin", "coach", "player"] as const).map((r) => <span key={r}>{({ org_admin: "مدير جهة", coach: "مدرب", player: "لاعب" })[r]} · {data.members.filter((m) => m.role === r && m.status === "approved").length}</span>)}</div></div>
 
-            <div data-v="content" className="c mapc" ref={mapRef}><h3>خريطة المنصة — أقسام v28 الـ{TILES.length} <span className="en">Platform map</span></h3>
+            <div data-v="content" className="c mapc" ref={mapRef}><h3>خريطة المنصة — {TILES.length} قسم <span className="en">Platform map</span></h3>
               <div className="tiles">{TILES.map((t) => {
                 const v = (cfg.progress as Record<TileStatus, number>)[t.st]
                 const stage = (cfg.stageAr as Record<TileStatus, string>)[t.st]
@@ -276,7 +276,7 @@ export function Board({ data }: { data: AdminData }): React.JSX.Element {
               <div className="tl">
                 {data.audit.slice(0, cfg.rules.auditShown).reverse().map((a) => <div className="ev" key={a.id}>{a.action}<small>{a.target_table ?? ""} · {new Date(a.created_at).toLocaleString("ar")}</small></div>)}
                 {data.orgs.slice(0, cfg.rules.auditShown).map((o) => <div className="ev" key={o.id}>تسجيل جهة: {o.name_ar}<small>جهة · {new Date(o.created_at).toLocaleDateString("ar")}</small></div>)}
-                <div className="ev">نقل محتوى v28 ({CONTENT_TOTAL} عنصر)<small>محتوى · 2026-10-25</small></div>
+                <div className="ev">إضافة محتوى المكتبة ({CONTENT_TOTAL} عنصر)<small>محتوى · 2026-10-25</small></div>
                 <div className="ev nx">الحدث الجاي هيظهر هنا<small>مباشر · Live</small></div></div></div>
             <div data-v="activity" className="c aic"><h3 className="center">المساعد الذكي <span className="en">AI Assistant</span></h3><div className="orb" /><b>اسأل عن أي حاجة في المنظومة</b><p>«مين الجهات اللي ما فيهاش مدرب؟»</p>
               <div className="ask" onClick={() => setAiNote(true)}><span>اكتب سؤالك…</span><button>➤</button></div>
@@ -285,7 +285,7 @@ export function Board({ data }: { data: AdminData }): React.JSX.Element {
           {view === "activity" && <div className="tbar"><span>⟲ آلة الزمن <span className="en">Time machine</span></span>
             <input type="range" min="0" max={days.length - 1} step="1" value={idx} onChange={(e) => setDayIdx(Number(e.target.value))} />
             <b>{days[idx]}</b><span className="tag">{live ? "الآن · Live" : "لقطة من الماضي"}</span></div>}
-          <div className="note"><span>IM Training · لوحة المدير — كل الأرقام حقيقية: قاعدة البيانات + المحتوى المنقول.</span><span className="en">Instructor: Mohamed Ayad</span></div>
+          <div className="note"><span>IM Training · لوحة المدير — كل الأرقام حقيقية: قاعدة البيانات + محتوى المنصة.</span><span className="en">Instructor: Mohamed Ayad</span></div>
           <button className="btn exitp" onClick={() => setPresent(false)}>✕ خروج من العرض (Esc)</button>
         </main>
       </div>
