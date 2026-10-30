@@ -224,3 +224,25 @@
 .rs #vars{order:6}
 }
 
+/* ---------- خطوات المرحلة — Phase steps ---------- */
+.rs #steps{top:96px;right:104px;width:360px}
+.rs #steps.off,.rs.stepping #role,.rs.stepping #vars,.rs.stepping .hint{display:none}
+.rs .stp{font-weight:600;color:var(--teal2);background:var(--tealbg);box-shadow:inset 0 0 0 1px var(--teal)}
+.rs .stp:disabled{opacity:.45;cursor:not-allowed}.rs .stp.on{background:var(--navy);color:#fff;box-shadow:none}
+.rs .plays{display:flex;flex-wrap:wrap;gap:6px}.rs .plays .chip{white-space:normal;text-align:start}
+.rs .shots{list-style:none;display:flex;flex-direction:column;gap:6px}
+.rs .shots button{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:start;padding:9px 10px;border-radius:12px;border:1px solid var(--ln);background:var(--card);font-size:13px;line-height:1.6;transition:background .2s,border-color .2s}
+.rs .shots b{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font:700 12px Outfit;background:var(--chip);color:var(--mu)}
+.rs .shots button.done{opacity:.62}.rs .shots button.done b{background:var(--tealbg);color:var(--teal2)}
+.rs .shots button.on{border-color:#e0b81f;background:color-mix(in srgb,#F4D03F 16%,var(--card))}.rs .shots button.on b{background:#F4D03F;color:#0b1726}
+.rs .legend2{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;font-size:11.5px;color:var(--mu);padding-top:6px;border-top:1px solid var(--ln)}
+.rs .legend2 .lg{display:flex;align-items:center;gap:6px}.rs .legend2 i{width:26px;height:8px;flex:none}
+.rs .legend2 .lp{background:repeating-linear-gradient(90deg,#d8b11c 0 6px,transparent 6px 10px);height:3px}
+.rs .legend2 .lr{background:#8a99ab;height:3px;border-radius:2px}
+.rs .legend2 .ld{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 8'%3E%3Cpath d='M0 4q3.25-4 6.5 0t6.5 0 6.5 0 6.5 0' fill='none' stroke='%238a99ab' stroke-width='1.8'/%3E%3C/svg%3E")}
+.rs .legend2 .lo{background:#e5574b;height:3px;border-radius:2px}
+.rs #capbar{position:fixed;top:150px;left:calc(50% - 160px);transform:translate(-50%,-12px);opacity:0;pointer-events:none;z-index:18;display:flex;align-items:center;gap:12px;max-width:min(820px,calc(100vw - 620px));padding:10px 12px 10px 16px;border-radius:16px;background:#0b1b33e6;color:#fff;backdrop-filter:blur(10px);box-shadow:var(--sh);transition:opacity .3s,transform .3s}
+.rs #capbar.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.rs #capbar b{flex:none;font:700 22px Outfit;color:#F4D03F}.rs #capbar small{font-size:12px;color:#9fb0c6}
+.rs #capbar span{flex:1;font-size:15px;line-height:1.6}.rs #capbar .ic{background:#ffffff1f;color:#fff;flex:none}
+@media(max-width:900px){.rs #steps{order:5}.rs #capbar{position:relative;left:auto;bottom:auto;transform:none;max-width:none;margin:8px;order:4}.rs #capbar:not(.on){display:none}}

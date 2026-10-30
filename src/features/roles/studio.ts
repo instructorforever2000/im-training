@@ -151,6 +151,7 @@ function athlete(p, opp, idx) {
   return g;
 }
 function buildTeams() {
+  if (X.st) { if (stepCP && stepCP.p.mode === C.mode) { stepsEnter(X.st.id, X.st.i); return } X.st = null; stepCP = null; host.classList.remove('stepping'); clearStepG(); ballM.visible = true; tw.dur = 1100 }
   usG.clear(); oppG.clear(); const lay = layout(); us = lay.players.map((p, i) => { const a = athlete(p, false, i); usG.add(a); return a });
   const op = C.opp ? E.stOpp(C.mode, C.phase) : null; them = (op || []).map((p, i) => { const a = athlete(p, true, i + 3); oppG.add(a); return a }); oppG.visible = !!op;
   place(true); highlight();
@@ -158,6 +159,7 @@ function buildTeams() {
 let tw = { t0: 0, dur: 1100 };
 /** Move every player (and the ball) to the current phase layout, tweening from where they stand. */
 function place(instant) {
+  if (X.st) { const l = stepPlays(); if (!l.some(q => q.id === X.st.id)) { if (l.length) stepsEnter(l[0].id); else stepsExit() } return }
   const lay = layout(), op = C.opp ? E.stOpp(C.mode, C.phase) : null;
   const set = (arr, pl) => arr.forEach(a => { const p = pl && pl.find(q => String(q.id) === String(a.userData.id)) || pl && pl[arr.indexOf(a)]; if (!p) return; a.userData.from.copy(a.position); a.userData.to.copy(W3(p.x, p.y)); if (instant) { a.position.copy(a.userData.to); a.userData.from.copy(a.userData.to) } });
   set(us, lay.players); oppG.visible = !!op; if (op) { if (them.length !== op.length) { buildTeams(); return } set(them, op) }
@@ -216,20 +218,20 @@ canvas.addEventListener('pointerup', e => {
   if (!down || Math.hypot(e.clientX - down[0], e.clientY - down[1]) > 6) return; const b = canvas.getBoundingClientRect(); mp.set((e.clientX - b.left) / b.width * 2 - 1, -(e.clientY - b.top) / b.height * 2 + 1); ray.setFromCamera(mp, cam);
   const h = ray.intersectObjects(usG.children, true)[0]; if (!h) return; let o = h.object; while (o && o.userData.id == null) o = o.parent; if (o) selectSlot(o.userData.id)
 });
-function selectSlot(id) { C.sel = id; X.cmp = null; saveSt(); highlight(); zones(); panels(); if (X.cam === 'player') setCam('player') }
+function selectSlot(id) { if (X.st) return; C.sel = id; X.cmp = null; saveSt(); highlight(); zones(); panels(); if (X.cam === 'player') setCam('player') }
 
 /* ---------- animation loop ---------- */
 let last = performance.now(), nextAt = performance.now() + 2800; const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
 function tick(now) {
   const dt = Math.min(.05, (now - last) / 1000); last = now;
-  if (X.play && now > nextAt) { const ps = PHS(); setPhase(ps[(ps.indexOf(C.phase) + 1) % ps.length], true) }
+  if (X.play && now > nextAt) { if (X.st) stepNext(); else { const ps = PHS(); setPhase(ps[(ps.indexOf(C.phase) + 1) % ps.length], true) } }
   const f = reduce ? 1 : Math.min(1, (now - tw.t0) / tw.dur), e = f * f * (3 - 2 * f);
   [...us, ...them].forEach(a => { const u = a.userData, w = u.from.clone().lerp(u.to, e), prev = u.prev || w.clone(), v = w.clone().sub(prev), sp = v.length() / Math.max(dt, 1e-3); a.position.copy(w); u.prev = w.clone();
     const dir = u.opp ? Math.PI : 0, face = sp > .3 ? Math.atan2(-v.z, v.x) : dir; let d = face - a.rotation.y; d = Math.atan2(Math.sin(d), Math.cos(d)); a.rotation.y += d * .12;
     const run = Math.min(1, sp / 6); u.phase += dt * (3 + run * 9); const sw = Math.sin(u.phase) * (.1 + run * .75); u.legL.rotation.z = sw; u.legR.rotation.z = -sw; u.armL.rotation.z = -sw * .8; u.armR.rotation.z = sw * .8; u.body.position.y = Math.abs(Math.sin(u.phase)) * .04 * (1 + run) * u.k; u.body.rotation.z = -run * .12 });
   const bu = ballM.userData; ballM.position.copy(bu.from.clone().lerp(bu.to, e)); ballM.position.y = bu.r + Math.sin(e * Math.PI) * Math.min(4, bu.from.distanceTo(bu.to) * .12); ballM.rotation.z -= dt * 4 * (1 - e);
   const p = us.find(a => String(a.userData.id) === String(C.sel)); if (p) { spot.position.set(p.position.x, 14, p.position.z + 2); spot.target.position.copy(p.position); spot.intensity = root.dataset.theme === 'dark' ? 160 : 70; p.userData.ring.rotation.z += dt } else spot.intensity = 0;
-  $('#prog').style.width = X.play ? `${Math.min(100, 100 - (nextAt - now) / (2800 / X.speed) * 100)}%` : '0%';
+  $('#prog').style.width = X.play ? `${Math.min(100, 100 - (nextAt - now) / ((X.st ? 4200 : 2800) / X.speed) * 100)}%` : '0%';
   if (camGoal.on) { if (X.cam === 'player' && p) camGoal.t.copy(p.position); cam.position.lerp(camGoal.p, .06); ctl.target.lerp(camGoal.t, .08); if (cam.position.distanceTo(camGoal.p) < .2 && X.cam !== 'player') camGoal.on = false }
   if (dead) return; ctl.update(); rn.render(scene, cam); raf = requestAnimationFrame(tick);
 }
@@ -249,7 +251,7 @@ function phaseBar() {
 on(window, 'keydown', e => { if (e.target.closest('input,select,textarea')) return; if (e.code === 'Space') { e.preventDefault(); togglePlay() } if (e.key === 'ArrowLeft') step(1); if (e.key === 'ArrowRight') step(-1) });
 
 /* ---------- panels: draggable · collapsible · hideable · resizable ---------- */
-const PANELS = { role: bi('الشرح', 'Explanation'), vars: bi('أدوار المركز والمقارنة', 'Role variants & compare'), tl: bi('مراحل اللعب', 'Game phases') };
+const PANELS = { steps: bi('خطوات المرحلة', 'Phase steps'), role: bi('الشرح', 'Explanation'), vars: bi('أدوار المركز والمقارنة', 'Role variants & compare'), tl: bi('مراحل اللعب', 'Game phases') };
 function bi(ar, en) { return { ar, en } }
 const lay = store.get('im-roles-layout', {});
 function placePanels() {
@@ -357,7 +359,7 @@ function varsPanel() {
 function allRoles(role) { const rs = RS(), all = E.ROLES.filter(r => r.rs === rs); return `<div class="all"><span class="mut">${L('كل أدوار', 'All roles in')} ${esc(T(E.MODES[C.mode].name))} · ${all.length}</span>${all.map(r => `<button class="chip ${role && r.id === role.id ? 'on' : ''}" data-r="${r.id}">${esc(T(r.name))}</button>`).join('')}</div>` }
 function bindAll() { $$('#vars [data-r]').forEach(b => b.onclick = () => { const r = E.roleById(b.dataset.r), q = layout().players.find(x => x.fam === r.fam); if (!q) { toast(L('الدور ده لمركز مش موجود في الخطة الحالية — غيّر الخطة', 'This role belongs to a position not in the current shape — change the formation')); return } C.sel = q.id; C.rv[E.rvKey(C.mode, formKey(), q.id)] = r.id; X.cmp = null; saveSt(); highlight(); place(false); panels() }) }
 function toast(t) { const el = $('#toast'); el.textContent = t; el.classList.add('on'); clearTimeout(toast.h); toast.h = setTimeout(() => el.classList.remove('on'), 2800) }
-function panels() { rolePanel(); varsPanel(); $('#tlnote').textContent = `${T(E.MODES[C.mode].name)} · ${L('المرحلة', 'Phase')} ${PHS().indexOf(C.phase) + 1}/${PHS().length}` }
+function panels() { stepsUI(); rolePanel(); varsPanel(); $('#tlnote').textContent = `${T(E.MODES[C.mode].name)} · ${L('المرحلة', 'Phase')} ${PHS().indexOf(C.phase) + 1}/${PHS().length}` }
 
 /* ---------- infographic card (print / PDF) ---------- */
 function printCard() {
@@ -367,6 +369,110 @@ function printCard() {
   const w = open('', '_blank'); if (!w) { toast(L('المتصفح منع فتح نافذة البطاقة — اسمح بالنوافذ المنبثقة', 'The browser blocked the card window — allow pop-ups')); return }
   w.document.write(`<!doctype html><html lang="${E.getLang()}" dir="${dir}"><head><meta charset="utf-8"><title>${L('بطاقة الدور', 'Role card')}</title><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"IBM Plex Sans Arabic",sans-serif;color:#0b1726;margin:24px;max-width:1000px}h1{font-size:22px;margin:0}.s{color:#566;margin:4px 0 12px}img{width:100%;border-radius:12px}.g{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}.ph{display:grid;grid-template-columns:repeat(${ps.length},1fr);gap:8px}section{border:1px solid #dde4ec;border-radius:10px;padding:10px;break-inside:avoid}section.on{border-color:#1FB5A8;background:#e6f7f5}h3{font-size:13px;margin:0 0 6px;color:#0f8f84}li,p{font-size:12.5px;line-height:1.7}.a{display:flex;justify-content:space-between;font-size:12.5px}.a b{color:#1FB5A8;letter-spacing:2px}footer{margin-top:14px;font-size:11px;color:#677;display:flex;justify-content:space-between}</style></head><body>${body}<footer><span>IM Training · ${L('المراكز والأدوار', 'Positions & Roles')}</span><b>Instructor: Mohamed Ayad</b></footer><script>setTimeout(()=>print(),600)<\/script></body></html>`); w.document.close();
 }
+
+/* ---------- خطوات المرحلة — Phase steps: every phase split into numbered shots ----------
+   Source: the platform's animated plays (src/content/legacy-v28/plays.json — steps with captions).
+   Each shot shows who has the ball, the pass (yellow dashed), runs without the ball (white arrow),
+   dribbles (wavy line) and the opponent's movement (red), with a number on the pitch and a written caption. */
+const STEP_CATS = { att: ['att', 'build'], def: ['def', 'press'], ta: ['counter'], td: [], sp: ['sp'] };
+let PLAYS = [], stepCP = null; X.st = null;
+import('@/content/legacy-v28/plays.json').then(m => { if (dead) return; PLAYS = m.default; stepsUI() });
+const stepPlays = () => PLAYS.filter(p => p.mode === C.mode && (STEP_CATS[C.phase] || []).includes(p.cat));
+const stepG = new THREE.Group(); stepG.renderOrder = 5;
+const SC = { pass: 0xF4D03F, shot: 0xff8a3d, us: 0xffffff, opp: 0xe5574b };
+function compileSteps(p) {
+  const Mo = E.MODES[p.mode], pos = {}, meta = {};
+  p.tokens.forEach(([id, code, n, x, y]) => { pos[id] = [x, y]; meta[id] = { team: id[0] === 'b' ? 'b' : 'a', code, n } });
+  let holder = p.ball0 ?? null; const init = JSON.parse(JSON.stringify(pos)), segs = [];
+  p.steps.forEach(st => {
+    const from = { ...pos }, to = { ...pos }; Object.entries(st.m || {}).forEach(([id, v]) => { if (to[id]) to[id] = v });
+    const nh = st.b !== undefined ? st.b : holder, moves = [];
+    for (const id in to) { const a = from[id], b = to[id]; if (Math.hypot(b[0] - a[0], b[1] - a[1]) < Mo.L * .004) continue; moves.push({ id, a, b, team: meta[id].team, kind: id === holder && id === nh ? 'dribble' : 'run' }) }
+    const at = (h, P) => typeof h === 'string' ? P[h] : h;
+    const ball = nh !== holder && nh != null && holder != null ? { kind: typeof nh === 'string' ? 'pass' : 'shot', a: at(holder, from), b: at(nh, to) } : null;
+    segs.push({ moves, ball, h0: holder, h1: nh, to, cap: st.c }); Object.assign(pos, to); holder = nh });
+  return { p, meta, init, segs };
+}
+/* flat ribbons painted on the surface (WebGL lines are 1px, so paths are built as thin meshes) */
+function strip(pts, w, col, op, dash, head) {
+  const P = pts.map(q => W3(q[0], q[1])), out = [], y = .06; let s = 0;
+  const on = w * 3.4, per = w * 5.6, stp = w * .7, R = [];
+  for (let i = 1; i < P.length; i++) { const a = P[i - 1], b = P[i], d = a.distanceTo(b), n = Math.max(1, Math.ceil(d / stp)); for (let j = 0; j < n; j++) R.push([a.clone().lerp(b, j / n), a.clone().lerp(b, (j + 1) / n)]) }
+  R.forEach(([a, b]) => { const len = a.distanceTo(b); const vis = !dash || (s % per) < on; s += len; if (!vis || len < 1e-4) return;
+    const dx = b.x - a.x, dz = b.z - a.z, k = w / 2 / len, px = -dz * k, pz = dx * k;
+    out.push(a.x + px, y, a.z + pz, a.x - px, y, a.z - pz, b.x + px, y, b.z + pz, b.x + px, y, b.z + pz, a.x - px, y, a.z - pz, b.x - px, y, b.z - pz) });
+  if (head && P.length > 1) { const e = P[P.length - 1], f = P[Math.max(0, P.length - 3)], d = e.clone().sub(f).setY(0).normalize(), h = w * 3.6, bw = w * 2.1, px = -d.z * bw, pz = d.x * bw, bx = e.x - d.x * h, bz = e.z - d.z * h;
+    out.push(e.x, y + .005, e.z, bx + px, y + .005, bz + pz, bx - px, y + .005, bz - pz) }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(out, 3));
+  const m = new THREE.Mesh(g, new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: op, depthWrite: false, side: THREE.DoubleSide })); m.renderOrder = 6; return m;
+}
+const hashId = id => [...String(id)].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);
+function curve(a, b, k, sg) { const c = [(a[0] + b[0]) / 2 - (b[1] - a[1]) * k * sg, (a[1] + b[1]) / 2 + (b[0] - a[0]) * k * sg], o = []; for (let i = 0; i <= 24; i++) { const t = i / 24, u = 1 - t; o.push([u * u * a[0] + 2 * u * t * c[0] + t * t * b[0], u * u * a[1] + 2 * u * t * c[1] + t * t * b[1]]) } return o }
+function wavy(a, b, amp) { const dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy) || 1, nx = -dy / L, ny = dx / L, waves = Math.max(2, Math.round(L / (amp * 5))), o = []; for (let i = 0; i <= 60; i++) { const t = i / 60, s = Math.sin(t * Math.PI * 2 * waves) * amp * Math.min(1, t * 6, (1 - t) * 6); o.push([a[0] + dx * t + nx * s, a[1] + dy * t + ny * s]) } return o }
+function badge(n, col) {
+  const c = document.createElement('canvas'); c.width = c.height = 128; const g = c.getContext('2d');
+  g.fillStyle = col; g.beginPath(); g.arc(64, 64, 54, 0, Math.PI * 2); g.fill(); g.lineWidth = 8; g.strokeStyle = '#ffffff'; g.stroke();
+  g.fillStyle = '#0b1726'; g.font = '700 64px Outfit, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(String(n), 64, 68);
+  const tx = new THREE.CanvasTexture(c); tx.colorSpace = THREE.SRGBColorSpace; const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: tx, depthTest: false, transparent: true })); s.renderOrder = 11; return s;
+}
+function clearStepG() { stepG.traverse(o => { o.geometry?.dispose?.(); o.material?.map?.dispose?.(); o.material?.dispose?.() }); stepG.clear() }
+function drawSeg(s, i, cur) {
+  const w = Math.max(.16, dims.L / 105), op = cur ? .95 : .3;
+  s.moves.forEach(mv => { const col = mv.team === 'b' ? SC.opp : SC.us;
+    const pts = mv.kind === 'dribble' ? wavy(mv.a, mv.b, w * 1.5) : curve(mv.a, mv.b, .12, hashId(mv.id) % 2 ? 1 : -1);
+    stepG.add(strip(pts, w, col, op, false, true)) });
+  if (s.ball) stepG.add(strip(curve(s.ball.a, s.ball.b, .04, 1), w * 1.15, s.ball.kind === 'shot' ? SC.shot : SC.pass, op, true, true));
+  const anchor = s.ball ? s.ball.b : s.moves[0] ? s.moves[0].b : null;
+  if (anchor) { const b = badge(i + 1, cur ? '#F4D03F' : '#cfd8e3'), k = Math.max(1.3, dims.L / 22); b.position.copy(W3(anchor[0], anchor[1])).setY(k * .9); b.scale.set(k, k, 1); b.material.opacity = cur ? 1 : .7; stepG.add(b) }
+}
+function holderPos(h, P) { if (h == null) return null; const q = typeof h === 'string' ? P[h] : h; return q ? [q[0] + dims.L * .008, q[1] + dims.W * .012] : null }
+function stepGo(i, instant) {
+  const cp = stepCP; if (!cp) return; X.st.i = i; if (stepG.parent !== arena) arena.add(stepG);
+  const s = cp.segs[i];
+  [...us, ...them].forEach(a => { const q = s.to[a.userData.id]; if (!q) return; a.userData.from.copy(a.position); a.userData.to.copy(W3(q[0], q[1])); if (instant) { a.position.copy(a.userData.to); a.userData.from.copy(a.userData.to) } });
+  const bp = holderPos(s.h1, s.to); ballM.visible = !!bp; if (bp) { ballM.userData.from.copy(ballM.position); ballM.userData.to.copy(W3(bp[0], bp[1])).setY(ballM.userData.r); if (instant) ballM.position.copy(ballM.userData.to) }
+  tw.t0 = performance.now(); tw.dur = 1500; clearStepG(); trailG.clear(); zonesG.clear();
+  for (let j = 0; j <= i; j++) drawSeg(cp.segs[j], j, j === i);
+  nextAt = performance.now() + 4200 / X.speed; stepsUI();
+}
+function stepsEnter(id, i = 0) {
+  const list = stepPlays(), p = PLAYS.find(q => q.id === id && q.mode === C.mode) || list[0];
+  if (!p) { toast(L('لسه مفيش خطوات مسجّلة للمرحلة دي في الرياضة دي', 'No steps recorded yet for this phase in this sport')); return stepsExit() }
+  X.st = { id: p.id, i: 0 }; stepCP = compileSteps(p); host.classList.add('stepping');
+  usG.clear(); oppG.clear(); us = []; them = []; oppG.visible = true;
+  Object.entries(stepCP.meta).forEach(([tid, m], k) => { const a = athlete({ id: tid, code: m.code, n: m.n }, m.team === 'b', k); (m.team === 'b' ? oppG : usG).add(a); (m.team === 'b' ? them : us).push(a); const q = W3(...stepCP.init[tid]); a.position.copy(q); a.userData.from.copy(q); a.userData.to.copy(q) });
+  const b0 = holderPos(p.ball0, stepCP.init); if (b0) ballM.position.copy(W3(b0[0], b0[1])).setY(ballM.userData.r);
+  frameSteps(); stepGo(Math.min(i, stepCP.segs.length - 1), true); if (i === 0) { stepCP.segs.length && (tw.t0 = performance.now() + 500) }
+}
+function frameSteps() {
+  const xs = [], ys = []; [stepCP.init, ...stepCP.segs.map(q => q.to)].forEach(o => Object.values(o).forEach(q => { xs.push(q[0]); ys.push(q[1]) }));
+  const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys), c = W3((x0 + x1) / 2, (y0 + y1) / 2);
+  const f = frame(), th = Math.tan(cam.fov * Math.PI / 360), el = .78, sw = (x1 - x0) / 2 + dims.L * .08, sh = (y1 - y0) / 2 + dims.W * .1;
+  const d = Math.max(sw / (th * f.asp * f.fw), sh * Math.sin(el) / (th * f.fh)) * 1.1 + 4;
+  X.cam = 'broadcast'; $$('#camv button').forEach(b => b.classList.toggle('on', b.dataset.v === 'broadcast'));
+  camGoal.t.copy(c); camGoal.p.set(c.x, d * Math.sin(el), c.z + d * Math.cos(el)); camGoal.on = true;
+}
+function stepsExit() { const was = !!X.st; if (was) setTimeout(() => setCam(X.cam, false), 50); X.st = null; stepCP = null; host.classList.remove('stepping'); clearStepG(); ballM.visible = true; tw.dur = 1100; if (was) buildTeams(); stepsUI() }
+function stepNext(d = 1) { if (!stepCP) return; const n = stepCP.segs.length; stepGo((X.st.i + d + n) % n, false) }
+function stepsUI() {
+  const btn = $('#stepsBtn'); if (!btn) return; const list = stepPlays();
+  btn.innerHTML = X.st ? `✕ ${L('رجوع للأدوار', 'Back to roles')}` : `▤ ${L('خطوات المرحلة', 'Phase steps')} <span class="en">${list.length || ''}</span>`;
+  btn.classList.toggle('on', !!X.st); btn.disabled = !X.st && !list.length; btn.title = list.length ? '' : L('لسه مفيش خطوات مسجّلة للمرحلة دي', 'No steps recorded yet for this phase');
+  const pnl = $('#steps'); pnl.classList.toggle('off', !X.st); const cap = $('#capbar'); cap.classList.toggle('on', !!X.st); cap.style.top = innerWidth > 900 ? ($('.hud2').getBoundingClientRect().bottom + 12) + 'px' : '';
+  if (!X.st || !stepCP) return; const p = stepCP.p, i = X.st.i, s = stepCP.segs[i], n = PHN();
+  pnl.querySelector('.ttl').innerHTML = `${L('خطوات المرحلة', 'Phase steps')} <em class="en">Phase steps</em>`;
+  const lg = (cls, t) => `<span class="lg"><i class="${cls}"></i>${t}</span>`;
+  pnl.querySelector('.pb').innerHTML = `<div class="mut">${esc(T(n[C.phase]))} · ${esc(T(E.MODES[C.mode].name))}</div>
+   <div class="plays">${list.map(q => `<button class="chip ${q.id === p.id ? 'on' : ''}" data-play-id="${q.id}">${esc(T(q.name))}</button>`).join('')}</div>
+   <h2>${esc(T(p.name))}</h2><p class="mut">${esc(T(p.desc))}</p>
+   <ol class="shots">${stepCP.segs.map((q, j) => `<li><button data-shot="${j}" class="${j === i ? 'on' : j < i ? 'done' : ''}"><b>${j + 1}</b><span>${esc(T(q.cap))}</span></button></li>`).join('')}</ol>
+   <div class="legend2">${lg('lp', L('تمريرة', 'Pass'))}${lg('lr', L('جري بدون كرة', 'Run off the ball'))}${lg('ld', L('مراوغة / جري بالكرة', 'Dribble'))}${lg('lo', L('تحرك المنافس', 'Opponent movement'))}</div>`;
+  pnl.querySelectorAll('[data-play-id]').forEach(b => b.onclick = () => { stepsEnter(b.dataset.playId); pause() });
+  pnl.querySelectorAll('[data-shot]').forEach(b => b.onclick = () => { stepGo(+b.dataset.shot, false); pause() });
+  cap.innerHTML = `<b>${i + 1}<small>/${stepCP.segs.length}</small></b><span>${esc(T(s.cap))}</span><button class="ic" data-sd="-1" title="${L('الخطوة السابقة', 'Previous step')}">›</button><button class="ic" data-sd="1" title="${L('الخطوة التالية', 'Next step')}">‹</button>`;
+  cap.querySelectorAll('[data-sd]').forEach(b => b.onclick = () => { stepNext(+b.dataset.sd); pause() });
+}
+$('#stepsBtn').onclick = () => { if (X.st) stepsExit(); else { stepsEnter(null); if (X.st) { X.play = true; playBtns() } } };
 
 /* ---------- top bar wiring ---------- */
 $$('#camv button').forEach(b => b.onclick = () => setCam(b.dataset.v));
