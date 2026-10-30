@@ -209,7 +209,7 @@ function setCam(k, now) {
   else { const el = k === 'top' ? Math.PI / 2 - .001 : .6, d = fit(el); camGoal.t.set(0, 0, 0); camGoal.p.set(0, d * Math.sin(el), d * Math.cos(el)) }
   camGoal.on = true; if (now) { cam.position.copy(camGoal.p); ctl.target.copy(camGoal.t); camGoal.on = false }
 }
-const refit = () => { if (dims) setCam(X.cam, false) }; ctl.addEventListener('start', () => { camGoal.on = false });
+const refit = () => { if (!dims) return; if (X.st && stepCP && X.cam === 'broadcast') frameSteps(); else setCam(X.cam, false) }; ctl.addEventListener('start', () => { camGoal.on = false });
 
 /* ---------- picking ---------- */
 const ray = new THREE.Raycaster(), mp = new THREE.Vector2(); let down = null;
