@@ -7,7 +7,7 @@ import {
   DRILLS, DRILL_CAT, PLAYS, PLAY_CAT, SKILLS, SKILL_CAT, SPORTS, parseAsk, playSport, scoreDrill, textMatch,
   type Ask, type Drill, type DrillCat, type NodeKey,
 } from "./content"
-import { Dock } from "./Dock"
+import { Dock } from "@/components/ui/Dock"
 import { SkillMap } from "./SkillMap"
 
 const PlayLab = lazy(async () => ({ default: (await import("./PlayLab")).PlayLab }))
@@ -37,7 +37,7 @@ export function LibraryScreen(): React.JSX.Element {
   useEffect(() => { window.scrollTo({ top: 0 }) }, [view])
   return (
     <div className="lib" data-theme={theme} dir="rtl">
-      <Dock />
+      <Dock active="library" />
       {view.v === "cmd" && <Command open={setView} flip={flip} />}
       {view.v === "play" && <Suspense fallback={<div className="cmdv"><p className="wrap">…</p></div>}><PlayLab id={view.id} open={setView} flip={flip} theme={theme} /></Suspense>}
       {view.v === "map" && <SkillMap start={view.key} open={setView} flip={flip} />}
