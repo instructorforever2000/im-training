@@ -43,7 +43,9 @@
 .rs .ttl .en{font-size:10.5px}
 .rs .ph-h button{width:24px;height:24px;border-radius:7px;color:var(--mu);font-size:13px;display:grid;place-items:center}
 .rs .ph-h button:hover{background:var(--soft);color:var(--ink)}
-.rs .pnl.min .pb,.rs .pnl.min .tlb{display:none}
+.rs .pnl.min .pb,.rs .pnl:not(#tl).min .tlb{display:none}
+.rs #tl.min #track,.rs #tl.min .tlk{display:none}
+.rs #tl.min .tlb{padding-block:6px}
 .rs .pnl.min{resize:none}
 .rs .pnl.min .min-b{transform:rotate(180deg)}
 .rs .pb{overflow:auto;padding:12px 14px;display:flex;flex-direction:column;gap:10px;font-size:13px}
@@ -246,3 +248,10 @@
 .rs #capbar b{flex:none;font:700 22px Outfit;color:#F4D03F}.rs #capbar small{font-size:12px;color:#9fb0c6}
 .rs #capbar span{flex:1;font-size:15px;line-height:1.6}.rs #capbar .ic{background:#ffffff1f;color:#fff;flex:none}
 @media(max-width:900px){.rs #steps{order:5}.rs #capbar{position:relative;left:auto;bottom:auto;transform:none;max-width:none;margin:8px;order:4}.rs #capbar:not(.on){display:none}}
+
+/* mobile: pitch stays visible while scrolling, legend shown */
+@media(max-width:900px){.rs{overflow:visible!important}
+.rs #stage{position:sticky;top:0;z-index:30;height:46dvh;box-shadow:0 10px 24px -14px #0006}
+.rs .legend{display:flex!important;flex-wrap:wrap;gap:6px 10px;font-size:11px}
+.rs .hint{display:block;position:relative;left:auto;bottom:auto;transform:none;margin:4px 8px;text-align:center;order:3}
+}

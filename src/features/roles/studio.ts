@@ -151,12 +151,12 @@ function athlete(p, opp, idx) {
   return g;
 }
 function buildTeams() {
-  if (X.st) { if (stepCP && stepCP.p.mode === C.mode) { stepsEnter(X.st.id, X.st.i); return } X.st = null; stepCP = null; host.classList.remove('stepping'); clearStepG(); ballM.visible = true; tw.dur = 1100 }
+  if (X.st) { if (stepCP && stepCP.p.mode === C.mode) { stepsEnter(X.st.id, X.st.i); return } X.st = null; stepCP = null; host.classList.remove('stepping'); clearStepG(); ballM.visible = true; tw.dur = 2600 }
   usG.clear(); oppG.clear(); const lay = layout(); us = lay.players.map((p, i) => { const a = athlete(p, false, i); usG.add(a); return a });
   const op = C.opp ? E.stOpp(C.mode, C.phase) : null; them = (op || []).map((p, i) => { const a = athlete(p, true, i + 3); oppG.add(a); return a }); oppG.visible = !!op;
   place(true); highlight();
 }
-let tw = { t0: 0, dur: 1100 };
+let tw = { t0: 0, dur: 2600 };
 /** Move every player (and the ball) to the current phase layout, tweening from where they stand. */
 function place(instant) {
   if (X.st) { const l = stepPlays(); if (!l.some(q => q.id === X.st.id)) { if (l.length) stepsEnter(l[0].id); else stepsExit() } return }
@@ -221,17 +221,22 @@ canvas.addEventListener('pointerup', e => {
 function selectSlot(id) { if (X.st) return; C.sel = id; X.cmp = null; saveSt(); highlight(); zones(); panels(); if (X.cam === 'player') setCam('player') }
 
 /* ---------- animation loop ---------- */
-let last = performance.now(), nextAt = performance.now() + 2800; const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
+let last = performance.now(), nextAt = performance.now() + 7000; const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
 function tick(now) {
   const dt = Math.min(.05, (now - last) / 1000); last = now;
   if (X.play && now > nextAt) { if (X.st) stepNext(); else { const ps = PHS(); setPhase(ps[(ps.indexOf(C.phase) + 1) % ps.length], true) } }
-  const f = reduce ? 1 : Math.min(1, (now - tw.t0) / tw.dur), e = f * f * (3 - 2 * f);
+  const f = reduce ? 1 : Math.min(1, (now - tw.t0) / (tw.dur / X.speed)), e = f * f * (3 - 2 * f);
   [...us, ...them].forEach(a => { const u = a.userData, w = u.from.clone().lerp(u.to, e), prev = u.prev || w.clone(), v = w.clone().sub(prev), sp = v.length() / Math.max(dt, 1e-3); a.position.copy(w); u.prev = w.clone();
     const dir = u.opp ? Math.PI : 0, face = sp > .3 ? Math.atan2(-v.z, v.x) : dir; let d = face - a.rotation.y; d = Math.atan2(Math.sin(d), Math.cos(d)); a.rotation.y += d * .12;
     const run = Math.min(1, sp / 6); u.phase += dt * (3 + run * 9); const sw = Math.sin(u.phase) * (.1 + run * .75); u.legL.rotation.z = sw; u.legR.rotation.z = -sw; u.armL.rotation.z = -sw * .8; u.armR.rotation.z = sw * .8; u.body.position.y = Math.abs(Math.sin(u.phase)) * .04 * (1 + run) * u.k; u.body.rotation.z = -run * .12 });
   const bu = ballM.userData; ballM.position.copy(bu.from.clone().lerp(bu.to, e)); ballM.position.y = bu.r + Math.sin(e * Math.PI) * Math.min(4, bu.from.distanceTo(bu.to) * .12); ballM.rotation.z -= dt * 4 * (1 - e);
+  /* ball sits where the sport puts it: football on the ground; basketball dribbled beside the holder; handball held in the hand; volleyball held overhead / in the air */
+  const ct = COURT[C.mode]; if (ct !== 'fb' && ct !== 'fs' && ballM.visible) { let hd = null, bd = 1.6; for (const a of [...us, ...them]) { const d = Math.hypot(a.position.x - ballM.position.x, a.position.z - ballM.position.z); if (d < bd) { bd = d; hd = a } }
+    if (hd) { const k = hd.userData.k || 1, side = new THREE.Vector3(0, 0, .42 * k).applyAxisAngle(new THREE.Vector3(0, 1, 0), hd.rotation.y), w = Math.max(0, 1 - bd / 1.6);
+      const hy = ct === 'bb' ? bu.r + Math.abs(Math.sin(now / 1000 * 5.5)) * (1.0 * k - bu.r) : ct === 'hb' ? 1.25 * k : 2.15 * k + Math.abs(Math.sin(now / 1000 * 2)) * .5;
+      ballM.position.x += (hd.position.x + side.x - ballM.position.x) * w; ballM.position.z += (hd.position.z + side.z - ballM.position.z) * w; ballM.position.y += (hy - ballM.position.y) * w } }
   const p = us.find(a => String(a.userData.id) === String(C.sel)); if (p) { spot.position.set(p.position.x, 14, p.position.z + 2); spot.target.position.copy(p.position); spot.intensity = root.dataset.theme === 'dark' ? 160 : 70; p.userData.ring.rotation.z += dt } else spot.intensity = 0;
-  $('#prog').style.width = X.play ? `${Math.min(100, 100 - (nextAt - now) / ((X.st ? 4200 : 2800) / X.speed) * 100)}%` : '0%';
+  $('#prog').style.width = X.play ? `${Math.min(100, 100 - (nextAt - now) / ((X.st ? 8000 : 7000) / X.speed) * 100)}%` : '0%';
   if (camGoal.on) { if (X.cam === 'player' && p) camGoal.t.copy(p.position); cam.position.lerp(camGoal.p, .06); ctl.target.lerp(camGoal.t, .08); if (cam.position.distanceTo(camGoal.p) < .2 && X.cam !== 'player') camGoal.on = false }
   if (dead) return; ctl.update(); rn.render(scene, cam); raf = requestAnimationFrame(tick);
 }
@@ -239,10 +244,10 @@ function resize() { const b = $('#stage').getBoundingClientRect(); rn.setSize(b.
 track(new ResizeObserver(resize)).observe($('#stage'));
 
 /* ---------- phases & playback ---------- */
-function setPhase(ph, auto) { C.phase = ph; saveSt(); place(false); phaseBar(); panels(); nextAt = performance.now() + 2800 / X.speed; if (!auto) pause() }
+function setPhase(ph, auto) { C.phase = ph; saveSt(); place(false); phaseBar(); panels(); nextAt = performance.now() + 7000 / X.speed; if (!auto) pause() }
 function pause() { X.play = false; playBtns() }
 function playBtns() { $$('[data-play]').forEach(b => { b.innerHTML = X.play ? `❚❚ <span>${L('إيقاف', 'Pause')}</span>` : `▶ <span>${L('تشغيل الدورة', 'Play cycle')}</span>`; b.classList.toggle('on', X.play) }) }
-function togglePlay() { X.play = !X.play; nextAt = performance.now() + 2800 / X.speed; playBtns() }
+function togglePlay() { X.play = !X.play; nextAt = performance.now() + 7000 / X.speed; playBtns() }
 function step(d) { const ps = PHS(); setPhase(ps[(ps.indexOf(C.phase) + d + ps.length) % ps.length]) }
 function phaseBar() {
   const ps = PHS(), n = PHN(); $('#segs').innerHTML = ps.map((p, i) => `<button class="seg ${p === C.phase ? 'on' : ''}" data-ph="${p}" style="--c:${PHC[p]}"><b><i>${i + 1}</i>${esc(T(n[p]))}</b><em class="en">${esc(n[p].en)}</em></button>`).join('');
@@ -431,9 +436,9 @@ function stepGo(i, instant) {
   const s = cp.segs[i];
   [...us, ...them].forEach(a => { const q = s.to[a.userData.id]; if (!q) return; a.userData.from.copy(a.position); a.userData.to.copy(W3(q[0], q[1])); if (instant) { a.position.copy(a.userData.to); a.userData.from.copy(a.userData.to) } });
   const bp = holderPos(s.h1, s.to); ballM.visible = !!bp; if (bp) { ballM.userData.from.copy(ballM.position); ballM.userData.to.copy(W3(bp[0], bp[1])).setY(ballM.userData.r); if (instant) ballM.position.copy(ballM.userData.to) }
-  tw.t0 = performance.now(); tw.dur = 1500; clearStepG(); trailG.clear(); zonesG.clear();
+  tw.t0 = performance.now(); tw.dur = 3200; clearStepG(); trailG.clear(); zonesG.clear();
   for (let j = 0; j <= i; j++) drawSeg(cp.segs[j], j, j === i);
-  nextAt = performance.now() + 4200 / X.speed; stepsUI();
+  nextAt = performance.now() + 8000 / X.speed; stepsUI();
 }
 function stepsEnter(id, i = 0) {
   const list = stepPlays(), p = PLAYS.find(q => q.id === id && q.mode === C.mode) || list[0];
@@ -452,7 +457,7 @@ function frameSteps() {
   X.cam = 'broadcast'; $$('#camv button').forEach(b => b.classList.toggle('on', b.dataset.v === 'broadcast'));
   camGoal.t.copy(c); camGoal.p.set(c.x, d * Math.sin(el), c.z + d * Math.cos(el)); camGoal.on = true;
 }
-function stepsExit() { const was = !!X.st; if (was) setTimeout(() => setCam(X.cam, false), 50); X.st = null; stepCP = null; host.classList.remove('stepping'); clearStepG(); ballM.visible = true; tw.dur = 1100; if (was) buildTeams(); stepsUI() }
+function stepsExit() { const was = !!X.st; if (was) setTimeout(() => setCam(X.cam, false), 50); X.st = null; stepCP = null; host.classList.remove('stepping'); clearStepG(); ballM.visible = true; tw.dur = 2600; if (was) buildTeams(); stepsUI() }
 function stepNext(d = 1) { if (!stepCP) return; const n = stepCP.segs.length; stepGo((X.st.i + d + n) % n, false) }
 function stepsUI() {
   const btn = $('#stepsBtn'); if (!btn) return; const list = stepPlays();
@@ -479,7 +484,7 @@ $$('#camv button').forEach(b => b.onclick = () => setCam(b.dataset.v));
 $$('#lang button').forEach(b => b.onclick = () => { E.setLang(b.dataset.l); $$('#lang button').forEach(x => x.classList.toggle('on', x === b)); all() });
 $('#th').onclick = () => { root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark'; store.set('im-theme-v', root.dataset.theme); buildArena() };
 $('#card').onclick = printCard; $$('[data-play]').forEach(b => b.onclick = togglePlay); $('#prev').onclick = () => step(-1); $('#next').onclick = () => step(1);
-$('#speed').onchange = e => { X.speed = +e.target.value; nextAt = performance.now() + 2800 / X.speed };
+$('#speed').onchange = e => { X.speed = +e.target.value; nextAt = performance.now() + 7000 / X.speed };
 function all() { controls(); phaseBar(); panels(); playBtns(); placePanels() }
 
 /* ---------- boot ---------- */
