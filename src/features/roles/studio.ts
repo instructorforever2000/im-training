@@ -416,8 +416,8 @@ function curve(a, b, k, sg) { const c = [(a[0] + b[0]) / 2 - (b[1] - a[1]) * k *
 function wavy(a, b, amp) { const dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy) || 1, nx = -dy / L, ny = dx / L, waves = Math.max(2, Math.round(L / (amp * 5))), o = []; for (let i = 0; i <= 60; i++) { const t = i / 60, s = Math.sin(t * Math.PI * 2 * waves) * amp * Math.min(1, t * 6, (1 - t) * 6); o.push([a[0] + dx * t + nx * s, a[1] + dy * t + ny * s]) } return o }
 function badge(n, col) {
   const c = document.createElement('canvas'); c.width = c.height = 128; const g = c.getContext('2d');
-  g.fillStyle = col; g.beginPath(); g.arc(64, 64, 54, 0, Math.PI * 2); g.fill(); g.lineWidth = 8; g.strokeStyle = '#ffffff'; g.stroke();
-  g.fillStyle = '#0b1726'; g.font = '700 64px Outfit, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(String(n), 64, 68);
+  g.fillStyle = col; g.beginPath(); g.arc(64, 64, 54, 0, Math.PI * 2); g.fill(); g.lineWidth = 6; g.strokeStyle = '#ffffffcc'; g.stroke();
+  g.fillStyle = '#33404f'; g.font = '700 64px Outfit, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(String(n), 64, 68);
   const tx = new THREE.CanvasTexture(c); tx.colorSpace = THREE.SRGBColorSpace; const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: tx, depthTest: false, transparent: true })); s.renderOrder = 11; return s;
 }
 function clearStepG() { stepG.traverse(o => { o.geometry?.dispose?.(); o.material?.map?.dispose?.(); o.material?.dispose?.() }); stepG.clear() }
@@ -428,7 +428,7 @@ function drawSeg(s, i, cur) {
     stepG.add(strip(pts, w, col, op, false, true)) });
   if (s.ball) stepG.add(strip(curve(s.ball.a, s.ball.b, .04, 1), w * 1.15, s.ball.kind === 'shot' ? SC.shot : SC.pass, op, true, true));
   const anchor = s.ball ? s.ball.b : s.moves[0] ? s.moves[0].b : null;
-  if (anchor) { const b = badge(i + 1, cur ? '#F4D03F' : '#cfd8e3'), k = Math.max(1.3, dims.L / 22); b.position.copy(W3(anchor[0], anchor[1])).setY(k * .9); b.scale.set(k, k, 1); b.material.opacity = cur ? 1 : .7; stepG.add(b) }
+  if (anchor) { const b = badge(i + 1, cur ? '#FBE7A1' : '#e3e9f0'), k = Math.max(.75, dims.L / 40); b.position.copy(W3(anchor[0], anchor[1])).setY(3.3); b.scale.set(k, k, 1); b.material.opacity = cur ? .85 : .5; stepG.add(b) }
 }
 function holderPos(h, P) { if (h == null) return null; const q = typeof h === 'string' ? P[h] : h; return q ? [q[0] + dims.L * .008, q[1] + dims.W * .012] : null }
 function stepGo(i, instant) {
