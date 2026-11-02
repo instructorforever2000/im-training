@@ -118,7 +118,7 @@ function buildArena() {
   const big = Math.max(S.L, S.W); sun.position.set(-big * .35, big * .9, big * .45); const sc = sun.shadow.camera; sc.left = -S.L * .7; sc.right = S.L * .7; sc.top = S.W * 1.1; sc.bottom = -S.W * 1.1; sc.near = 1; sc.far = big * 3; sc.updateProjectionMatrix();
   sun.intensity = dark ? 1.25 : 2.3; hemi.intensity = dark ? .35 : .95; rn.setClearColor(dark ? 0x04070c : 0xe4eaf0); scene.fog = new THREE.Fog(dark ? 0x04070c : 0xe4eaf0, big * 1.6, big * 4.2);
   zonesG = new THREE.Group(); trailG = new THREE.Group(); usG = new THREE.Group(); oppG = new THREE.Group(); arena.add(zonesG, trailG, usG, oppG);
-  const br = court === 'fb' ? .3 * S.L / 105 * 1.6 : court === 'bb' ? .24 : court === 'vb' ? .21 : .2;
+  const br = court === 'fb' ? .3 * S.L / 105 * 1.6 : court === 'bb' ? .24 : court === 'vb' ? .27 : .26;
   ballM = new THREE.Mesh(new THREE.SphereGeometry(br, 24, 16), mat(court === 'bb' ? 0xe0701e : court === 'vb' ? 0xf2d34a : 0xffffff, { roughness: .45 })); ballM.castShadow = true; ballM.userData = { r: br, to: new THREE.Vector3(), from: new THREE.Vector3() }; arena.add(ballM);
   buildTeams(); setCam(X.cam, true);
 }
@@ -463,7 +463,7 @@ function stepsUI() {
   const btn = $('#stepsBtn'); if (!btn) return; const list = stepPlays();
   btn.innerHTML = X.st ? `✕ ${L('رجوع للأدوار', 'Back to roles')}` : `▤ ${L('خطوات المرحلة', 'Phase steps')} <span class="en">${list.length || ''}</span>`;
   btn.classList.toggle('on', !!X.st); btn.disabled = !X.st && !list.length; btn.title = list.length ? '' : L('لسه مفيش خطوات مسجّلة للمرحلة دي', 'No steps recorded yet for this phase');
-  const pnl = $('#steps'); pnl.classList.toggle('off', !X.st); const cap = $('#capbar'); cap.classList.toggle('on', !!X.st); cap.style.top = innerWidth > 900 ? ($('.hud2').getBoundingClientRect().bottom + 12) + 'px' : '';
+  const pnl = $('#steps'); pnl.classList.toggle('off', !X.st); const cap = $('#capbar'); cap.classList.toggle('on', !!X.st); if (cap.classList.contains('moved')) X.capPos?.(); else cap.style.top = innerWidth > 900 ? ($('.hud2').getBoundingClientRect().bottom + 12) + 'px' : '';
   if (!X.st || !stepCP) return; const p = stepCP.p, i = X.st.i, s = stepCP.segs[i], n = PHN();
   pnl.querySelector('.ttl').innerHTML = `${L('خطوات المرحلة', 'Phase steps')} <em class="en">Phase steps</em>`;
   const lg = (cls, t) => `<span class="lg"><i class="${cls}"></i>${t}</span>`;
@@ -482,6 +482,25 @@ $('#stepsBtn').onclick = () => { if (X.st) stepsExit(); else { stepsEnter(null);
 /* ---------- top bar wiring ---------- */
 $$('#camv button').forEach(b => b.onclick = () => setCam(b.dataset.v));
 $$('#lang button').forEach(b => b.onclick = () => { E.setLang(b.dataset.l); $$('#lang button').forEach(x => x.classList.toggle('on', x === b)); all() });
+/* ---------- more room for the pitch: top bar auto-hides, side dock folds, caption bar moves ---------- */
+{ const rs = host, prefs = store.get('im-roles-ui', { pin: false, dock: true }), saveUi = () => store.set('im-roles-ui', prefs);
+  let hideT = 0; const show = v => { if (rs.classList.contains('hh') === !v) return; rs.classList.toggle('hh', !v); setTimeout(refit, 320) };
+  const pinUi = () => { $('#pin').classList.toggle('on', prefs.pin); if (prefs.pin) show(true) };
+  const dockUi = () => { rs.classList.toggle('dh', !prefs.dock); $('#dockb').classList.toggle('on', !prefs.dock); setTimeout(() => { resize(); placePanels() }, 320) };
+  $('#pin').onclick = () => { prefs.pin = !prefs.pin; saveUi(); pinUi(); toast(prefs.pin ? L('القائمة العلوية مثبّتة', 'Top bar pinned') : L('القائمة العلوية بتختفي وتظهر لما تقرّب من فوق', 'Top bar hides — move to the top to show it')) };
+  $('#dockb').onclick = () => { prefs.dock = !prefs.dock; saveUi(); dockUi() };
+  $('#hudtab').onclick = () => show(true);
+  on(window, 'pointermove', e => { if (prefs.pin || innerWidth <= 900 || e.pointerType === 'touch') return; const t = e.target, overBar = t.closest && t.closest('.hud,.hud2,#hudtab,#pmenu,select');
+    if (e.clientY < 46 || overBar) { clearTimeout(hideT); show(true) } else if (!rs.classList.contains('hh')) { clearTimeout(hideT); hideT = setTimeout(() => show(false), 900) } });
+  on($('#gl'), 'pointerdown', () => { if (!prefs.pin && innerWidth > 900) show(false) });
+  pinUi(); dockUi(); if (!prefs.pin && innerWidth > 900) setTimeout(() => show(false), 2500);
+  /* caption bar: drag it anywhere, double-click to put it back */
+  const cap = $('#capbar'); let cd = null; const capPos = () => { const q = store.get('im-roles-cap', null); cap.classList.toggle('moved', !!q && innerWidth > 900); if (q && innerWidth > 900) Object.assign(cap.style, { left: q.x + 'px', top: q.y + 'px' }) };
+  on(cap, 'pointerdown', e => { if (innerWidth <= 900 || e.target.closest('button')) return; const b = cap.getBoundingClientRect(); cd = [e.clientX - b.left, e.clientY - b.top]; cap.setPointerCapture(e.pointerId); cap.classList.add('moved', 'drag') });
+  on(cap, 'pointermove', e => { if (!cd) return; Object.assign(cap.style, { left: Math.max(0, Math.min(innerWidth - 120, e.clientX - cd[0])) + 'px', top: Math.max(0, Math.min(innerHeight - 50, e.clientY - cd[1])) + 'px' }) });
+  on(cap, 'pointerup', () => { if (!cd) return; cd = null; cap.classList.remove('drag'); const b = cap.getBoundingClientRect(); store.set('im-roles-cap', { x: b.left, y: b.top }) });
+  on(cap, 'dblclick', () => { store.set('im-roles-cap', null); cap.classList.remove('moved'); cap.style.left = ''; stepsUI() });
+  X.capPos = capPos; capPos() }
 $('#th').onclick = () => { root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark'; store.set('im-theme-v', root.dataset.theme); buildArena() };
 $('#card').onclick = printCard; $$('[data-play]').forEach(b => b.onclick = togglePlay); $('#prev').onclick = () => step(-1); $('#next').onclick = () => step(1);
 $('#speed').onchange = e => { X.speed = +e.target.value; nextAt = performance.now() + 7000 / X.speed };

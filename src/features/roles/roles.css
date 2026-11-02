@@ -12,10 +12,12 @@
 .rs .dock a.on{background:#ffffff18;color:#fff}
 .rs .dock svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .rs .dock .sp{flex:1}
-.rs #stage{position:fixed;inset:12px 92px 12px 12px;border-radius:22px;overflow:hidden;border:1px solid var(--ln)}
+.rs{--rx:104px}
+.rs.dh{--rx:24px}
+.rs #stage{position:fixed;inset:12px calc(var(--rx) - 12px) 12px 12px;transition:inset .3s;border-radius:22px;overflow:hidden;border:1px solid var(--ln)}
 .rs #gl{width:100%;height:100%;display:block;cursor:grab}
 .rs #gl:active{cursor:grabbing}
-.rs .hud{position:fixed;top:24px;right:104px;left:24px;display:flex;align-items:center;gap:10px;padding:8px 12px;z-index:30;flex-wrap:wrap}
+.rs .hud{position:fixed;top:24px;right:var(--rx);left:24px;display:flex;align-items:center;gap:10px;padding:8px 12px;z-index:30;flex-wrap:wrap}
 .rs .hud h1{font-size:18px;white-space:nowrap}
 .rs .hud h1 .en{font-size:12px;margin-inline-start:6px}
 .rs .chip{font-size:12px;padding:5px 10px;border-radius:999px;background:var(--chip);color:var(--mu);display:inline-flex;gap:6px;align-items:center;white-space:nowrap}
@@ -49,9 +51,9 @@
 .rs .pnl.min{resize:none}
 .rs .pnl.min .min-b{transform:rotate(180deg)}
 .rs .pb{overflow:auto;padding:12px 14px;display:flex;flex-direction:column;gap:10px;font-size:13px}
-.rs #role{top:96px;right:104px;width:340px}
+.rs #role{top:96px;right:var(--rx);width:340px}
 .rs #vars{top:96px;left:24px;width:310px}
-.rs #tl{bottom:24px;right:104px;left:24px;max-height:none;max-width:none;resize:none;min-width:0}
+.rs #tl{bottom:24px;right:var(--rx);left:24px;max-height:none;max-width:none;resize:none;min-width:0}
 .rs .tag{font:700 11px Outfit;color:#fff;background:var(--teal2);padding:2px 7px;border-radius:6px}
 .rs .k{font-size:12px;color:var(--mu)}
 .rs .pb h2{font-size:21px;line-height:1.35}
@@ -155,7 +157,7 @@
 .rs .legend i.z.nb{--c:#4FD1C5;border-style:dashed}
 .rs .legend i.z.wb{--c:#F4D03F}
 .rs .legend i.z.cm{--c:#a77bf3;background:none;border-style:dashed}
-.rs .hud2{position:fixed;top:78px;right:104px;left:24px;z-index:29;display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:6px 10px}
+.rs .hud2{position:fixed;top:78px;right:var(--rx);left:24px;z-index:29;display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:6px 10px}
 .rs #pdock{display:flex;gap:6px}
 .rs .tlb .ctrls{display:flex;align-items:center;gap:6px;flex:none}
 .rs .bigplay{height:38px;padding:0 16px;border-radius:999px;background:var(--teal2);color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;gap:6px;white-space:nowrap}
@@ -227,7 +229,7 @@
 }
 
 /* ---------- خطوات المرحلة — Phase steps ---------- */
-.rs #steps{top:96px;right:104px;width:360px}
+.rs #steps{top:96px;right:var(--rx);width:360px}
 .rs #steps.off,.rs.stepping #role,.rs.stepping #vars,.rs.stepping .hint{display:none}
 .rs .stp{font-weight:600;color:var(--teal2);background:var(--tealbg);box-shadow:inset 0 0 0 1px var(--teal)}
 .rs .stp:disabled{opacity:.45;cursor:not-allowed}.rs .stp.on{background:var(--navy);color:#fff;box-shadow:none}
@@ -255,3 +257,16 @@
 .rs .legend{display:flex!important;flex-wrap:wrap;gap:6px 10px;font-size:11px}
 .rs .hint{display:block;position:relative;left:auto;bottom:auto;transform:none;margin:4px 8px;text-align:center;order:3}
 }
+
+/* top bar auto-hide + folding dock + movable caption */
+.rs .hud,.rs .hud2{transition:transform .3s,opacity .3s}
+.rs.hh .hud,.rs.hh .hud2{transform:translateY(-170%);opacity:0;pointer-events:none}
+.rs #hudtab{position:fixed;top:0;left:50%;transform:translate(-50%,-100%);z-index:31;padding:5px 16px;border-radius:0 0 12px 12px;background:var(--navy);color:#fff;font-size:12px;transition:transform .3s;box-shadow:var(--sh)}
+.rs #hudtab .en{font-size:10.5px;opacity:.75}
+.rs.hh #hudtab{transform:translate(-50%,0)}
+.rs .dock{transition:transform .3s}
+.rs.dh .dock{transform:translateX(130%)}
+.rs #pin.on,.rs #dockb.on{background:var(--teal2);color:#fff}
+.rs #capbar{cursor:grab}.rs #capbar.drag{cursor:grabbing;transition:none}
+.rs #capbar.moved{transform:none!important}
+@media(max-width:900px){.rs #hudtab,.rs #pin,.rs #dockb{display:none}.rs.dh .dock{transform:none}.rs.hh .hud,.rs.hh .hud2{transform:none;opacity:1;pointer-events:auto}}
