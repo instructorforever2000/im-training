@@ -226,7 +226,7 @@ function tick(now) {
   const dt = Math.min(.05, (now - last) / 1000); last = now;
   if (X.play && now > nextAt) { if (X.st) stepNext(); else { const ps = PHS(); setPhase(ps[(ps.indexOf(C.phase) + 1) % ps.length], true) } }
   const f = reduce ? 1 : Math.min(1, (now - tw.t0) / (tw.dur / X.speed)), e = f * f * (3 - 2 * f);
-  [...us, ...them].forEach(a => { const u = a.userData, w = u.from.clone().lerp(u.to, e), prev = u.prev || w.clone(), v = w.clone().sub(prev), sp = v.length() / Math.max(dt, 1e-3); a.position.copy(w); u.prev = w.clone();
+  [...us, ...them].forEach(a => { const u = a.userData, fa = reduce ? 1 : Math.max(0, Math.min(1, (now - tw.t0 - (u.dl || 0) / X.speed) / (tw.dur / X.speed))), ea = fa * fa * (3 - 2 * fa), w = u.from.clone().lerp(u.to, ea), prev = u.prev || w.clone(), v = w.clone().sub(prev), sp = v.length() / Math.max(dt, 1e-3); a.position.copy(w); u.prev = w.clone();
     const dir = u.opp ? Math.PI : 0, face = sp > .3 ? Math.atan2(-v.z, v.x) : dir; let d = face - a.rotation.y; d = Math.atan2(Math.sin(d), Math.cos(d)); a.rotation.y += d * .12;
     const run = Math.min(1, sp / 6); u.phase += dt * (3 + run * 9); const sw = Math.sin(u.phase) * (.1 + run * .75); u.legL.rotation.z = sw; u.legR.rotation.z = -sw; u.armL.rotation.z = -sw * .8; u.armR.rotation.z = sw * .8; u.body.position.y = Math.abs(Math.sin(u.phase)) * .04 * (1 + run) * u.k; u.body.rotation.z = -run * .12 });
   const bu = ballM.userData; ballM.position.copy(bu.from.clone().lerp(bu.to, e)); ballM.position.y = bu.r + Math.sin(e * Math.PI) * Math.min(4, bu.from.distanceTo(bu.to) * .12); ballM.rotation.z -= dt * 4 * (1 - e);
@@ -381,6 +381,10 @@ function printCard() {
    dribbles (wavy line) and the opponent's movement (red), with a number on the pitch and a written caption. */
 const STEP_CATS = { att: ['att', 'build'], def: ['def', 'press'], ta: ['counter'], td: [], sp: ['sp'] };
 let PLAYS = [], stepCP = null; X.st = null;
+/* وضع الشرح — Teaching mode: lessons written as coach sessions (situation → trigger → reaction → result → common mistake). Content: ./lessons.json */
+let LESSONS = []; import('./lessons.json').then(m => { if (dead) return; LESSONS = m.default; stepsUI() });
+const lessonsHere = () => LESSONS.filter(p => p.mode === C.mode && p.phase === C.phase);
+const KINDS = { sit: ['الموقف', 'Situation', '#5b8def'], trig: ['المحفّز', 'Trigger', '#F4D03F'], react: ['رد الفعل', 'Reaction', '#2bb3a3'], res: ['النتيجة', 'Result', '#7bd389'], err: ['الخطأ الشائع', 'Common mistake', '#e5574b'] };
 import('@/content/legacy-v28/plays.json').then(m => { if (dead) return; PLAYS = m.default; stepsUI() });
 const stepPlays = () => PLAYS.filter(p => p.mode === C.mode && (STEP_CATS[C.phase] || []).includes(p.cat));
 const stepG = new THREE.Group(); stepG.renderOrder = 5;
@@ -392,10 +396,10 @@ function compileSteps(p) {
   p.steps.forEach(st => {
     const from = { ...pos }, to = { ...pos }; Object.entries(st.m || {}).forEach(([id, v]) => { if (to[id]) to[id] = v });
     const nh = st.b !== undefined ? st.b : holder, moves = [];
-    for (const id in to) { const a = from[id], b = to[id]; if (Math.hypot(b[0] - a[0], b[1] - a[1]) < Mo.L * .004) continue; moves.push({ id, a, b, team: meta[id].team, kind: id === holder && id === nh ? 'dribble' : 'run' }) }
+    if (!st.reset) for (const id in to) { const a = from[id], b = to[id]; if (Math.hypot(b[0] - a[0], b[1] - a[1]) < Mo.L * .004) continue; moves.push({ id, a, b, team: meta[id].team, kind: id === holder && id === nh ? 'dribble' : 'run' }) }
     const at = (h, P) => typeof h === 'string' ? P[h] : h;
-    const ball = nh !== holder && nh != null && holder != null ? { kind: typeof nh === 'string' ? 'pass' : 'shot', a: at(holder, from), b: at(nh, to) } : null;
-    segs.push({ moves, ball, h0: holder, h1: nh, to, cap: st.c }); Object.assign(pos, to); holder = nh });
+    const ball = !st.reset && nh !== holder && nh != null && holder != null ? { kind: typeof nh === 'string' ? 'pass' : 'shot', a: at(holder, from), b: at(nh, to) } : null;
+    segs.push({ moves, ball, h0: holder, h1: nh, to, cap: st.c, raw: st }); Object.assign(pos, to); holder = nh });
   return { p, meta, init, segs };
 }
 /* flat ribbons painted on the surface (WebGL lines are 1px, so paths are built as thin meshes) */
@@ -430,6 +434,20 @@ function drawSeg(s, i, cur) {
   const anchor = s.ball ? s.ball.b : s.moves[0] ? s.moves[0].b : null;
   if (anchor) { const b = badge(i + 1, cur ? '#FBE7A1' : '#e3e9f0'), k = Math.max(.75, dims.L / 40); b.position.copy(W3(anchor[0], anchor[1])).setY(3.3); b.scale.set(k, k, 1); b.material.opacity = cur ? .85 : .5; stepG.add(b) }
 }
+/* teaching extras: who moves first, who is in focus, the key space, and the wrong position as a red ghost */
+function dimAthlete(a, v) { if (a.userData.dimV === v) return; a.userData.dimV = v; a.traverse(o => { const m = o.material; if (!m || o === a.userData.ring) return; m.transparent = v < 1 || m.transparent; m.opacity = v; m.depthWrite = v === 1 }) }
+function teachExtras(s) {
+  const r = s.raw || {}, f = r.focus, mv = new Set(s.moves.map(q => q.id));
+  [...us, ...them].forEach(a => { const id = a.userData.id; a.userData.dl = !mv.has(id) ? 0 : f && f.includes(id) ? (s.ball ? 900 : 0) : (s.ball ? 1900 : 1000); dimAthlete(a, !f || f.includes(id) || id === s.h1 ? 1 : .22) });
+  if (s.ball) tw.dur = 2200;
+  if (r.zone) { const [x, y, rad, t] = r.zone, d = new THREE.Mesh(new THREE.CircleGeometry(rad, 48), new THREE.MeshBasicMaterial({ color: 0x2bb3a3, transparent: true, opacity: .22, depthWrite: false })); d.rotation.x = -Math.PI / 2; d.position.copy(W3(x, y)).setY(.05); stepG.add(d);
+    const rg = new THREE.Mesh(new THREE.RingGeometry(rad - .25, rad, 64), new THREE.MeshBasicMaterial({ color: 0x2bb3a3, transparent: true, opacity: .8, depthWrite: false })); rg.rotation.x = -Math.PI / 2; rg.position.copy(d.position).setY(.06); stepG.add(rg);
+    const lb = label(T(t), false), k = Math.max(1.2, dims.L / 50); lb.position.copy(W3(x, y - rad - 1)).setY(.8); lb.scale.set(k * 2.4, k * .8, 1); stepG.add(lb) }
+  if (r.wrong) Object.entries(r.wrong).forEach(([id, q]) => { const a = [...us, ...them].find(z => z.userData.id === id); if (!a) return;
+    const g = athlete({ id: 'ghost-' + id, code: '✗', n: '' }, true, 1); g.traverse(o => { const m = o.material; if (m && o !== g.userData.ring) { m.transparent = true; m.opacity = .38; m.depthWrite = false; m.color?.set?.(0xe5574b) } }); g.position.copy(W3(q[0], q[1])); g.userData.tag.visible = false; stepG.add(g);
+    const to = s.to[id]; if (to) stepG.add(strip([q, to], Math.max(.16, dims.L / 105) * .9, SC.opp, .85, true, true));
+    const lb = label(L('غلط', 'Wrong'), true), k = Math.max(1.2, dims.L / 50); lb.position.copy(W3(q[0], q[1])).setY(2.9 * (a.userData.k || 1)); lb.scale.set(k * 1.5, k * .7, 1); stepG.add(lb) });
+}
 function holderPos(h, P) { if (h == null) return null; const q = typeof h === 'string' ? P[h] : h; return q ? [q[0] + dims.L * .008, q[1] + dims.W * .012] : null }
 function stepGo(i, instant) {
   const cp = stepCP; if (!cp) return; X.st.i = i; if (stepG.parent !== arena) arena.add(stepG);
@@ -437,11 +455,11 @@ function stepGo(i, instant) {
   [...us, ...them].forEach(a => { const q = s.to[a.userData.id]; if (!q) return; a.userData.from.copy(a.position); a.userData.to.copy(W3(q[0], q[1])); if (instant) { a.position.copy(a.userData.to); a.userData.from.copy(a.userData.to) } });
   const bp = holderPos(s.h1, s.to); ballM.visible = !!bp; if (bp) { ballM.userData.from.copy(ballM.position); ballM.userData.to.copy(W3(bp[0], bp[1])).setY(ballM.userData.r); if (instant) ballM.position.copy(ballM.userData.to) }
   tw.t0 = performance.now(); tw.dur = 3200; clearStepG(); trailG.clear(); zonesG.clear();
-  for (let j = 0; j <= i; j++) drawSeg(cp.segs[j], j, j === i);
+  if (X.teach) { drawSeg(s, i, true); teachExtras(s) } else for (let j = 0; j <= i; j++) drawSeg(cp.segs[j], j, j === i);
   nextAt = performance.now() + 8000 / X.speed; stepsUI();
 }
 function stepsEnter(id, i = 0) {
-  const list = stepPlays(), p = PLAYS.find(q => q.id === id && q.mode === C.mode) || list[0];
+  const list = X.teach ? lessonsHere() : stepPlays(), p = (X.teach ? LESSONS : PLAYS).find(q => q.id === id && q.mode === C.mode) || list[0];
   if (!p) { toast(L('لسه مفيش خطوات مسجّلة للمرحلة دي في الرياضة دي', 'No steps recorded yet for this phase in this sport')); return stepsExit() }
   X.st = { id: p.id, i: 0 }; stepCP = compileSteps(p); host.classList.add('stepping');
   usG.clear(); oppG.clear(); us = []; them = []; oppG.visible = true;
@@ -457,16 +475,17 @@ function frameSteps() {
   X.cam = 'broadcast'; $$('#camv button').forEach(b => b.classList.toggle('on', b.dataset.v === 'broadcast'));
   camGoal.t.copy(c); camGoal.p.set(c.x, d * Math.sin(el), c.z + d * Math.cos(el)); camGoal.on = true;
 }
-function stepsExit() { const was = !!X.st; if (was) setTimeout(() => setCam(X.cam, false), 50); X.st = null; stepCP = null; host.classList.remove('stepping'); clearStepG(); ballM.visible = true; tw.dur = 2600; if (was) buildTeams(); stepsUI() }
+function stepsExit() { const was = !!X.st; X.teach = false; [...us, ...them].forEach(a => { a.userData.dl = 0; dimAthlete(a, 1) }); if (was) setTimeout(() => setCam(X.cam, false), 50); X.st = null; stepCP = null; host.classList.remove('stepping'); clearStepG(); ballM.visible = true; tw.dur = 2600; if (was) buildTeams(); stepsUI() }
 function stepNext(d = 1) { if (!stepCP) return; const n = stepCP.segs.length; stepGo((X.st.i + d + n) % n, false) }
 function stepsUI() {
-  const btn = $('#stepsBtn'); if (!btn) return; const list = stepPlays();
+  teachBtnUI(); const btn = $('#stepsBtn'); if (!btn) return; const list = stepPlays(); btn.hidden = !!X.teach;
   btn.innerHTML = X.st ? `✕ ${L('رجوع للأدوار', 'Back to roles')}` : `▤ ${L('خطوات المرحلة', 'Phase steps')} <span class="en">${list.length || ''}</span>`;
   btn.classList.toggle('on', !!X.st); btn.disabled = !X.st && !list.length; btn.title = list.length ? '' : L('لسه مفيش خطوات مسجّلة للمرحلة دي', 'No steps recorded yet for this phase');
   const pnl = $('#steps'); pnl.classList.toggle('off', !X.st); const cap = $('#capbar'); cap.classList.toggle('on', !!X.st); if (cap.classList.contains('moved')) X.capPos?.(); else cap.style.top = innerWidth > 900 ? ($('.hud2').getBoundingClientRect().bottom + 12) + 'px' : '';
   if (!X.st || !stepCP) return; const p = stepCP.p, i = X.st.i, s = stepCP.segs[i], n = PHN();
   pnl.querySelector('.ttl').innerHTML = `${L('خطوات المرحلة', 'Phase steps')} <em class="en">Phase steps</em>`;
   const lg = (cls, t) => `<span class="lg"><i class="${cls}"></i>${t}</span>`;
+  if (X.teach) { teachUI(pnl, cap, p, i, s, n); return }
   pnl.querySelector('.pb').innerHTML = `<div class="mut">${esc(T(n[C.phase]))} · ${esc(T(E.MODES[C.mode].name))}</div>
    <div class="plays">${list.map(q => `<button class="chip ${q.id === p.id ? 'on' : ''}" data-play-id="${q.id}">${esc(T(q.name))}</button>`).join('')}</div>
    <h2>${esc(T(p.name))}</h2><p class="mut">${esc(T(p.desc))}</p>
@@ -477,6 +496,20 @@ function stepsUI() {
   cap.innerHTML = `<b>${i + 1}<small>/${stepCP.segs.length}</small></b><span>${esc(T(s.cap))}</span><button class="ic" data-sd="-1" title="${L('الخطوة السابقة', 'Previous step')}">›</button><button class="ic" data-sd="1" title="${L('الخطوة التالية', 'Next step')}">‹</button>`;
   cap.querySelectorAll('[data-sd]').forEach(b => b.onclick = () => { stepNext(+b.dataset.sd); pause() });
 }
+function teachUI(pnl, cap, p, i, s, n) {
+  const r = s.raw || {}, kd = KINDS[r.k] || KINDS.react, kn = q => { const z = KINDS[q.raw?.k] || KINDS.react; return `<i class="kd" style="--c:${z[2]}">${L(z[0], z[1])}</i>` };
+  const meta = stepCP.meta, why = Object.entries(r.why || {}).map(([id, t]) => `<li><b>${esc(meta[id] ? `${meta[id].code} · ${meta[id].n}` : id)}</b> ${esc(T(t))}</li>`).join('');
+  pnl.querySelector('.ttl').innerHTML = `${L('وضع الشرح', 'Teaching mode')} <em class="en">Teaching mode</em>`;
+  pnl.querySelector('.pb').innerHTML = `<div class="mut">${esc(T(n[C.phase]))} · ${esc(T(E.MODES[C.mode].name))}</div><h2>${esc(T(p.name))}</h2><p class="mut">${esc(T(p.desc))}</p>
+   ${why ? `<section class="whyb"><div class="lbl">${L('ليه بيتحركوا كده؟', 'Why they move')}</div><ul>${why}</ul></section>` : ''}
+   <ol class="shots teach">${stepCP.segs.map((q, j) => `<li><button data-shot="${j}" class="${j === i ? 'on' : j < i ? 'done' : ''}"><b>${j + 1}</b><span>${kn(q)}${esc(T(q.cap))}</span></button></li>`).join('')}</ol>
+   <div class="mut">${L('اللاعبين الباهتين خارج الفكرة دي. الدائرة الخضرا = المساحة المهمة. الشبح الأحمر = المكان الغلط.', 'Faded players are outside this idea. Green circle = key space. Red ghost = wrong position.')}</div>`;
+  pnl.querySelectorAll('[data-shot]').forEach(b => b.onclick = () => { stepGo(+b.dataset.shot, false); pause() });
+  cap.innerHTML = `<b>${i + 1}<small>/${stepCP.segs.length}</small></b><span><i class="kd" style="--c:${kd[2]}">${L(kd[0], kd[1])}</i> ${esc(T(s.cap))}${r.q ? `<em class="q">❓ ${esc(T(r.q))}</em>` : ''}</span><button class="ic" data-sd="-1" title="${L('اللقطة السابقة', 'Previous shot')}">›</button><button class="ic" data-sd="1" title="${L('اللقطة التالية', 'Next shot')}">‹</button>`;
+  cap.querySelectorAll('[data-sd]').forEach(b => b.onclick = () => { stepNext(+b.dataset.sd); pause() });
+}
+function teachBtnUI() { const b = $('#teachBtn'); if (!b) return; const n = lessonsHere().length; b.innerHTML = X.teach ? `✕ ${L('خروج من الشرح', 'Exit lesson')}` : `🎓 ${L('وضع الشرح', 'Teach')}${n ? ` <span class="en">${n}</span>` : ''}`; b.classList.toggle('on', !!X.teach); b.disabled = !X.teach && !n; b.title = n ? '' : L('الدرس لسه بيتكتب للمرحلة دي', 'Lesson for this phase is still being written') }
+$('#teachBtn').onclick = () => { if (X.teach) return stepsExit(); if (X.st) stepsExit(); X.teach = true; stepsEnter(null); if (X.st) pause(); else X.teach = false; teachBtnUI() };
 $('#stepsBtn').onclick = () => { if (X.st) stepsExit(); else { stepsEnter(null); if (X.st) { X.play = true; playBtns() } } };
 
 /* ---------- top bar wiring ---------- */

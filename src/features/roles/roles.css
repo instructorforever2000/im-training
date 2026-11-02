@@ -270,3 +270,29 @@
 .rs #capbar{cursor:grab}.rs #capbar.drag{cursor:grabbing;transition:none}
 .rs #capbar.moved{transform:none!important}
 @media(max-width:900px){.rs #hudtab,.rs #pin,.rs #dockb{display:none}.rs.dh .dock{transform:none}.rs.hh .hud,.rs.hh .hud2{transform:none;opacity:1;pointer-events:auto}}
+
+/* slim phase bar — always visible, one row (owner decision 2 Nov) */
+@media(min-width:901px){
+.rs #tl{bottom:14px;border-radius:16px}
+.rs #tl>.ph-h{display:none}
+.rs #tl .tlb{padding:6px 10px;gap:10px}
+.rs #tl .bigplay{height:34px;padding:0 14px;font-size:12.5px}
+.rs #tl .ic{width:30px;height:30px}
+.rs #tl #segs{display:flex;gap:4px}
+.rs #tl .seg{flex:1;min-width:0;padding:5px 8px;border-radius:10px;min-height:0}
+.rs #tl .seg b{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;gap:5px;align-items:center}
+.rs #tl .seg em{display:none}
+.rs #tl .tlk{max-width:150px;font-size:10.5px}
+.rs #tl .tlk #tlnote{display:none}
+.rs #tl .progw{height:2px}
+}
+/* teaching mode */
+.rs .stp.teach{border-color:#5b8def;color:#3d6fd6}
+.rs .stp.teach.on{background:#5b8def;color:#fff}
+.rs .kd{display:inline-block;font-style:normal;font-size:11px;font-weight:700;padding:1px 8px;border-radius:999px;margin-inline-end:6px;background:color-mix(in srgb,var(--c) 22%,transparent);color:var(--c);border:1px solid color-mix(in srgb,var(--c) 55%,transparent)}
+.rs #capbar .kd{color:#fff;background:color-mix(in srgb,var(--c) 55%,#0b1b33)}
+.rs #capbar .q{display:block;font-style:normal;font-size:13.5px;color:#F4D03F;margin-top:4px}
+.rs .whyb{background:var(--soft);border-radius:12px;padding:8px 12px}
+.rs .whyb ul{margin:4px 0 0;padding-inline-start:16px;display:grid;gap:4px;font-size:12.5px;line-height:1.6}
+.rs .whyb b{font:700 11.5px Outfit;color:var(--teal2);margin-inline-end:4px}
+.rs .shots.teach span{line-height:1.6}

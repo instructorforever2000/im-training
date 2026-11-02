@@ -1,0 +1,353 @@
+[
+ {
+  "id": "L-fb11-att-build",
+  "mode": "fb11",
+  "phase": "att",
+  "name": {
+   "ar": "الخروج بالكرة من الخلف ضد ضغط مهاجمين",
+   "en": "Playing out from the back against a two-striker press"
+  },
+  "desc": {
+   "ar": "درس من 6 لقطات: نخلق تفوق 3 ضد 2 بالحارس وقلبي الدفاع والارتكاز، ونكسر خطين من الضغط بتمريرتين.",
+   "en": "A 6-shot lesson: create a 3v2 with the keeper, centre-backs and pivot, then break two pressing lines with two passes."
+  },
+  "tokens": [
+   [
+    "a1",
+    "GK",
+    1,
+    4,
+    34
+   ],
+   [
+    "a4",
+    "RCB",
+    4,
+    16,
+    44
+   ],
+   [
+    "a5",
+    "LCB",
+    5,
+    16,
+    24
+   ],
+   [
+    "a6",
+    "DM",
+    6,
+    28,
+    34
+   ],
+   [
+    "a2",
+    "RB",
+    2,
+    30,
+    60
+   ],
+   [
+    "a3",
+    "LB",
+    3,
+    30,
+    8
+   ],
+   [
+    "a8",
+    "RCM",
+    8,
+    42,
+    46
+   ],
+   [
+    "a10",
+    "LCM",
+    10,
+    42,
+    22
+   ],
+   [
+    "b9",
+    "ST",
+    9,
+    26,
+    41
+   ],
+   [
+    "b10",
+    "ST",
+    10,
+    26,
+    27
+   ],
+   [
+    "b8",
+    "CM",
+    8,
+    36,
+    37
+   ],
+   [
+    "b6",
+    "CM",
+    6,
+    36,
+    24
+   ]
+  ],
+  "ball0": "a1",
+  "steps": [
+   {
+    "k": "sit",
+    "c": {
+     "ar": "الكرة مع الحارس، ومهاجمين المنافس واقفين قدام قلبي الدفاع.",
+     "en": "The keeper has the ball; two opposing strikers stand in front of the centre-backs."
+    },
+    "q": {
+     "ar": "لو قلبي الدفاع فضلوا مكانهم، هيبقى 2 ضد 2. نعمل إيه عشان نطلع بالكرة على الأرض؟",
+     "en": "If the centre-backs stay put it is 2v2. How do we play out on the ground?"
+    },
+    "focus": [
+     "a1",
+     "a4",
+     "a5",
+     "a6",
+     "b9",
+     "b10"
+    ]
+   },
+   {
+    "k": "react",
+    "c": {
+     "ar": "قلبي الدفاع يتسعوا لحدود المنطقة، والارتكاز ينزل بينهم، والظهيرين يتقدموا.",
+     "en": "Centre-backs split to the box corners, the pivot drops between them, full-backs push on."
+    },
+    "m": {
+     "a4": [
+      13,
+      53
+     ],
+     "a5": [
+      13,
+      15
+     ],
+     "a6": [
+      19,
+      34
+     ],
+     "a2": [
+      36,
+      63
+     ],
+     "a3": [
+      36,
+      5
+     ],
+     "b9": [
+      20,
+      42
+     ],
+     "b10": [
+      20,
+      26
+     ]
+    },
+    "focus": [
+     "a4",
+     "a5",
+     "a6"
+    ],
+    "why": {
+     "a4": {
+      "ar": "يبعد عن المهاجم ويفتح زاوية تمرير من الحارس",
+      "en": "Moves away from the striker and opens a passing angle"
+     },
+     "a5": {
+      "ar": "نفس الفكرة على الجهة التانية: الملعب يتفتح عرضيًا",
+      "en": "Same on the other side: the pitch opens wide"
+     },
+     "a6": {
+      "ar": "ينزل بين قلبي الدفاع فيبقى 3 ضد 2",
+      "en": "Drops between the centre-backs to make it 3v2"
+     }
+    },
+    "zone": [
+     16,
+     34,
+     10,
+     {
+      "ar": "3 ضد 2",
+      "en": "3v2"
+     }
+    ]
+   },
+   {
+    "k": "trig",
+    "c": {
+     "ar": "الحارس يمرر لقلب الدفاع الأيمن، والمهاجم يخرج يضغط عليه.",
+     "en": "The keeper finds the right centre-back; a striker jumps to press him."
+    },
+    "q": {
+     "ar": "المهاجم ساب مكانه… مين اللي بقى حر دلوقتي؟",
+     "en": "The striker left his zone… who is free now?"
+    },
+    "m": {
+     "b9": [
+      16,
+      50
+     ],
+     "a8": [
+      40,
+      50
+     ]
+    },
+    "b": "a4",
+    "focus": [
+     "a4",
+     "b9",
+     "a6"
+    ],
+    "why": {
+     "b9": {
+      "ar": "خرج يضغط، فساب المساحة اللي وراه",
+      "en": "Presses and leaves space behind him"
+     }
+    }
+   },
+   {
+    "k": "react",
+    "c": {
+     "ar": "الارتكاز يتحرك للمساحة اللي سابها المهاجم ويستلم.",
+     "en": "The pivot moves into the space the striker left and receives."
+    },
+    "m": {
+     "a6": [
+      22,
+      36
+     ],
+     "b10": [
+      21,
+      31
+     ],
+     "b8": [
+      33,
+      40
+     ]
+    },
+    "b": "a6",
+    "focus": [
+     "a4",
+     "a6",
+     "b9",
+     "b10"
+    ],
+    "why": {
+     "a6": {
+      "ar": "يستلم وجسمه مفتوح على الملعب، مش ضهره للمنافس",
+      "en": "Receives with an open body, not with his back to play"
+     }
+    },
+    "zone": [
+     22,
+     36,
+     6,
+     {
+      "ar": "المساحة الحرة",
+      "en": "Free space"
+     }
+    ]
+   },
+   {
+    "k": "res",
+    "c": {
+     "ar": "تمريرة للاعب الوسط بين الخطوط: كسرنا خطين من الضغط بتمريرتين.",
+     "en": "A pass into the eight between the lines: two pressing lines broken with two passes."
+    },
+    "m": {
+     "a8": [
+      44,
+      47
+     ],
+     "b8": [
+      38,
+      42
+     ]
+    },
+    "b": "a8",
+    "focus": [
+     "a6",
+     "a8",
+     "b8"
+    ],
+    "why": {
+     "a8": {
+      "ar": "يستلم بين خط الوسط وخط الدفاع ويلف للأمام",
+      "en": "Receives between midfield and defence and turns forward"
+     }
+    },
+    "zone": [
+     44,
+     47,
+     7,
+     {
+      "ar": "بين الخطوط",
+      "en": "Between the lines"
+     }
+    ]
+   },
+   {
+    "k": "err",
+    "c": {
+     "ar": "الخطأ الشائع (نفس لحظة اللقطة 3): الارتكاز يفضل عالي ورا وسط المنافس، فقلب الدفاع ملوش حل غير الكرة الطويلة.",
+     "en": "Common mistake (the moment of shot 3): the pivot stays high behind their midfield, so the centre-back can only go long."
+    },
+    "q": {
+     "ar": "قارن مكان الشبح الأحمر بمكان الارتكاز الصح. الفرق كام متر؟",
+     "en": "Compare the red ghost with the correct pivot position. How many metres apart?"
+    },
+    "focus": [
+     "a4",
+     "a6"
+    ],
+    "wrong": {
+     "a6": [
+      31,
+      33
+     ]
+    },
+    "why": {
+     "a6": {
+      "ar": "صح: تحت المهاجمين وبينهم. غلط: عالي ومتغطّي",
+      "en": "Right: below and between the strikers. Wrong: high and screened"
+     }
+    },
+    "reset": true,
+    "b": "a4",
+    "m": {
+     "a6": [
+      20,
+      35
+     ],
+     "a8": [
+      40,
+      50
+     ],
+     "b8": [
+      33,
+      40
+     ],
+     "b9": [
+      16,
+      50
+     ],
+     "b10": [
+      21,
+      31
+     ]
+    }
+   }
+  ]
+ }
+]
