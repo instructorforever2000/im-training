@@ -113,3 +113,6 @@ small { font-family: var(--font-latin); color: #7fe3da; font-size: .85em; font-w
 
 .lg-btn { text-align: center; flex-wrap: wrap; }
 @media (max-width: 480px) { .lg-google small { display: none; } .lg-card-head h2 { font-size: 17px; } }
+
+.lg-visit{margin-inline-start:auto;align-self:center;white-space:nowrap;pointer-events:auto;color:#cfe;font-size:13.5px;text-decoration:none;border:1px solid #ffffff2e;border-radius:999px;padding:7px 16px;background:#ffffff0d;backdrop-filter:blur(6px)}
+.lg-visit small{font-family:Outfit;color:#1FB5A8;font-size:11px}

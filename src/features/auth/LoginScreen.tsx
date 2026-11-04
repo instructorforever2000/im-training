@@ -33,6 +33,7 @@ export function LoginScreen({ access }: { access: AccessApi }): React.JSX.Elemen
           <b>{T.brand}</b>
           <span>{T.platformAr} <small>{T.platformEn}</small></span>
         </div>
+        <a className="lg-visit" href="#/tour">تصفّح المنصة كزائر <small>Browse as a visitor</small> ←</a>
       </header>
 
       <main className="lg-main">

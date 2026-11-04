@@ -1,0 +1,41 @@
+/* زائر المنصة — tour page + visitor strip */
+.vt{--ink:#0d1b2a;--mu:#6b7a8c;--teal:#1FB5A8;--teal2:#0f8f84;--navy:#0b1b33;--ln:#e3e9ef;min-height:100vh;background:#f1f5f8;color:var(--ink);font-family:"IBM Plex Sans Arabic",sans-serif}
+.vt *{box-sizing:border-box;margin:0;padding:0}.vt a{text-decoration:none;color:inherit}
+.vt .en,.vt i{font-family:Outfit;font-style:normal}
+.vt-top{display:flex;justify-content:space-between;align-items:center;padding:18px 28px;max-width:1240px;margin:0 auto}
+.vt .brand{display:flex;gap:12px;align-items:center;color:#fff}.vt .brand img{width:44px;height:44px;border-radius:12px}
+.vt .brand b{font:700 17px Outfit;display:block}.vt .brand span{font-size:12.5px;color:#9fb0c6}.vt .brand span i{color:var(--teal);font-size:11px}
+.vt .btn{height:44px;padding:0 20px;border-radius:12px;display:inline-flex;align-items:center;font-weight:700;font-size:14px;border:1px solid #ffffff33;color:#fff}
+.vt .btn.p{background:var(--teal);border-color:var(--teal)}.vt .btn.ghost{background:#ffffff10}
+.vt .hero{max-width:1240px;margin:0 auto;padding:56px 28px 70px;color:#fff;display:grid;gap:16px;justify-items:start}
+.vt .hero h1{font-size:46px;line-height:1.3;max-width:760px}
+.vt .cycle{display:flex;gap:10px}
+.vt .cycle span{font-size:20px;font-weight:700;color:var(--teal);opacity:0;animation:vtIn .6s forwards;animation-delay:calc(var(--k)*.25s + .2s)}
+.vt .cycle span:not(:last-child):after{content:"·";color:#ffffff55;margin-inline-start:10px}
+@keyframes vtIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.vt .hero p{color:#c9d5e3;font-size:17px;max-width:620px;line-height:1.8}
+.vt .aud{display:flex;flex-wrap:wrap;gap:8px}.vt .aud span{font-size:12.5px;color:#c9d5e3;border:1px solid #ffffff26;border-radius:999px;padding:4px 12px}
+.vt .cta{display:flex;gap:10px;margin-top:8px}
+.vt .blk{max-width:1240px;margin:0 auto;padding:10px 28px 34px}
+.vt .blk h2{font-size:22px;margin-bottom:14px}.vt .blk h2 .en{font-size:14px;color:var(--teal2);margin-inline-start:8px;font-weight:500}
+.vt .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.vt .sec{background:#fff;border:1px solid var(--ln);border-radius:20px;padding:20px;display:grid;gap:6px;align-content:start;transition:.25s;min-height:190px}
+.vt .sec:hover{transform:translateY(-3px);box-shadow:0 18px 40px -24px #0b1b3366}
+.vt .sec>i{font-size:24px;width:48px;height:48px;border-radius:14px;background:#e9f7f5;color:var(--teal2);display:grid;place-items:center}
+.vt .sec b{font-size:17px}.vt .sec .en{font-size:12.5px;color:var(--teal2)}.vt .sec p{color:var(--mu);font-size:13.5px;line-height:1.8}
+.vt .sec em{font-style:normal;font-weight:700;font-size:13px;color:var(--teal2);margin-top:auto}
+.vt .sec.lock{background:#f8fafc}.vt .sec.lock>i{background:#eef1f5;color:#7a8797}.vt .sec.lock em{color:#7a8797}
+.vt .join .two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.vt .join .two>div{background:var(--navy);color:#fff;border-radius:22px;padding:24px;display:grid;gap:10px;justify-items:start}
+.vt .join .two>div>i{font-size:26px}.vt .join b{font-size:19px}.vt .join p{color:#c9d5e3;line-height:1.9;font-size:14px}
+.vt .soon{font-size:13px;color:#9fb0c6;border:1px dashed #ffffff40;border-radius:10px;padding:8px 12px}.vt .soon i{color:var(--teal)}
+.vt-foot{text-align:center;padding:24px;font:600 12.5px Outfit;color:var(--teal2)}
+.vbar{position:fixed;top:0;left:50%;transform:translateX(-50%);z-index:70;display:flex;align-items:center;gap:12px;background:#0b1b33ee;color:#fff;font:500 12.5px "IBM Plex Sans Arabic",sans-serif;padding:6px 8px 6px 14px;border-radius:0 0 14px 14px;backdrop-filter:blur(8px);box-shadow:0 10px 30px -16px #0008;max-width:calc(100vw - 24px)}
+.vbar i{font:500 11px Outfit;color:#1FB5A8;font-style:normal}
+.vbar a{color:#cfe;text-decoration:none;padding:4px 10px;border-radius:8px;white-space:nowrap}.vbar a.p{background:#1FB5A8;color:#fff;font-weight:700}
+[data-visitor] .dock a.lock{opacity:.45}
+[data-visitor] .dock a.lock:after{content:"🔒";font-size:9px}
+@media(max-width:900px){.vt .hero h1{font-size:32px}.vt .grid,.vt .join .two{grid-template-columns:1fr}.vt-top,.vt .hero,.vt .blk{padding-inline:16px}
+.vbar{top:auto;bottom:78px;border-radius:14px;font-size:11.5px}.vbar>span{display:none}}
+
+.vt .dark{background:radial-gradient(1200px 600px at 80% -10%,#1fb5a833,transparent),#0b1b33;margin-bottom:30px}

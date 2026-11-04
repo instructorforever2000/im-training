@@ -3,6 +3,8 @@ import { AuthGate } from "@/features/auth/AuthGate"
 import { AccessGranted } from "@/features/home/AccessGranted"
 import type { AccessApi } from "@/features/auth/useAccess"
 import { supabase } from "@/lib/supabase"
+import { baseRoute, isPublic, useSignedIn, useVisitorFlag } from "@/features/visitor/access"
+import { TourScreen, VisitorBar } from "@/features/visitor/TourScreen"
 
 // Each screen loads only when opened, so nobody downloads what they don't use.
 const AdminDashboard = lazy(async () => ({ default: (await import("@/features/admin/AdminDashboard")).AdminDashboard }))
@@ -33,9 +35,21 @@ function Home({ access }: { access: AccessApi }): React.JSX.Element {
   const wait = <main className="min-h-dvh grid place-items-center opacity-60">…</main>
   if (owner === null) return wait
   if (!owner) return <AccessGranted access={access} />
-  return <Suspense fallback={wait}>{route === "squad" ? <SquadScreen /> : route === "library" ? <LibraryScreen /> : route === "roles" ? <RolesScreen /> : route === "tournaments" ? <TournamentsScreen /> : route === "learning" ? <LearningScreen /> : <AdminDashboard />}</Suspense>
+  return <Suspense fallback={wait}>{route === "squad" ? <SquadScreen /> : route === "library" ? <LibraryScreen /> : route === "roles" ? <RolesScreen /> : route === "tournaments" ? <TournamentsScreen /> : route === "learning" ? <LearningScreen /> : baseRoute(route) === "tour" ? <TourScreen /> : <AdminDashboard />}</Suspense>
+}
+
+/** Open sections for anyone with the link (visitor strip on top); everything else goes through sign-in. */
+function OpenSection({ route, visitor }: { route: string; visitor: boolean }): React.JSX.Element {
+  useVisitorFlag(visitor)
+  const wait = <main className="min-h-dvh grid place-items-center opacity-60">…</main>
+  const screen: Record<string, React.JSX.Element> = { tour: <TourScreen />, library: <LibraryScreen />, roles: <RolesScreen />, learning: <LearningScreen /> }
+  const key = baseRoute(route)
+  return <>{visitor && key !== "tour" && <VisitorBar />}<Suspense fallback={wait}>{screen[key] ?? <TourScreen />}</Suspense></>
 }
 
 export default function App(): React.JSX.Element {
+  const route = useRoute()
+  const signedIn = useSignedIn()
+  if (isPublic(route) && signedIn === false) return <OpenSection route={route} visitor />
   return <AuthGate>{(access) => <Home access={access} />}</AuthGate>
 }
