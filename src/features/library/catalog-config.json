@@ -1,0 +1,33 @@
+{
+  "stages": [
+    { "key": "s1", "from": 5, "to": 8, "ages": "6–8", "ar": "الأساسيات الحركية", "en": "FUNdamentals" },
+    { "key": "s2", "from": 9, "to": 11, "ages": "9–11", "ar": "تعلّم التدريب", "en": "Learn to Train" },
+    { "key": "s3", "from": 12, "to": 14, "ages": "12–14", "ar": "التدريب للتدريب", "en": "Train to Train" },
+    { "key": "s4", "from": 15, "to": 99, "ages": "15+", "ar": "التدريب للمنافسة", "en": "Train to Compete" }
+  ],
+  "formats": [
+    { "key": "solo", "ar": "فردي", "en": "Individual" },
+    { "key": "pairs", "ar": "ثنائي", "en": "Pairs" },
+    { "key": "small", "ar": "مجموعات صغيرة", "en": "Small groups" },
+    { "key": "game", "ar": "مواجهة ولعب", "en": "Opposed / game" },
+    { "key": "team", "ar": "الفريق كاملًا", "en": "Whole squad" }
+  ],
+  "goals": {
+    "warm": { "ar": "الإحماء", "en": "Warm-up", "color": "#e09a1c" },
+    "tech": { "ar": "المهارات الفنية", "en": "Technical", "color": "#1FB5A8" },
+    "tact": { "ar": "الخطط والتكتيك", "en": "Tactical", "color": "#5b6fe0" },
+    "game": { "ar": "اللعب المصغّر", "en": "Small-sided games", "color": "#2fa36b" },
+    "phys": { "ar": "الإعداد البدني", "en": "Physical conditioning", "color": "#d9483b" },
+    "cool": { "ar": "التهدئة والإطالة", "en": "Cool-down", "color": "#7c8ea3" }
+  },
+  "quality": {
+    "str": { "ar": "القوة العضلية", "en": "Strength" },
+    "pow": { "ar": "القدرة الانفجارية", "en": "Power" },
+    "spd": { "ar": "السرعة", "en": "Speed" },
+    "end": { "ar": "التحمّل", "en": "Endurance" },
+    "mob": { "ar": "الحركية", "en": "Mobility" },
+    "flex": { "ar": "المرونة", "en": "Flexibility" },
+    "bal": { "ar": "التوازن", "en": "Balance" },
+    "coord": { "ar": "التوافق الحركي", "en": "Coordination" }
+  }
+}

@@ -1,0 +1,1003 @@
+{
+"px-walk-var": {
+"p": "walk",
+"v": "hall",
+"n": 3
+},
+"px-walk-knee": {
+"p": "kneeHug",
+"v": "hall",
+"n": 3
+},
+"px-walk-quad": {
+"p": "quadStretch",
+"v": "hall",
+"n": 3
+},
+"px-walk-reach": {
+"p": "rdl",
+"v": "hall",
+"n": 3
+},
+"px-jog-light": {
+"p": "jog",
+"v": "hall",
+"n": 3
+},
+"px-jog-arms": {
+"p": "jog",
+"v": "hall",
+"n": 3
+},
+"px-jog-back": {
+"p": "shuffle",
+"v": "hall",
+"n": 3
+},
+"px-jog-signal": {
+"p": "jog",
+"v": "hall",
+"o": "cones",
+"n": 3
+},
+"px-neck": {
+"p": "neck",
+"v": "hall"
+},
+"px-arm-circ": {
+"p": "armCircles",
+"v": "hall"
+},
+"px-arm-swing": {
+"p": "armSwing",
+"v": "hall"
+},
+"px-trunk-rot": {
+"p": "trunkRot",
+"v": "hall"
+},
+"px-side-bend": {
+"p": "sideBend",
+"v": "hall"
+},
+"px-hip-circ": {
+"p": "hipCircle",
+"v": "hall"
+},
+"px-knee-lift": {
+"p": "kneeTouch",
+"v": "hall"
+},
+"px-leg-swing": {
+"p": "legSwing",
+"v": "hall",
+"o": "wallSide"
+},
+"px-stick-press": {
+"p": "militaryPress",
+"v": "hall",
+"h": "stick"
+},
+"px-stick-twist": {
+"p": "trunkRot",
+"v": "hall",
+"h": "stick"
+},
+"px-inch": {
+"p": "inchworm",
+"v": "hall",
+"o": "mat"
+},
+"px-lunge-reach": {
+"p": "lungeReach",
+"v": "hall"
+},
+"px-lunge-side": {
+"p": "sideLunge",
+"v": "hall"
+},
+"px-squat-reach": {
+"p": "squatReach",
+"v": "hall"
+},
+"px-jacks": {
+"p": "jacks",
+"v": "hall"
+},
+"px-run-place": {
+"p": "runPlace",
+"v": "hall"
+},
+"px-bird-dog": {
+"p": "birdDog",
+"v": "hall",
+"o": "mat"
+},
+"px-cat-cow": {
+"p": "catCow",
+"v": "hall",
+"o": "mat"
+},
+"px-ham-sit": {
+"p": "hamSit",
+"v": "hall",
+"o": "mat"
+},
+"px-straddle": {
+"p": "straddle",
+"v": "hall",
+"o": "mat"
+},
+"px-butterfly": {
+"p": "butterfly",
+"v": "hall",
+"o": "mat"
+},
+"px-quad-stand": {
+"p": "quadStretch",
+"v": "hall"
+},
+"px-calf-wall": {
+"p": "calfWall",
+"v": "hall",
+"o": "wall"
+},
+"px-hip-flexor": {
+"p": "halfKneel",
+"v": "hall",
+"o": "mat"
+},
+"px-child": {
+"p": "child",
+"v": "hall",
+"o": "mat"
+},
+"px-cobra": {
+"p": "cobra",
+"v": "hall",
+"o": "mat"
+},
+"px-knee-chest": {
+"p": "kneesChest",
+"v": "hall",
+"o": "mat"
+},
+"px-spine-twist": {
+"p": "spineTwist",
+"v": "hall",
+"o": "mat"
+},
+"px-seated-twist": {
+"p": "seatedTwist",
+"v": "hall",
+"o": "mat"
+},
+"px-triceps": {
+"p": "triceps",
+"v": "hall"
+},
+"px-shoulder": {
+"p": "shoulderStretch",
+"v": "hall"
+},
+"px-side-reach": {
+"p": "sideReach",
+"v": "hall"
+},
+"px-pair-row": {
+"p": "rowSit",
+"v": "hall",
+"n": 2,
+"m": "rowSit"
+},
+"px-pair-back": {
+"p": "seatedFold",
+"v": "hall",
+"n": 2,
+"m": "partnerPush"
+},
+"px-squat": {
+"p": "squat",
+"v": "hall"
+},
+"px-lunge-fw": {
+"p": "lunge",
+"v": "hall"
+},
+"px-lunge-walk": {
+"p": "lunge",
+"v": "hall",
+"n": 3
+},
+"px-wall-sit": {
+"p": "wallSit",
+"v": "hall",
+"o": "wallBack"
+},
+"px-calf-raise": {
+"p": "calfRaise",
+"v": "hall"
+},
+"px-step-up": {
+"p": "stepUp",
+"v": "hall",
+"o": "box"
+},
+"px-pushup": {
+"p": "pushup",
+"v": "hall",
+"o": "mat"
+},
+"px-pushup-knee": {
+"p": "kneePushup",
+"v": "hall",
+"o": "mat"
+},
+"px-wall-push": {
+"p": "wallPush",
+"v": "hall",
+"o": "wall"
+},
+"px-plank": {
+"p": "plank",
+"v": "hall",
+"o": "mat"
+},
+"px-side-plank": {
+"p": "sidePlank",
+"v": "hall",
+"o": "mat"
+},
+"px-climbers": {
+"p": "climber",
+"v": "hall",
+"o": "mat"
+},
+"px-crunch": {
+"p": "crunch",
+"v": "hall",
+"o": "mat"
+},
+"px-leg-raise": {
+"p": "legRaise",
+"v": "hall",
+"o": "mat"
+},
+"px-bicycle": {
+"p": "bicycle",
+"v": "hall",
+"o": "mat"
+},
+"px-bridge": {
+"p": "bridge",
+"v": "hall",
+"o": "mat"
+},
+"px-superman": {
+"p": "superman",
+"v": "hall",
+"o": "mat"
+},
+"px-v-sit": {
+"p": "vsit",
+"v": "hall",
+"o": "mat"
+},
+"px-russian": {
+"p": "russian",
+"v": "hall",
+"h": "med",
+"o": "mat"
+},
+"px-mb-chest": {
+"p": "chestPass",
+"v": "hall",
+"h": "med",
+"n": 2,
+"m": "catchHigh"
+},
+"px-mb-slam": {
+"p": "slam",
+"v": "hall",
+"h": "med"
+},
+"px-mb-squat-toss": {
+"p": "squat",
+"v": "hall",
+"h": "med"
+},
+"px-mb-rot-pass": {
+"p": "trunkRot",
+"v": "hall",
+"h": "med",
+"n": 2,
+"m": "trunkRot"
+},
+"px-db-lateral": {
+"p": "lateralRaise",
+"v": "gym",
+"h": "dumbbells"
+},
+"px-db-press": {
+"p": "kneelPress",
+"v": "gym",
+"h": "dumbbells",
+"o": "mat"
+},
+"px-db-curl": {
+"p": "curl",
+"v": "gym",
+"h": "dumbbells"
+},
+"px-pair-squat": {
+"p": "squat",
+"v": "hall",
+"n": 2,
+"m": "squat"
+},
+"px-pair-pistol": {
+"p": "pistol",
+"v": "hall",
+"n": 2,
+"m": "partnerHold"
+},
+"px-wheelbarrow": {
+"p": "pushup",
+"v": "hall",
+"n": 2,
+"m": "partnerHold"
+},
+"px-bench-step": {
+"p": "stepUp",
+"v": "hall",
+"o": "benchSide"
+},
+"px-hang-knee": {
+"p": "hangKnee",
+"v": "gym",
+"o": "bars"
+},
+"px-bear": {
+"p": "bear",
+"v": "hall"
+},
+"px-crab": {
+"p": "crab",
+"v": "hall"
+},
+"px-track-run": {
+"p": "jog",
+"v": "hall",
+"n": 3
+},
+"px-fartlek": {
+"p": "sprint",
+"v": "hall",
+"o": "cones",
+"n": 3
+},
+"px-jacks-long": {
+"p": "jacks",
+"v": "hall"
+},
+"px-hop-run": {
+"p": "hop",
+"v": "hall",
+"n": 3
+},
+"px-step-cont": {
+"p": "stepUp",
+"v": "hall",
+"o": "benchSide"
+},
+"px-circuit": {
+"p": "squat",
+"v": "hall",
+"o": "cones",
+"n": 3
+},
+"px-shuttle-easy": {
+"p": "jog",
+"v": "hall",
+"o": "cones",
+"n": 3
+},
+"px-pair-carry": {
+"p": "piggyCarrier",
+"v": "hall",
+"n": 2,
+"m": "kneeHug"
+},
+"px-sprint-10": {
+"p": "sprint",
+"v": "hall",
+"o": "cones",
+"n": 3
+},
+"px-fast-feet": {
+"p": "fastFeet",
+"v": "hall"
+},
+"px-react-start": {
+"p": "startSplit",
+"v": "hall",
+"o": "cones",
+"n": 3
+},
+"px-react-pos": {
+"p": "proneReady",
+"v": "hall",
+"o": "cones",
+"n": 3
+},
+"px-react-cmd": {
+"p": "athletic",
+"v": "hall",
+"n": 3
+},
+"px-ball-circle": {
+"p": "sprint",
+"v": "hall",
+"o": "ball",
+"n": 3
+},
+"px-number-hit": {
+"p": "throwOver",
+"v": "hall",
+"o": "wall"
+},
+"px-rhythm-trunk": {
+"p": "trunkRot",
+"v": "hall"
+},
+"px-sprint-50": {
+"p": "sprint",
+"v": "hall",
+"o": "cones",
+"n": 3
+},
+"px-squat-jump": {
+"p": "squatJump",
+"v": "hall"
+},
+"px-tuck-jump": {
+"p": "tuckJump",
+"v": "hall"
+},
+"px-broad-jump": {
+"p": "broadJump",
+"v": "hall"
+},
+"px-bunny": {
+"p": "bunny",
+"v": "hall",
+"n": 3
+},
+"px-hoops-jump": {
+"p": "hop",
+"v": "hall",
+"o": "hoops"
+},
+"px-cone-lateral": {
+"p": "skater",
+"v": "hall",
+"o": "cones"
+},
+"px-hurdle-hops": {
+"p": "bunny",
+"v": "hall",
+"o": "hurdles"
+},
+"px-rope": {
+"p": "rope",
+"v": "hall",
+"o": "rope"
+},
+"px-bench-jumps": {
+"p": "squatJump",
+"v": "hall",
+"o": "benchSide"
+},
+"px-skater": {
+"p": "skater",
+"v": "hall"
+},
+"px-mb-throw-far": {
+"p": "chestPass",
+"v": "hall",
+"h": "med"
+},
+"px-pushup-clap": {
+"p": "pushup",
+"v": "hall",
+"o": "mat"
+},
+"px-stork": {
+"p": "stork",
+"v": "hall"
+},
+"px-scale": {
+"p": "scale",
+"v": "hall"
+},
+"px-beam-walk": {
+"p": "beam",
+"v": "hall",
+"o": "beam"
+},
+"px-pad-reach": {
+"p": "padReach",
+"v": "hall",
+"o": "pad"
+},
+"px-ball-balance": {
+"p": "stork",
+"v": "hall",
+"h": "med"
+},
+"px-cone-zigzag": {
+"p": "sprint",
+"v": "hall",
+"o": "cones",
+"n": 3
+},
+"px-t-drill": {
+"p": "shuffle",
+"v": "hall",
+"o": "cones",
+"n": 3
+},
+"px-wall-target": {
+"p": "throwOver",
+"v": "hall",
+"o": "wall"
+},
+"px-cone-target": {
+"p": "throwUnder",
+"v": "hall",
+"o": "cones"
+},
+"px-foot-goal": {
+"p": "kick",
+"v": "hall",
+"o": "ball"
+},
+"px-wall-catch": {
+"p": "catchHigh",
+"v": "hall",
+"o": "wall"
+},
+"px-bounce": {
+"p": "bbDribble",
+"v": "hall"
+},
+"px-juggle": {
+"p": "juggle",
+"v": "hall",
+"o": "ball"
+},
+"sc-neck-fe": {
+"p": "neck",
+"v": "gym"
+},
+"sc-shoulder-rot": {
+"p": "armCircles",
+"v": "gym"
+},
+"sc-wrist-rot": {
+"p": "wrists",
+"v": "gym"
+},
+"sc-frankenstein": {
+"p": "frankenstein",
+"v": "gym",
+"n": 3
+},
+"sc-rot-lunge": {
+"p": "lungeTwist",
+"v": "gym"
+},
+"sc-ovh-lunge": {
+"p": "lungeReach",
+"v": "gym",
+"h": "stick"
+},
+"sc-goblet": {
+"p": "gobletSquat",
+"v": "gym",
+"h": "dumbbell"
+},
+"sc-back-squat": {
+"p": "backSquat",
+"v": "gym",
+"h": "barbell",
+"o": "rack"
+},
+"sc-front-squat": {
+"p": "frontSquat",
+"v": "gym",
+"h": "barbell",
+"o": "rack"
+},
+"sc-split-squat": {
+"p": "lungeDB",
+"v": "gym",
+"h": "dumbbells"
+},
+"sc-bulgarian": {
+"p": "bulgarian",
+"v": "gym",
+"h": "dumbbells",
+"o": "benchBack"
+},
+"sc-db-stepup": {
+"p": "stepUpDB",
+"v": "gym",
+"h": "dumbbells",
+"o": "box"
+},
+"sc-bb-lunge": {
+"p": "lungeBar",
+"v": "gym",
+"h": "barbell"
+},
+"sc-leg-press": {
+"p": "legPress",
+"v": "gym",
+"o": "machine"
+},
+"sc-leg-curl": {
+"p": "legCurl",
+"v": "gym",
+"o": "machine"
+},
+"sc-leg-ext": {
+"p": "legExt",
+"v": "gym",
+"o": "machine"
+},
+"sc-hip-abd": {
+"p": "hipAbd",
+"v": "gym",
+"o": "machine"
+},
+"sc-hip-add": {
+"p": "hipAdd",
+"v": "gym",
+"o": "machine"
+},
+"sc-calf-db": {
+"p": "calfRaise",
+"v": "gym",
+"h": "dumbbells"
+},
+"sc-deadlift": {
+"p": "deadlift",
+"v": "gym",
+"h": "barbell"
+},
+"sc-rdl": {
+"p": "rdl",
+"v": "gym",
+"h": "barbell"
+},
+"sc-db-rdl": {
+"p": "rdl",
+"v": "gym",
+"h": "dumbbells"
+},
+"sc-good-morning": {
+"p": "goodMorning",
+"v": "gym",
+"h": "barbell",
+"o": "rack"
+},
+"sc-back-ext": {
+"p": "backExt",
+"v": "gym",
+"o": "machine"
+},
+"sc-pullup": {
+"p": "pullup",
+"v": "gym",
+"o": "bars"
+},
+"sc-chinup": {
+"p": "pullup",
+"v": "gym",
+"o": "bars"
+},
+"sc-lat-pull": {
+"p": "latPull",
+"v": "gym",
+"h": "cable",
+"o": "cable"
+},
+"sc-seated-row": {
+"p": "seatedRow",
+"v": "gym",
+"h": "cable",
+"o": "cable"
+},
+"sc-stand-row": {
+"p": "cableRow",
+"v": "gym",
+"h": "cable",
+"o": "cable"
+},
+"sc-bent-row": {
+"p": "bentRow",
+"v": "gym",
+"h": "barbell"
+},
+"sc-db-row": {
+"p": "oneArmRow",
+"v": "gym",
+"h": "dumbbell",
+"o": "benchSide"
+},
+"sc-prone-row": {
+"p": "proneIncline",
+"v": "gym",
+"h": "dumbbells",
+"o": "incline"
+},
+"sc-shrug": {
+"p": "armsDown",
+"v": "gym",
+"h": "dumbbells"
+},
+"sc-bench": {
+"p": "bench",
+"v": "gym",
+"h": "barbell",
+"o": "bench"
+},
+"sc-db-bench": {
+"p": "bench",
+"v": "gym",
+"h": "dumbbells",
+"o": "bench"
+},
+"sc-incline-db": {
+"p": "incline",
+"v": "gym",
+"h": "dumbbells",
+"o": "incline"
+},
+"sc-incline-fly": {
+"p": "inclineFly",
+"v": "gym",
+"h": "dumbbells",
+"o": "incline"
+},
+"sc-machine-press": {
+"p": "machinePress",
+"v": "gym",
+"o": "machine"
+},
+"sc-machine-fly": {
+"p": "machineFly",
+"v": "gym",
+"o": "machine"
+},
+"sc-military": {
+"p": "militaryPress",
+"v": "gym",
+"h": "barbell",
+"o": "rack"
+},
+"sc-db-press": {
+"p": "seatedPress",
+"v": "gym",
+"h": "dumbbells",
+"o": "benchSide"
+},
+"sc-front-raise": {
+"p": "frontRaise",
+"v": "gym",
+"h": "dumbbells"
+},
+"sc-rear-raise": {
+"p": "rearRaise",
+"v": "gym",
+"h": "dumbbells"
+},
+"sc-ext-rot": {
+"p": "extRot",
+"v": "gym",
+"h": "dumbbell"
+},
+"sc-scarecrow": {
+"p": "scarecrow",
+"v": "gym",
+"h": "dumbbells"
+},
+"sc-bb-curl": {
+"p": "curl",
+"v": "gym",
+"h": "barbell"
+},
+"sc-hammer": {
+"p": "curl",
+"v": "gym",
+"h": "dumbbells"
+},
+"sc-conc-curl": {
+"p": "seatedCurl",
+"v": "gym",
+"h": "dumbbell",
+"o": "benchSide"
+},
+"sc-incline-curl": {
+"p": "inclineCurl",
+"v": "gym",
+"h": "dumbbells",
+"o": "incline"
+},
+"sc-preacher": {
+"p": "preacher",
+"v": "gym",
+"h": "barbell",
+"o": "machine"
+},
+"sc-cable-curl": {
+"p": "curl",
+"v": "gym",
+"h": "cable",
+"o": "cable"
+},
+"sc-bench-dip": {
+"p": "benchDip",
+"v": "gym",
+"o": "benchBack"
+},
+"sc-bar-dip": {
+"p": "barDip",
+"v": "gym",
+"o": "dip"
+},
+"sc-tri-ovh": {
+"p": "ohTriceps",
+"v": "gym",
+"h": "dumbbell"
+},
+"sc-skull": {
+"p": "skull",
+"v": "gym",
+"h": "barbell",
+"o": "bench"
+},
+"sc-kickback": {
+"p": "kickback",
+"v": "gym",
+"h": "dumbbell",
+"o": "benchSide"
+},
+"sc-pushdown": {
+"p": "pushdown",
+"v": "gym",
+"h": "cable",
+"o": "cable"
+},
+"sc-wrist-curl": {
+"p": "wristCurl",
+"v": "gym",
+"h": "dumbbells",
+"o": "benchSide"
+},
+"sc-rev-crunch": {
+"p": "revCrunch",
+"v": "gym",
+"o": "mat"
+},
+"sc-ball-crunch": {
+"p": "ballCrunch",
+"v": "gym",
+"o": "swiss"
+},
+"sc-ball-jack": {
+"p": "ballJack",
+"v": "gym",
+"o": "swiss"
+},
+"sc-ball-ext": {
+"p": "ballExt",
+"v": "gym",
+"o": "swiss"
+},
+"sc-ball-twist": {
+"p": "ballTwist",
+"v": "gym",
+"h": "med",
+"o": "swiss"
+},
+"sc-side-bend": {
+"p": "dbSideBend",
+"v": "gym",
+"h": "dumbbell"
+},
+"sc-suitcase": {
+"p": "suitcase",
+"v": "gym",
+"h": "dumbbell"
+},
+"sc-woodchop": {
+"p": "chop",
+"v": "gym",
+"h": "cable",
+"o": "cable"
+},
+"sc-mb-chop": {
+"p": "chopHigh",
+"v": "gym",
+"h": "med"
+},
+"sc-hang-clean": {
+"p": "rack",
+"v": "gym",
+"h": "barbell"
+},
+"sc-power-clean": {
+"p": "rack",
+"v": "gym",
+"h": "barbell"
+},
+"sc-hang-snatch": {
+"p": "snatch",
+"v": "gym",
+"h": "barbell"
+},
+"sc-push-press": {
+"p": "pushPress",
+"v": "gym",
+"h": "barbell"
+},
+"sc-jump-squat": {
+"p": "jumpSquatBar",
+"v": "gym",
+"h": "barbell"
+},
+"sc-ohs": {
+"p": "ohSquat",
+"v": "gym",
+"h": "stick"
+},
+"sc-pec-st": {
+"p": "pecWall",
+"v": "gym",
+"o": "wallSide"
+},
+"sc-lat-st": {
+"p": "latStretch",
+"v": "gym",
+"o": "mat"
+},
+"sc-upper-back-st": {
+"p": "upperBack",
+"v": "gym"
+},
+"sc-biceps-st": {
+"p": "bicepsWall",
+"v": "gym",
+"o": "wallSide"
+},
+"sc-itb-st": {
+"p": "itBand",
+"v": "gym"
+},
+"sc-add-st": {
+"p": "sideLunge",
+"v": "gym"
+},
+"sc-ham-lie-st": {
+"p": "lyingHam",
+"v": "gym",
+"o": "mat"
+},
+"sc-erector-st": {
+"p": "seatedFold",
+"v": "gym",
+"o": "mat"
+}
+}

@@ -1,0 +1,107 @@
+/* مكتبة التمارين — merged direction (Nov 2026): editorial "pro coaching manual" catalogue (C) + 3D stage with floating glass card (A) */
+.lib{--ref:"JetBrains Mono",ui-monospace,monospace}
+.libv{padding:20px 104px 40px 20px;display:flex;flex-direction:column;gap:16px;min-height:100vh}
+.libv .cmdv .wrap{margin-right:0;padding:0;min-height:0}
+.lhead{padding:16px 20px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.lhead .ttl{flex:1;min-width:260px}
+.lhead h1{font-size:22px}.lhead h1 .en{font-size:13px;margin-inline-start:6px}
+.lhead p{font-size:12.5px;color:var(--mu);margin-top:3px;line-height:1.6}
+.tabs{display:flex;gap:4px;padding:4px;border-radius:14px;background:var(--soft);flex-wrap:wrap}
+.tabs button{padding:8px 14px;border-radius:10px;font-size:13px;font-weight:600;color:var(--mu);display:flex;gap:6px;align-items:baseline;position:relative}
+.tabs button .en{font-size:10.5px;font-weight:500;opacity:.8}
+.tabs button.on{background:var(--card);color:var(--ink);box-shadow:0 2px 10px -4px #0b1b3340}
+.tabs .badge{position:absolute;top:-4px;left:-4px;min-width:18px;height:18px;border-radius:9px;background:var(--teal);color:#fff;font:700 11px Outfit;display:grid;place-items:center}
+.tabs button:focus-visible,.cat button:focus-visible,.dv button:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+
+.cat{display:grid;grid-template-columns:270px minmax(0,1fr);gap:16px;align-items:start}
+.rail{position:sticky;top:16px;display:flex;flex-direction:column;gap:16px;padding:16px;border-radius:20px;background:var(--glass);border:1px solid var(--ln);box-shadow:var(--sh);max-height:calc(100vh - 32px);overflow:auto}
+.rail h3{font-size:13px;margin-bottom:8px;display:flex;gap:6px;align-items:baseline}.rail h3 .en{font-size:10.5px}
+.search{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;background:var(--soft);border:1px solid var(--ln);font-size:14px}
+.search span{color:var(--mu);font-size:16px}.search input{flex:1;min-width:0;border:0;background:none;font:inherit;color:var(--ink);outline:0}
+.search:focus-within{border-color:var(--teal);box-shadow:0 0 0 4px #1FB5A81a}
+.chips{display:flex;flex-wrap:wrap;gap:6px}.chips .chip small{font:600 10.5px Outfit;opacity:.75}
+.chips.sub{margin-top:8px;padding-top:8px;border-top:1px dashed var(--ln)}
+.rail .hint{font-size:11px;color:var(--mu);margin-top:6px}
+.stages{display:flex;flex-direction:column;gap:6px}
+.stage{display:flex;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;border:1px solid var(--ln);background:var(--card);text-align:start}
+.stage b{font:700 13px Outfit;min-width:44px;color:var(--ink)}.stage span{font-size:12.5px;display:flex;flex-direction:column;line-height:1.35}.stage small{font-size:10.5px}
+.stage.on{border-color:var(--teal);background:var(--tealbg)}
+.goals{display:flex;flex-direction:column;gap:4px}
+.goal{display:flex;gap:8px;align-items:center;padding:7px 10px;border-radius:10px;font-size:12.5px;text-align:start}
+.goal i{width:9px;height:9px;border-radius:3px;background:var(--c)}.goal small{margin-inline-start:auto;font:600 11px Outfit;color:var(--mu)}
+.goal:hover{background:var(--soft)}.goal.on{background:var(--soft);box-shadow:inset 3px 0 0 var(--c);font-weight:600}
+.reset{font-size:12.5px;color:var(--teal2);font-weight:600;padding:6px;align-self:flex-start}
+
+.results{min-width:0;display:flex;flex-direction:column;gap:12px}
+.rhead{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.rhead h2{font-size:16px;font-weight:600}.rhead h2 b{font:700 22px Outfit}.mu{color:var(--mu);font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.card{display:flex;flex-direction:column;text-align:start;border-radius:18px;overflow:hidden;background:var(--card);border:1px solid var(--ln);position:relative;transition:transform .25s,box-shadow .25s,border-color .25s;animation:in .45s both}
+.card:hover{transform:translateY(-3px);box-shadow:0 22px 40px -22px #0b1b3366;border-color:var(--c)}
+.dimg{aspect-ratio:16/10;max-width:100%;background:linear-gradient(135deg,var(--soft),var(--chip));position:relative;overflow:hidden}
+.dimg img{width:100%;height:100%;object-fit:cover;display:block;animation:fade .5s both}
+.shim{position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,#ffffff55 50%,transparent 70%);background-size:220% 100%;animation:shim 1.4s infinite}
+.lib[data-theme=dark] .shim{background:linear-gradient(100deg,transparent 30%,#ffffff12 50%,transparent 70%);background-size:220% 100%}
+@keyframes shim{from{background-position:120% 0}to{background-position:-120% 0}}
+@keyframes fade{from{opacity:0}}
+.card .ref{position:absolute;top:10px;right:10px;font:600 10.5px var(--ref);letter-spacing:.04em;color:#fff;background:#0b1b33cc;padding:3px 7px;border-radius:7px;direction:ltr;backdrop-filter:blur(6px)}
+.card .body{display:flex;flex-direction:column;gap:6px;padding:12px 14px 14px;border-top:3px solid var(--c)}
+.card .gl{font-size:11px;color:var(--mu);display:flex;gap:6px;align-items:center}.card .gl i{width:8px;height:8px;border-radius:2px;background:var(--c)}
+.card b{font-size:14.5px;line-height:1.45}
+.facts{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:11.5px;color:var(--mu);align-items:center}
+.int{display:inline-flex;gap:2px}.int i{width:5px;height:11px;border-radius:2px;background:var(--chip)}.int i.on{background:var(--c)}
+.more{align-self:center;padding:10px 22px;border-radius:12px;border:1px solid var(--ln);background:var(--card);font-weight:600;font-size:13px}
+.empty{padding:40px;text-align:center;color:var(--mu)}
+
+.plist{padding:16px;display:flex;flex-direction:column;gap:12px}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px}
+.pc{display:flex;gap:10px;align-items:center;padding:12px;border-radius:14px;border:1px solid var(--ln);background:var(--card);text-align:start}
+.pc i{width:6px;align-self:stretch;border-radius:3px;background:var(--c)}.pc span{flex:1;min-width:0;display:flex;flex-direction:column}.pc b{font-size:13.5px}.pc small{font-size:11.5px;color:var(--mu)}
+.pc .go{flex:none;color:var(--teal2);font-weight:700}
+
+/* drill view: the 3D stage stays full size; everything else floats over it */
+.dv{position:fixed;inset:0;z-index:5}
+.scene3d{position:fixed;top:12px;bottom:12px;left:12px;right:104px;width:calc(100% - 116px);height:calc(100% - 24px);border-radius:22px;border:1px solid var(--ln);opacity:0;transition:opacity .6s;cursor:grab;touch-action:none;background:var(--soft)}
+.scene3d.on{opacity:1}.scene3d:active{cursor:grabbing}
+.topbar{position:fixed;top:24px;left:24px;z-index:6;display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:14px}
+.topbar button{padding:7px 12px;border-radius:9px;font-size:13px;font-weight:600}.topbar button:hover:not(:disabled){background:var(--soft)}.topbar button:disabled{opacity:.35;cursor:default}
+.topbar .en{font-size:11px}.topbar .sep{width:1px;height:20px;background:var(--ln)}.topbar .pos{font:600 12px Outfit;color:var(--mu);min-width:56px;text-align:center}
+.orbit{position:fixed;bottom:24px;left:24px;z-index:6;font-size:11.5px;color:var(--mu);padding:7px 12px;border-radius:999px;pointer-events:none}
+.dcard{position:fixed;top:24px;right:118px;z-index:6;width:min(420px,calc(100vw - 150px));max-height:calc(100vh - 48px);display:flex;flex-direction:column;border-radius:20px;overflow:hidden;background:color-mix(in srgb,var(--card) 84%,transparent);border-top:4px solid var(--c)}
+.dcard header{padding:16px 18px 10px}
+.dcard .row{display:flex;align-items:center;gap:8px}
+.dcard .ref{font:700 12px var(--ref);letter-spacing:.05em;direction:ltr;color:var(--ink);background:var(--soft);padding:3px 8px;border-radius:7px}
+.dcard .gl{font-size:12px;color:var(--mu);display:flex;gap:6px;align-items:center}.dcard .gl i{width:9px;height:9px;border-radius:3px;background:var(--c)}.dcard .gl .en{font-size:10.5px}
+.dcard .mn{margin-inline-start:auto;width:30px;height:30px;border-radius:9px;background:var(--soft);font-weight:700}
+.dcard h1{font-size:21px;line-height:1.4;margin-top:10px;text-wrap:balance}
+.dcard .sub{font-size:12.5px;margin-top:2px}
+.dcard .scroll{overflow:auto;padding:4px 18px 18px;display:flex;flex-direction:column;gap:14px}
+.dcard h2{font-size:12.5px;color:var(--mu);font-weight:600;margin-bottom:6px;display:flex;gap:6px;align-items:baseline}.dcard h2 .en{font-size:10.5px}
+.dcard p{font-size:13.5px;line-height:1.75}
+.org{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.org div{padding:8px 10px;border-radius:10px;background:var(--soft)}.org dt{font-size:11px;color:var(--mu)}.org dd{font-size:13px;font-weight:600;line-height:1.5}.org small{font-weight:400;color:var(--mu)}
+.pts{padding-inline-start:20px;display:flex;flex-direction:column;gap:6px;font-size:13.5px;line-height:1.65}
+.pts li::marker{color:var(--c);font:700 13px Outfit}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.note{padding:10px 12px;border-radius:12px;background:#e09a1c14;border:1px solid #e09a1c33}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.acts{display:flex;gap:8px}.acts button{flex:1;height:42px;border-radius:12px;font-weight:600;font-size:13px;border:1px solid var(--ln);background:var(--card)}.acts .p{background:var(--teal);color:#fff;border-color:var(--teal)}
+.dcard.min{width:auto}
+
+.ftoggle{display:none}
+@media (max-width:1100px){.cat{grid-template-columns:1fr}.rail{position:static;max-height:none}
+  .ftoggle{display:block;padding:9px 12px;border-radius:11px;background:var(--soft);font-size:13px;font-weight:600;text-align:start}
+  .rail:not(.open) section,.rail:not(.open) .reset{display:none}}
+@media (max-width:900px){
+  .libv{padding:12px 12px 90px}
+  .scene3d{right:12px;width:calc(100% - 24px);height:52vh;bottom:auto}
+  .dcard{top:auto;bottom:12px;right:12px;left:12px;width:auto;max-height:46vh}
+  .topbar{top:20px;left:20px}.orbit{display:none}
+  .two,.org{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){.card,.dimg img,.shim{animation:none}.card{transition:none}}
+@media print{
+  .lib .dock,.topbar,.orbit,.scene3d,.acts,.mn{display:none!important}
+  .dv{position:static}.dcard{position:static;width:100%;max-height:none;box-shadow:none;background:#fff}
+  .dcard .scroll{overflow:visible}
+}

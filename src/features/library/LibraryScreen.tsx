@@ -9,10 +9,15 @@ import {
 } from "./content"
 import { Dock } from "@/components/ui/Dock"
 import { SkillMap } from "./SkillMap"
+import { Catalog } from "./Catalog"
+import { DrillView } from "./DrillView"
+import { NO_FILTER, type Filters } from "./catalog"
+import "./catalog.css"
 
 const PlayLab = lazy(async () => ({ default: (await import("./PlayLab")).PlayLab }))
 
 export type View = { v: "cmd" } | { v: "play"; id: string } | { v: "map"; key: NodeKey }
+type Tab = "drills" | "session" | "plays" | "skills"
 type Theme = "light" | "dark"
 const THEME_KEY = "im-theme"
 const ORDER: readonly DrillCat[] = ["warm", "phys", "tech", "tact", "game", "cool"]
@@ -23,6 +28,12 @@ const RADAR = cfg.radar
 const HALF = 2
 const TAU = Math.PI * HALF
 const PCT = 100
+const TABS: readonly { key: Tab; ar: string; en: string }[] = [
+  { key: "drills", ar: "التمارين", en: "Drills" },
+  { key: "session", ar: "بناء وحدة تدريبية", en: "Session builder" },
+  { key: "plays", ar: "الخطط المتحركة", en: "Animated plays" },
+  { key: "skills", ar: "المهارات", en: "Skills" },
+]
 
 function readTheme(): Theme {
   try { return localStorage.getItem(THEME_KEY) === "dark" ? "dark" : "light" } catch { return "light" }
@@ -31,22 +42,71 @@ function readTheme(): Theme {
 export function LibraryScreen(): React.JSX.Element {
   const [theme, setTheme] = useState<Theme>(readTheme)
   const [view, setView] = useState<View>({ v: "cmd" })
+  const [tab, setTab] = useState<Tab>("drills")
+  const [filters, setFilters] = useState<Filters>(NO_FILTER)
+  const [drill, setDrill] = useState<{ id: string; list: string[] } | null>(null)
+  const [extra, setExtra] = useState<string[]>([])
   const flip = useCallback((): void => {
     setTheme((t) => { const n: Theme = t === "dark" ? "light" : "dark"; try { localStorage.setItem(THEME_KEY, n) } catch { /* private mode */ } return n })
   }, [])
-  useEffect(() => { window.scrollTo({ top: 0 }) }, [view])
+  useEffect(() => { window.scrollTo({ top: 0 }) }, [view, tab])
+  const dark = theme === "dark"
+  const back = useCallback((): void => setDrill(null), [])
+  const go = useCallback((id: string): void => setDrill((d) => (d ? { ...d, id } : d)), [])
+  const add = (id: string): void => { setExtra((x) => (x.includes(id) ? x : [...x, id])); setDrill(null); setTab("session") }
   return (
     <div className="lib" data-theme={theme} dir="rtl">
       <Dock active="library" />
-      {view.v === "cmd" && <Command open={setView} flip={flip} />}
-      {view.v === "play" && <Suspense fallback={<div className="cmdv"><p className="wrap">…</p></div>}><PlayLab id={view.id} open={setView} flip={flip} theme={theme} /></Suspense>}
-      {view.v === "map" && <SkillMap start={view.key} open={setView} flip={flip} />}
+      {drill && <DrillView id={drill.id} list={drill.list} dark={dark} ctx={filters.sport === "all" ? undefined : filters.sport} back={back} go={go} addToSession={add} />}
+      {!drill && view.v === "cmd" && (
+        <div className="libv">
+          <header className="lhead glass">
+            <div className="ttl"><h1>المكتبة <span className="en">Library</span></h1>
+              <p>{DRILLS.length} تمرينًا بصورة ثلاثية الأبعاد · {PLAYS.length} خطة متحركة · {SKILLS.length} مهارة — مصنّفة حسب اللعبة والمرحلة السنية والهدف وشكل التمرين</p></div>
+            <nav className="tabs" role="tablist" aria-label="أقسام المكتبة">
+              {TABS.map((t) => <button key={t.key} role="tab" aria-selected={tab === t.key} className={tab === t.key ? "on" : ""} onClick={() => setTab(t.key)}>{t.ar}<span className="en">{t.en}</span>{t.key === "session" && extra.length > 0 && <b className="badge">{extra.length}</b>}</button>)}
+            </nav>
+            <button className="chip" onClick={flip} title="الوضع الفاتح / الغامق">◐</button>
+          </header>
+          {tab === "drills" && <Catalog dark={dark} filters={filters} setFilters={setFilters} open={(id, list) => setDrill({ id, list })} />}
+          {tab === "session" && <Command open={setView} flip={flip} extra={extra} />}
+          {tab === "plays" && <PlayList open={setView} />}
+          {tab === "skills" && <SkillList open={setView} />}
+        </div>
+      )}
+      {!drill && view.v === "play" && <Suspense fallback={<div className="cmdv"><p className="wrap">…</p></div>}><PlayLab id={view.id} open={setView} flip={flip} theme={theme} /></Suspense>}
+      {!drill && view.v === "map" && <SkillMap start={view.key} open={setView} flip={flip} />}
     </div>
   )
 }
 
+function PlayList({ open }: { open: (v: View) => void }): React.JSX.Element {
+  const [q, setQ] = useState("")
+  const xs = PLAYS.filter((p) => textMatch(q, p.name.ar, p.name.en, p.desc.ar))
+  return (
+    <section className="plist glass">
+      <label className="search"><span aria-hidden="true">⌕</span><input id="lib-pq" value={q} onChange={(e) => setQ(e.target.value)} placeholder="ابحث في الخطط: ضغط، بناء، مرتد…" aria-label="بحث في الخطط" /></label>
+      <div className="pgrid">{xs.map((p) => (
+        <button key={p.id} className="pc" style={{ "--c": PLAY_CAT[p.cat]?.color ?? "#7c8ea3" } as React.CSSProperties} onClick={() => open({ v: "play", id: p.id })}>
+          <i /><span><b>{p.name.ar}</b><small>{PLAY_CAT[p.cat]?.ar} · {p.steps.length} خطوات · {playSport(p) ? SPORTS[playSport(p) ?? "football"].ar : "أنشطة عامة"}</small></span><span className="go">↗</span></button>))}</div>
+    </section>
+  )
+}
+function SkillList({ open }: { open: (v: View) => void }): React.JSX.Element {
+  const [q, setQ] = useState("")
+  const xs = SKILLS.filter((s) => textMatch(q, s.ar.n, s.en.n, s.ar.w))
+  return (
+    <section className="plist glass">
+      <label className="search"><span aria-hidden="true">⌕</span><input id="lib-sq" value={q} onChange={(e) => setQ(e.target.value)} placeholder="ابحث في المهارات: تمرير، تسديد، استلام…" aria-label="بحث في المهارات" /></label>
+      <div className="pgrid">{xs.map((s) => (
+        <button key={s.id} className="pc" style={{ "--c": "#5b6fe0" } as React.CSSProperties} onClick={() => open({ v: "map", key: `s:${s.id}` })}>
+          <i /><span><b>{s.ar.n}</b><small>{SKILL_CAT[s.cat]?.ar} · {SPORTS[s.sp].ar} · المستوى {s.lvl}</small></span><span className="go">↗</span></button>))}</div>
+    </section>
+  )
+}
+
 // ---------------- Coach command ----------------
-function Command({ open, flip }: { open: (v: View) => void; flip: () => void }): React.JSX.Element {
+function Command({ open, flip, extra }: { open: (v: View) => void; flip: () => void; extra: string[] }): React.JSX.Element {
   const [q, setQ] = useState(cfg.example)
   const [ask, setAsk] = useState<Ask>(() => parseAsk(cfg.example))
   const [picked, setPicked] = useState<string[] | null>(null)
@@ -55,7 +115,7 @@ function Command({ open, flip }: { open: (v: View) => void; flip: () => void }):
     const take = (cs: DrillCat[], n: number): string[] => scored.filter((o) => cs.includes(o.x.cat)).slice(0, n).map((o) => o.x.id)
     return cfg.autoPick.flatMap((a) => take(a.cats as DrillCat[], a.n))
   }, [scored])
-  const sel = picked ?? auto
+  const sel = picked ?? [...auto, ...extra.filter((id) => !auto.includes(id))]
   const toggle = (id: string): void => setPicked(sel.includes(id) ? sel.filter((x) => x !== id) : [...sel, id])
   const plays = useMemo(() => PLAYS.filter((p) => (!ask.sp || playSport(p) === ask.sp) && textMatch(q, p.name.ar, p.name.en, p.desc.ar)).slice(0, cfg.sideTake), [q, ask])
   const skills = useMemo(() => SKILLS.filter((s) => (!ask.sp || s.sp === ask.sp) && (!ask.age || s.age <= ask.age) && textMatch(q, s.ar.n, s.en.n, s.ar.w)).slice(0, cfg.sideTake), [q, ask])

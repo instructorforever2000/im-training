@@ -10,7 +10,8 @@ export type DrillCat = "warm" | "phys" | "tech" | "tact" | "game" | "cool"
 export interface Drill {
   id: string; sp: Sport[]; cat: DrillCat; dur: number; int: number; rpe: number; age: number
   ar: { name: string; obj: string; n: string; area: string; eq: string; pts: string[]; prog: string; reg: string; note: string }
-  en: { name: string }
+  en: { name: string; n: string; area: string; eq: string; obj?: string }
+  px?: { q: string; pos: string; eq: string[]; lvl: number }
 }
 export type Token = [string, string, number | string, number, number]
 export interface Step { c: { ar: string; en: string }; m: Record<string, [number, number]>; b?: string }
