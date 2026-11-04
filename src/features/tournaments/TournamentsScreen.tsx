@@ -87,7 +87,7 @@ function Wizard({ data, close, done }: { data: TData; close: () => void; done: (
     const g = gameOf(k)
     setSport(k); setQ("")
     if (!g) return
-    const [w, d, l] = g.pts
+    const [w, d, l] = g.pts ?? []
     setPts({ win: w ?? 0, draw: d ?? 0, loss: l ?? 0 })
     setSystem(isHeadToHead(g) ? "league" : "ranking")
   }
@@ -385,7 +385,7 @@ function Pulse({ t, es, ms, names, after }: { t: Tournament; es: EntryRow[]; ms:
   const off = RING_R * TAU * (1 - ringPct / PCT)
   return (
     <aside className="pulse">
-      <div className="ring">
+      <div className="pring">
         <svg viewBox="0 0 80 80"><circle cx="40" cy="40" r={RING_R} className="bg" /><circle cx="40" cy="40" r={RING_R} className="fg" strokeDasharray={RING_R * TAU} strokeDashoffset={off} /></svg>
         <div><b>{ringPct}%</b><span>{ranked ? `${resultsIn}/${es.length} نتيجة` : `${done}/${real.length} مباراة`}</span></div>
       </div>

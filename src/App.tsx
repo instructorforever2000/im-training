@@ -12,6 +12,7 @@ const LibraryScreen = lazy(async () => ({ default: (await import("@/features/lib
 const RolesScreen = lazy(async () => ({ default: (await import("@/features/roles/RolesScreen")).RolesScreen }))
 const TournamentsScreen = lazy(async () => ({ default: (await import("@/features/tournaments/TournamentsScreen")).TournamentsScreen }))
 const LearningScreen = lazy(async () => ({ default: (await import("@/features/learning/LearningScreen")).LearningScreen }))
+const AssessmentScreen = lazy(async () => ({ default: (await import("@/features/assessment/AssessmentScreen")).AssessmentScreen }))
 const SquadScreen = lazy(async () => ({ default: (await import("@/features/squad/SquadScreen")).SquadScreen }))
 
 /** Simple hash routes: "#/" = home (لوحة المدير for the owner), "#/squad" = الفرق واللاعبين, "#/library" = المكتبة, "#/roles" = المراكز والأدوار. */
@@ -35,7 +36,7 @@ function Home({ access }: { access: AccessApi }): React.JSX.Element {
   const wait = <main className="min-h-dvh grid place-items-center opacity-60">…</main>
   if (owner === null) return wait
   if (!owner) return <AccessGranted access={access} />
-  return <Suspense fallback={wait}>{route === "squad" ? <SquadScreen /> : route === "library" ? <LibraryScreen /> : route === "roles" ? <RolesScreen /> : route === "tournaments" ? <TournamentsScreen /> : route === "learning" ? <LearningScreen /> : baseRoute(route) === "tour" ? <TourScreen /> : <AdminDashboard />}</Suspense>
+  return <Suspense fallback={wait}>{route === "squad" ? <SquadScreen /> : route === "library" ? <LibraryScreen /> : route === "roles" ? <RolesScreen /> : route === "tournaments" ? <TournamentsScreen /> : route === "learning" ? <LearningScreen /> : route === "assessment" ? <AssessmentScreen /> : baseRoute(route) === "tour" ? <TourScreen /> : <AdminDashboard />}</Suspense>
 }
 
 /** Open sections for anyone with the link (visitor strip on top); everything else goes through sign-in. */

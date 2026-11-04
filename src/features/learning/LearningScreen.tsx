@@ -161,7 +161,7 @@ export function LearningScreen(): React.JSX.Element {
         {mode === "result" && (
           <section className="res">
             <div className="rc printable">
-              <div className="ring">
+              <div className="lring">
                 <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r={RING_R} className="bg" /><circle cx="60" cy="60" r={RING_R} className="fg" strokeDasharray={RING_R * TAU} strokeDashoffset={RING_R * TAU * (1 - score / PCT)} /></svg>
                 <div><b>{score}%</b><span>{right} من {asked.length}</span></div>
               </div>

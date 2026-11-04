@@ -3,7 +3,7 @@ import games from "@/content/legacy-v28/games.json"
 import systems from "@/content/legacy-v28/tournament-systems.json"
 import type { System } from "./data"
 
-export interface Game { k: string; cat: string; ar: string; en: string; m: string; pts: number[] }
+export interface Game { k: string; cat: string; ar: string; en: string; m: string; pts?: number[] }
 export const GAMES = games as Game[]
 export const gameOf = (k: string): Game | undefined => GAMES.find((g) => g.k === k)
 

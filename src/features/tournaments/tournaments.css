@@ -58,7 +58,7 @@
 .tr .form{display:flex;gap:3px;justify-content:center}
 .tr .form i{width:9px;height:9px;border-radius:50%}.tr .fw{background:var(--green)}.tr .fd{background:#b8c2cd}.tr .fl{background:var(--red)}
 .tr .br{display:flex;gap:18px;padding:18px 16px;overflow-x:auto}
-.tr .br .col{display:flex;flex-direction:column;justify-content:space-around;gap:14px;min-width:190px}
+.tr .br .col{display:flex;flex-direction:column;justify-content:space-around;gap:14px;min-width:150px}
 .tr .br h5{font-size:12.5px;color:var(--mu);text-align:center}
 .tr .tie{background:#fff;border:1px solid var(--ln);border-radius:12px;overflow:hidden}
 .tr .sl{display:flex;justify-content:space-between;padding:7px 10px;font-size:13px}
@@ -74,12 +74,12 @@
 .tr .rr i{font-style:normal;color:var(--mu);font-size:12px}.tr .rr .sv{grid-column:auto;padding:0 12px}
 .tr .rules{display:grid;gap:8px;padding-inline-start:20px;font-size:13.5px;line-height:1.8}
 .tr .pulse{background:var(--navy);color:#fff;border-radius:22px;padding:18px;display:flex;flex-direction:column;gap:12px;position:sticky;top:22px}
-.tr .ring{position:relative;width:150px;height:150px;margin:0 auto}
-.tr .ring svg{width:100%;height:100%;transform:rotate(-90deg)}
-.tr .ring circle{fill:none;stroke-width:7}.tr .ring .bg{stroke:#ffffff1a}
-.tr .ring .fg{stroke:var(--teal);stroke-linecap:round;transition:stroke-dashoffset .9s cubic-bezier(.2,.7,.2,1)}
-.tr .ring div{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
-.tr .ring b{font:700 30px Outfit}.tr .ring span{font-size:11.5px;color:#9fb0c6}
+.tr .pring{position:relative;width:150px;height:150px;margin:0 auto}
+.tr .pring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.tr .pring circle{fill:none;stroke-width:7}.tr .pring .bg{stroke:#ffffff1a}
+.tr .pring .fg{stroke:var(--teal);stroke-linecap:round;transition:stroke-dashoffset .9s cubic-bezier(.2,.7,.2,1)}
+.tr .pring div{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.tr .pring b{font:700 30px Outfit}.tr .pring span{font-size:11.5px;color:#9fb0c6}
 .tr .kv{display:flex;justify-content:space-between;font-size:13px;color:#b9c6d6;border-top:1px solid #ffffff14;padding-top:10px}
 .tr .kv b{font:700 16px Outfit;color:#fff}
 .tr .lead{background:#ffffff10;border-radius:14px;padding:10px 12px;display:grid;gap:2px}
