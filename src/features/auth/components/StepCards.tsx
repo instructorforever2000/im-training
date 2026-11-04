@@ -47,6 +47,9 @@ export function StepCards({ access }: Props): React.JSX.Element {
     <ol className="lg-cards">
       {T.steps.map((s, i) => {
         const st = stateOf(i)
+        // Later steps stay private: a visitor signing in sees only the account step; the invite and approval
+        // steps appear once they are actually reached.
+        if (st === "locked") return null
         return (
           <li key={s.en} className="lg-card" data-state={st} aria-current={st === "active" ? "step" : undefined}>
             <div className="lg-plate" aria-hidden="true"><i /><i /><i /></div>
@@ -60,7 +63,6 @@ export function StepCards({ access }: Props): React.JSX.Element {
               </header>
 
               {st === "done" && <p className="lg-note">{s.doneAr}</p>}
-              {st === "locked" && <p className="lg-note lg-dim">{s.lockAr}</p>}
 
               {st === "active" && i === 0 && (
                 <div className="lg-body">

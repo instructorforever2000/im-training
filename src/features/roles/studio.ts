@@ -523,7 +523,7 @@ $$('#lang button').forEach(b => b.onclick = () => { E.setLang(b.dataset.l); $$('
   $('#pin').onclick = () => { prefs.pin = !prefs.pin; saveUi(); pinUi(); toast(prefs.pin ? L('القائمة العلوية مثبّتة', 'Top bar pinned') : L('القائمة العلوية بتختفي وتظهر لما تقرّب من فوق', 'Top bar hides — move to the top to show it')) };
   $('#dockb').onclick = () => { prefs.dock = !prefs.dock; saveUi(); dockUi() };
   $('#hudtab').onclick = () => show(true);
-  on(window, 'pointermove', e => { if (prefs.pin || innerWidth <= 900 || e.pointerType === 'touch') return; const t = e.target, overBar = t.closest && t.closest('.hud,.hud2,#hudtab,#pmenu,select');
+  on(window, 'pointermove', e => { if (prefs.pin || innerWidth <= 900 || e.pointerType === 'touch') return; const t = e.target, overBar = t.closest && t.closest('.hud,.hud2,#hudtab,#pmenu');
     if (e.clientY < 46 || overBar) { clearTimeout(hideT); show(true) } else if (!rs.classList.contains('hh')) { clearTimeout(hideT); hideT = setTimeout(() => show(false), 900) } });
   on($('#gl'), 'pointerdown', () => { if (!prefs.pin && innerWidth > 900) show(false) });
   pinUi(); dockUi(); if (!prefs.pin && innerWidth > 900) setTimeout(() => show(false), 2500);

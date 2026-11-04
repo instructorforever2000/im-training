@@ -60,7 +60,7 @@ export function TourScreen(): React.JSX.Element {
       <section className="blk join" id="join">
         <h2>طريقتين للدخول الكامل <span className="en">Full access</span></h2>
         <div className="two">
-          <div><i>🔑</i><b>كود دعوة</b><p>لو جهتك (نادي، أو أكاديمية، أو مدرسة) مشتركة، مدير الجهة بيبعتلك كود. ادخل بحساب Google أو بإيميلك، واكتب الكود، وبعد موافقة المدير الأقسام بتتفتح.</p><a className="btn p" href="#/">دخول بالكود</a></div>
+          <div><i>🔑</i><b>عضوية جهتك</b><p>لو جهتك (نادي، أو أكاديمية، أو مدرسة) مشتركة، إدارة الجهة بتضيفك عضو. ادخل بحساب Google أو بإيميلك، والأقسام بتتفتح حسب دورك.</p><a className="btn p" href="#/">دخول الأعضاء</a></div>
           <div><i>★</i><b>الاشتراك السنوي</b><p>اشتراك سنوي بسعر في المتناول للأفراد والجهات. ولحد ما الدفع الإلكتروني يتفعّل، الاشتراك بيتم من خلال إدارة المنصة.</p><span className="soon">الدفع الإلكتروني قريبًا <i>Coming soon</i></span></div>
         </div>
       </section>
