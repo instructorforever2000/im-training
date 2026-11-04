@@ -8,3 +8,5 @@
  .dock{top:auto;bottom:10px;left:10px;right:10px;width:auto;height:64px;flex-direction:row;justify-content:space-around;padding:0 8px}
  .dock img,.dock .sp{display:none}.dock a{width:auto;flex:1}
 }
+
+[data-member] .dock a[href="#/"]{display:none}

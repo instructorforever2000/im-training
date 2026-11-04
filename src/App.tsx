@@ -27,6 +27,20 @@ function useRoute(): string {
   return hash.replace(/^#\/?/, "")
 }
 
+/** Approved members (coach, player, viewer…): the field screens; the owner's command centre stays the owner's.
+ *  What each person may change is enforced by the database (row-level security), per role and organisation. */
+const MEMBER_SCREENS: Record<string, () => React.JSX.Element> = {
+  program: () => <ProgramScreen />, assessment: () => <AssessmentScreen />, tournaments: () => <TournamentsScreen />, squad: () => <SquadScreen />,
+  library: () => <LibraryScreen />, roles: () => <RolesScreen />, learning: () => <LearningScreen />, tour: () => <TourScreen />,
+}
+function MemberArea({ route, access }: { route: string; access: AccessApi }): React.JSX.Element {
+  useEffect(() => { document.documentElement.dataset.member = ""; return () => { delete document.documentElement.dataset.member } }, [])
+  const key = baseRoute(route)
+  if (key === "welcome") return <AccessGranted access={access} />
+  const screen = MEMBER_SCREENS[key] ?? MEMBER_SCREENS.program
+  return <Suspense fallback={<main className="min-h-dvh grid place-items-center opacity-60">…</main>}>{screen()}</Suspense>
+}
+
 function Home({ access }: { access: AccessApi }): React.JSX.Element {
   const [owner, setOwner] = useState<boolean | null>(null)
   const route = useRoute()
@@ -36,7 +50,7 @@ function Home({ access }: { access: AccessApi }): React.JSX.Element {
   }, [])
   const wait = <main className="min-h-dvh grid place-items-center opacity-60">…</main>
   if (owner === null) return wait
-  if (!owner) return <AccessGranted access={access} />
+  if (!owner) return <MemberArea route={route} access={access} />
   return <Suspense fallback={wait}>{route === "squad" ? <SquadScreen /> : route === "library" ? <LibraryScreen /> : route === "roles" ? <RolesScreen /> : route === "tournaments" ? <TournamentsScreen /> : route === "learning" ? <LearningScreen /> : route === "assessment" ? <AssessmentScreen /> : route === "program" ? <ProgramScreen /> : baseRoute(route) === "tour" ? <TourScreen /> : <AdminDashboard />}</Suspense>
 }
 

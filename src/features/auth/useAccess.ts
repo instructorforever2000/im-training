@@ -10,6 +10,9 @@ export interface Membership {
   status: "pending" | "approved" | "suspended"
   orgNameAr: string | null
   orgNameEn: string | null
+  /** End of a time-limited access (null = open). */
+  accessUntil?: string | null
+  expired?: boolean
 }
 
 export interface AccessState {
@@ -26,15 +29,17 @@ export interface AccessApi extends AccessState {
   retry: () => void
 }
 
-interface MembershipRow { role: string; status: Membership["status"]; org_id: string }
+interface MembershipRow { role: string; status: Membership["status"]; org_id: string; access_until: string | null }
 interface OrgRow { name_ar: string | null; name_en: string | null }
 
 const DEV_PREVIEW = import.meta.env.DEV ? new URLSearchParams(window.location.search).get("preview") : null
 
+const PHASE_OF: Record<Membership["status"], Phase> = { approved: "granted", suspended: "suspended", pending: "pending" }
+
 async function resolve(session: Session): Promise<{ phase: Phase; membership: Membership | null }> {
   const { data: rows, error } = await supabase
     .from("memberships")
-    .select("role,status,org_id")
+    .select("role,status,org_id,access_until")
     .eq("platform_id", PLATFORM_ID)
     .eq("user_id", session.user.id)
     .order("created_at", { ascending: false })
@@ -48,8 +53,9 @@ async function resolve(session: Session): Promise<{ phase: Phase; membership: Me
   }
   const { data: org } = await supabase.from("organizations").select("name_ar,name_en").eq("id", row.org_id).maybeSingle()
   const o = org as OrgRow | null
-  const membership: Membership = { role: row.role, status: row.status, orgNameAr: o?.name_ar ?? null, orgNameEn: o?.name_en ?? null }
-  const phase: Phase = row.status === "approved" ? "granted" : row.status === "suspended" ? "suspended" : "pending"
+  const expired = !!row.access_until && new Date(row.access_until).getTime() <= Date.now()
+  const membership: Membership = { role: row.role, status: row.status, orgNameAr: o?.name_ar ?? null, orgNameEn: o?.name_en ?? null, accessUntil: row.access_until, expired }
+  const phase: Phase = PHASE_OF[expired ? "suspended" : row.status]
   return { phase, membership }
 }
 

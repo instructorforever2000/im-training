@@ -12,7 +12,11 @@ export type DrawerKind = { k: "org"; org?: Org } | { k: "inv"; orgId?: string } 
 
 const R = cfg.rules
 const GAP: React.CSSProperties = { marginTop: "20px" }
-const INVITE_ROLES: readonly MemberRole[] = ["org_admin", "technical_director", "coach", "fitness_coach", "supervisor", "player", "parent"]
+/** How long the person keeps access after joining (OPEN = until you stop it). */
+const OPEN = 0
+const ACCESS_DAYS: readonly number[] = [7, 30, 90, 365, OPEN]
+const accessLabel = (d: number | null): string => (d ? `${d} يوم` : "مفتوحة")
+const INVITE_ROLES: readonly MemberRole[] = ["org_admin", "technical_director", "coach", "fitness_coach", "supervisor", "player", "parent", "viewer"]
 
 function Pills<T extends string | number>({ items, value, label, onPick }: { items: readonly T[]; value: T; label: (v: T) => string; onPick: (v: T) => void }): React.JSX.Element {
   return <div>{items.map((v) => <button type="button" key={String(v)} className={`pill${v === value ? " on" : ""}`} onClick={() => onPick(v)}>{label(v)}</button>)}</div>
@@ -71,6 +75,7 @@ function NewInvite({ data, orgId }: { data: AdminData; orgId?: string }): React.
   const [role, setRole] = useState<MemberRole>("coach")
   const [days, setDays] = useState(R.inviteDays[1])
   const [uses, setUses] = useState(R.inviteUses[0])
+  const [access, setAccess] = useState<number>(OPEN)
   const [code, setCode] = useState<string | null>(null)
   const [err, setErr] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
@@ -78,7 +83,7 @@ function NewInvite({ data, orgId }: { data: AdminData; orgId?: string }): React.
   const msg = code ? `رمز دعوتك لمنصة IM Training (${orgName}): ${code}\n${window.location.origin}${import.meta.env.BASE_URL}` : ""
   const issue = async (): Promise<void> => {
     setErr(null)
-    const r = await createInvite({ org_id: org, role, days, max_uses: uses })
+    const r = await createInvite({ org_id: org, role, days, max_uses: uses, access_days: access || null })
     if (r.error) setErr(`ما اتصدرش: ${r.error}`); else setCode(r.code ?? null)
   }
   const copy = async (): Promise<void> => { await navigator.clipboard.writeText(msg); setCopied(true) }
@@ -91,7 +96,9 @@ function NewInvite({ data, orgId }: { data: AdminData; orgId?: string }): React.
       <Pills items={orgs.map((o) => o.id)} value={org} label={(id) => orgs.find((o) => o.id === id)?.name_ar ?? ""} onPick={setOrg} />
       <p className="fld">الدور <span className="en">Role</span></p>
       <Pills items={INVITE_ROLES} value={role} label={(r) => ROLE_AR[r]} onPick={setRole} />
-      <p className="fld">الصلاحية <span className="en">Valid for</span></p>
+      <p className="fld">مدة الدخول بعد الانضمام <span className="en">Access period</span></p>
+      <Pills items={ACCESS_DAYS} value={access} label={accessLabel} onPick={setAccess} />
+      <p className="fld">الرمز نفسه صالح لمدة <span className="en">Code valid for</span></p>
       <Pills items={R.inviteDays} value={days} label={(d) => `${d} يوم`} onPick={setDays} />
       <p className="fld">عدد مرات الاستخدام <span className="en">Max uses</span></p>
       <Pills items={R.inviteUses} value={uses} label={(u) => (u === 1 ? "استخدام واحد" : `${u} شخص`)} onPick={setUses} />
@@ -109,7 +116,7 @@ function NewInvite({ data, orgId }: { data: AdminData; orgId?: string }): React.
       <h3 className="subh">الرموز النشطة <span className="en">Active codes · {live.length}</span></h3>
       {live.length ? live.map((i) => (
         <div className="req" key={i.id}><div><b className="en" style={{ color: "#b9c3ff" }}>{i.code}</b>
-          <small>{ROLE_AR[i.default_role]} · {i.uses}/{i.max_uses ?? "∞"} · ينتهي {i.expires_at ? new Date(i.expires_at).toLocaleDateString("ar") : "—"}</small></div>
+          <small>{ROLE_AR[i.default_role]} · دخول {accessLabel(i.access_days ?? null)} · {i.uses}/{i.max_uses ?? "∞"} · ينتهي {i.expires_at ? new Date(i.expires_at).toLocaleDateString("ar") : "—"}</small></div>
           <div className="act"><button className="btn" onClick={() => void deactivateInvite(i.id)}>إيقاف</button></div></div>
       )) : <div className="empty">مفيش رموز نشطة.</div>}
     </>
