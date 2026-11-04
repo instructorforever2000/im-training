@@ -22,7 +22,7 @@ const db = (): ReturnType<typeof supabase.schema> => supabase.schema("training")
 const T_COLS = "id,org_id,name,sport,system,legs,pts_win,pts_draw,pts_loss,groups_count,lower_better,unit,starts_on,notes,is_active,created_at"
 const E_COLS = "id,tournament_id,team_id,name,grp,seed,result"
 const M_COLS = "id,tournament_id,stage,grp,round,slot,home_id,away_id,home_score,away_score,home_pen,away_pen,played_on"
-const NO_ROWS = "قاعدة البيانات رفضت العملية — الحساب ده مالوش الصلاحية دي."
+const NO_ROWS = "رفضت قاعدة البيانات العملية؛ فهذا الحساب لا يملك هذه الصلاحية."
 const ISO_DATE_LEN = 10
 const ERR_KIND: Record<string, LoadError> = { PGRST106: "schema", PGRST205: "missing", "42P01": "missing" }
 /** null when the write changed at least one row, otherwise the reason. */

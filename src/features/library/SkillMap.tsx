@@ -93,7 +93,7 @@ export function SkillMap({ start, open, flip }: { start: NodeKey; open: (v: View
         <button className="chip" onClick={flip}>◐</button></div>
       <div className="hud glass legend">
         {(["s", "d", "p"] as T[]).map((t) => <div key={t}><i className={SHAPE_CLASS[t]} style={{ "--c": COL[t] } as React.CSSProperties} />{TN[t]}<b>{{ s: SKILLS.length, d: DRILLS.length, p: PLAYS.length }[t]}</b></div>)}
-        <div className="hint">الخط = علاقة علمية · اضغط أي نقطة تبقى هي المركز</div></div>
+        <div className="hint">الخط = علاقة علمية · اضغط أي نقطة لتصبح المركز</div></div>
       <Galaxy center={center} go={go} />
       <div className="hud glass det">
         <span className="k">● {me ? TN[me.t] : ""}{info.sport ? ` · ${info.sport}` : ""}</span>
@@ -102,7 +102,7 @@ export function SkillMap({ start, open, flip }: { start: NodeKey; open: (v: View
         <div className="nb">{(["d", "p", "s"] as T[]).map((t) => group(t).length ? (
           <div key={t} style={{ display: "contents" }}><h4>{GROUP[t]}</h4>
             {group(t).map((k) => <button key={k} style={{ "--c": COL[t] } as React.CSSProperties} onClick={() => go(k)}><i />{byKey.get(k)?.name}</button>)}</div>) : null)}</div>
-        <div className="act">{playId ? <button className="p" onClick={() => open({ v: "play", id: playId })}>افتح في الملعب 3D</button> : <button className="p" onClick={() => open({ v: "cmd" })}>ارجع للطلب</button>}</div>
+        <div className="act">{playId ? <button className="p" onClick={() => open({ v: "play", id: playId })}>افتح في الملعب 3D</button> : <button className="p" onClick={() => open({ v: "cmd" })}>العودة إلى الطلب</button>}</div>
       </div>
     </div>
   )

@@ -93,8 +93,8 @@ const MIN_WORD = 3
 const AGE_RE = /(?:تحت|U)\s*(\d+)/i
 // Duration: accepts "60 دقيقة" or "45 min" (captures the number); rejects "60".  https://regex101.com/?regex=(%5Cd%2B)%5Cs*(%3F%3A%D8%AF%D9%82%D9%8A%D9%82%D8%A9%7Cmin)
 const MIN_RE = /(\d+)\s*(?:دقيقة|min)/
-// Few equipment: accepts "أدوات قليلة" / "بدون أدوات" / "من غير أدوات"; rejects "أدوات كثيرة".
-const FEW_RE = /أدوات قليلة|بدون أدوات|من غير أدوات/
+// Few equipment: accepts "أدوات قليلة" / "بدون أدوات" / "بدون أدوات"; rejects "أدوات كثيرة".
+const FEW_RE = /أدوات قليلة|بدون أدوات|بدون أدوات/
 // Light equipment list: accepts "أقماع" or "" ; rejects "حواجز، سلالم".
 const FEW_EQ_RE = /^(أقماع|كرات|كرة|أقماع، كرات|كرات، أقماع|لا يوجد|—|-)?$/
 // Word splitter: splits "سرعة، رشاقة U12" on spaces and Arabic/Latin commas.

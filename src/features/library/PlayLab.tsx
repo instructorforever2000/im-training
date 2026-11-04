@@ -158,7 +158,7 @@ export function PlayLab({ id, open, flip, theme }: { id: string; open: (v: View)
     <div className="lab">
       <canvas ref={cv} id="gl" />
       <div className="hud glass title"><h1>المكتبة <span className="en">3D play lab</span></h1>
-        <button className="chip" onClick={() => open({ v: "cmd" })}>← ارجع للطلب</button><span className="live">LIVE 3D</span></div>
+        <button className="chip" onClick={() => open({ v: "cmd" })}>← العودة إلى الطلب</button><span className="live">LIVE 3D</span></div>
       <div className="hud glass modes"><button className="on">ملعب</button><button onClick={flip}>◐</button></div>
       <div className="hud glass shelf"><h3>الخطط المتحركة <span className="en">Plays · {PLAYS.length}</span></h3>
         <div className="chips">{[...Object.keys(SPORTS), "general"].map((s) => counts(s) ? (
@@ -177,7 +177,7 @@ export function PlayLab({ id, open, flip, theme }: { id: string; open: (v: View)
       </div>
       <div className="hud glass tl"><div className="top">
         <button className="pp" onClick={toggle} aria-label={running ? "إيقاف" : "تشغيل"}><svg viewBox="0 0 24 24">{running ? <path d="M6 4h4v16H6zM14 4h4v16h-4z" /> : <path d="M7 4l13 8-13 8z" />}</svg></button>
-        <div className="cap">{cur ? play.steps[cur - 1].c.ar : "اضغط ▶ — الخطة بتتحرك على الملعب خطوة بخطوة، واسحب بالماوس عشان تلف الكاميرا"}</div><span className="sig" dir="ltr">{cur} / {play.steps.length}</span></div>
+        <div className="cap">{cur ? play.steps[cur - 1].c.ar : "اضغط ▶ لتتحرك الخطة على الملعب خطوة بخطوة، واسحب بالفأرة لتدوير الكاميرا"}</div><span className="sig" dir="ltr">{cur} / {play.steps.length}</span></div>
         <div className="steps">{play.steps.map((s, i) => <button key={i} className={i < cur ? "d" : ""} onClick={() => { setRunning(false); setCur(i + 1) }}>{i + 1} · {s.c.ar.split(" ").slice(0, CAPTION_WORDS).join(" ")}…</button>)}</div></div>
     </div>
   )

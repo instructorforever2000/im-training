@@ -101,9 +101,9 @@ function Wizard({ data, close, done }: { data: TData; close: () => void; done: (
   const total = picked.length + externals.length
 
   const submit = async (): Promise<void> => {
-    if (!orgId || name.trim().length < MIN_ENTRIES || !sport) { setErr("اكتب اسم البطولة واختار الجهة واللعبة."); return }
-    if (total < MIN_ENTRIES) { setErr("لازم مشاركين اتنين على الأقل."); return }
-    if (system === "mixed" && total < groups * MIN_PER_GROUP) { setErr(`محتاج ${groups * MIN_PER_GROUP} مشاركين على الأقل لـ${groups} مجموعات.`); return }
+    if (!orgId || name.trim().length < MIN_ENTRIES || !sport) { setErr("اكتب اسم البطولة واختر الجهة واللعبة."); return }
+    if (total < MIN_ENTRIES) { setErr("يلزم مشاركان على الأقل."); return }
+    if (system === "mixed" && total < groups * MIN_PER_GROUP) { setErr(`يلزم ${groups * MIN_PER_GROUP} مشاركين على الأقل لـ${groups} مجموعات.`); return }
     const names = [...picked.map((id) => ({ team_id: id, name: orgTeams.find((t) => t.id === id)?.name ?? "" })), ...externals.map((n) => ({ team_id: null, name: n }))]
     const grp = system === "mixed" ? snakeGroups(names.map((n) => n.name), groups) : names.map(() => 1)
     const entries: NewEntry[] = names.map((n, i) => ({ ...n, grp: grp[i], seed: i + 1 }))
@@ -115,7 +115,7 @@ function Wizard({ data, close, done }: { data: TData; close: () => void; done: (
     setBusy(true); setErr(null)
     const r = await createTournament(t, entries, (_ids, rows) => buildFixtures(system, t.legs, rows))
     setBusy(false)
-    if (r.err) setErr(`ما اتحفظتش: ${r.err}`); else if (r.id) done(r.id)
+    if (r.err) setErr(`تعذّر الحفظ: ${r.err}`); else if (r.id) done(r.id)
   }
 
   return (
@@ -158,7 +158,7 @@ function Wizard({ data, close, done }: { data: TData; close: () => void; done: (
                   <div className="systems">{HEAD_SYSTEMS.map((s) => (
                     <button key={s} className={s === system ? "on" : ""} onClick={() => setSystem(s)}><i>{SYSTEMS[s].icon}</i><b>{SYSTEMS[s].ar}</b><span>{SYSTEMS[s].note}</span></button>
                   ))}</div>
-                ) : <p className="mut">اللعبة دي بتتحسب بالنتيجة، فالنظام هيكون <b>ترتيب بالنتيجة</b> (Ranking).</p>}
+                ) : <p className="mut">تُحتسب هذه اللعبة بالنتيجة، لذا سيكون النظام <b>ترتيب بالنتيجة</b> (Ranking).</p>}
                 <ul className="rules">{systemRules(system).map((r) => <li key={r}>{r}</li>)}</ul>
                 {system === "league" && (
                   <div className="seg"><button className={legs === ONE_LEG ? "on" : ""} onClick={() => setLegs(ONE_LEG)}>دور واحد</button><button className={legs === TWO_LEGS ? "on" : ""} onClick={() => setLegs(TWO_LEGS)}>ذهاب وإياب</button></div>
@@ -166,14 +166,14 @@ function Wizard({ data, close, done }: { data: TData; close: () => void; done: (
                 {system === "mixed" && (
                   <label className="fld sm">عدد المجموعات <span className="en">Groups</span>
                     <select value={groups} onChange={(e) => setGroups(Number(e.target.value))}>{GROUP_CHOICES.map((n) => <option key={n} value={n}>{n}</option>)}</select>
-                    <small>يتأهل الأول والتاني من كل مجموعة.</small></label>
+                    <small>يتأهل الأول والثاني من كل مجموعة.</small></label>
                 )}
                 {h2h && system !== "knockout" && (
                   <div className="pts">
                     <label>الفوز<input type="number" min={0} value={pts.win} onChange={(e) => setPts({ ...pts, win: num(e.target.value) ?? 0 })} /></label>
                     {allowsDraw(game) && <label>التعادل<input type="number" min={0} value={pts.draw} onChange={(e) => setPts({ ...pts, draw: num(e.target.value) ?? 0 })} /></label>}
                     <label>الخسارة<input type="number" min={0} value={pts.loss} onChange={(e) => setPts({ ...pts, loss: num(e.target.value) ?? 0 })} /></label>
-                    <small>نقاط اللعبة من اللائحة، وتقدر تعدّلها.</small>
+                    <small>نقاط اللعبة مأخوذة من اللائحة، ويمكنك تعديلها.</small>
                   </div>
                 )}
                 {!h2h && (
@@ -189,19 +189,19 @@ function Wizard({ data, close, done }: { data: TData; close: () => void; done: (
             <section>
               <div className="sn">4</div>
               <div className="sb">
-                <h4>المشاركين <span className="en">Entries · {total}</span></h4>
+                <h4>المشاركون <span className="en">Entries · {total}</span></h4>
                 {orgTeams.length > 0 && <div className="teams">{orgTeams.map((t) => (
                   <label key={t.id} className={picked.includes(t.id) ? "on" : ""}><input type="checkbox" checked={picked.includes(t.id)} onChange={() => setPicked(picked.includes(t.id) ? picked.filter((x) => x !== t.id) : [...picked, t.id])} />{t.name}</label>
                 ))}</div>}
-                <label className="fld">مشاركين من برّه الجهة <span className="en">Other entries</span>
-                  <textarea rows={4} value={extra} onChange={(e) => setExtra(e.target.value)} placeholder={h2h ? "اسم كل فريق في سطر — مدارس أو أندية تانية" : "اسم كل لاعب أو فريق في سطر"} /></label>
-                <small className="mut">الترتيب هنا هو التصنيف (Seeding): الأول هو الأقوى، وده بيحدد المجموعات وشجرة الإقصائيات.</small>
+                <label className="fld">مشاركون من خارج الجهة <span className="en">Other entries</span>
+                  <textarea rows={4} value={extra} onChange={(e) => setExtra(e.target.value)} placeholder={h2h ? "اسم كل فريق في سطر — مدارس أو أندية أخرى" : "اسم كل لاعب أو فريق في سطر"} /></label>
+                <small className="mut">الترتيب هنا هو التصنيف (Seeding): الأول هو الأقوى، وعليه تُحدَّد المجموعات وشجرة الإقصائيات.</small>
               </div>
             </section>
           )}
         </div>
         {err && <p className="err">{err}</p>}
-        <footer><button className="btn" onClick={close}>إلغاء</button><button className="btn p" disabled={busy || !game} onClick={() => void submit()}>{busy ? "بيتحفظ…" : `إنشاء البطولة وجدول المباريات`}</button></footer>
+        <footer><button className="btn" onClick={close}>إلغاء</button><button className="btn p" disabled={busy || !game} onClick={() => void submit()}>{busy ? "جارٍ الحفظ…" : `إنشاء البطولة وجدول المباريات`}</button></footer>
       </div>
     </div>
   )
@@ -222,8 +222,8 @@ function MatchCard({ m, names, draws, after }: { m: MatchRow; names: Map<string,
   const dirty = h !== (m.home_score?.toString() ?? "") || a !== (m.away_score?.toString() ?? "") || hp !== (m.home_pen?.toString() ?? "") || ap !== (m.away_pen?.toString() ?? "")
   const save = async (): Promise<void> => {
     if ((h === "") !== (a === "")) { setErr("اكتب النتيجتين."); return }
-    if (drawBad) { setErr("اللعبة دي مفيهاش تعادل."); return }
-    if (needPen && (hp === "" || ap === "" || hp === ap)) { setErr("التعادل في الإقصائيات محتاج ركلات ترجيح بفائز."); return }
+    if (drawBad) { setErr("لا يوجد تعادل في هذه اللعبة."); return }
+    if (needPen && (hp === "" || ap === "" || hp === ap)) { setErr("التعادل في الأدوار الإقصائية يتطلب ركلات ترجيح تحدد الفائز."); return }
     setBusy(true)
     const r = await saveScore(m.id, { home_score: num(h), away_score: num(a), home_pen: needPen ? num(hp) : null, away_pen: needPen ? num(ap) : null })
     setBusy(false)
@@ -256,7 +256,7 @@ function Fixtures({ t, ms, names, after }: { t: Tournament; ms: MatchRow[]; name
     return `${grp}الجولة ${m.round}`
   }
   const blocks = ms.reduce((acc, m) => acc.set(keyOf(m), [...(acc.get(keyOf(m)) ?? []), m]), new Map<string, MatchRow[]>())
-  if (!ms.length) return <p className="mut pad">مفيش مباريات لسه.</p>
+  if (!ms.length) return <p className="mut pad">لا توجد مباريات بعد.</p>
   return (
     <div className="fx">{[...blocks.entries()].map(([k, list]) => {
       const done = list.filter(isPlayed).length
@@ -279,7 +279,7 @@ function Table({ t, es, ms }: { t: Tournament; es: EntryRow[]; ms: MatchRow[] })
       return (
         <table key={g ?? 0} className="tbl">
           {g && <caption>{groupName(g)}</caption>}
-          <thead><tr><th>#</th><th className="tn">الفريق</th><th>لعب</th><th>ف</th><th>ت</th><th>خ</th><th>له</th><th>عليه</th><th>±</th><th>نقاط</th><th>آخر النتايج</th></tr></thead>
+          <thead><tr><th>#</th><th className="tn">الفريق</th><th>لعب</th><th>ف</th><th>ت</th><th>خ</th><th>له</th><th>عليه</th><th>±</th><th>نقاط</th><th>آخر النتائج</th></tr></thead>
           <tbody>{rows.map((r, i) => (
             <tr key={r.id} className={i < cut ? "q" : ""}>
               <td>{i + 1}</td><td className="tn">{r.name}</td><td>{r.p}</td><td>{r.w}</td><td>{r.d}</td><td>{r.l}</td><td>{r.gf}</td><td>{r.ga}</td>
@@ -296,7 +296,7 @@ function Table({ t, es, ms }: { t: Tournament; es: EntryRow[]; ms: MatchRow[] })
 function Bracket({ ms, names }: { ms: MatchRow[]; names: Map<string, string> }): React.JSX.Element {
   const ko = ms.filter((m) => m.stage === "ko")
   const rounds = [...new Set(ko.map((m) => m.round))].sort((a, b) => a - b)
-  if (!rounds.length) return <p className="mut pad">شجرة الإقصائيات بتظهر لما دور المجموعات يخلص.</p>
+  if (!rounds.length) return <p className="mut pad">تظهر شجرة الإقصائيات بعد انتهاء دور المجموعات.</p>
   const final = ko.find((m) => m.round === rounds[rounds.length - 1] && ko.filter((x) => x.round === m.round).length === 1)
   const champ = final ? winner(final) : null
   return (
@@ -392,11 +392,11 @@ function Pulse({ t, es, ms, names, after }: { t: Tournament; es: EntryRow[]; ms:
       {!ranked && <div className="kv"><span>الأهداف / النقاط المسجّلة</span><b>{goals}</b></div>}
       {!ranked && <div className="kv"><span>المتوسط في المباراة</span><b>{done ? (goals / done).toFixed(1) : "—"}</b></div>}
       {table[0] && table[0].p > 0 && <div className="lead"><small>المتصدّر</small><b>{table[0].name}</b><span>{table[0].pts} نقطة</span></div>}
-      {groupsDone && <button className="btn p wide" disabled={busy} onClick={() => void startKo()}>دور المجموعات خلص — ابدأ الإقصائيات</button>}
+      {groupsDone && <button className="btn p wide" disabled={busy} onClick={() => void startKo()}>انتهى دور المجموعات — ابدأ الأدوار الإقصائية</button>}
       {nextKo.length > 0 && <button className="btn p wide" disabled={busy} onClick={() => void advance()}>{`إنشاء ${koRoundName(nextKo.length).ar}`}</button>}
       {err && <p className="err">{err}</p>}
       {next.length > 0 && (
-        <div className="next"><h6>الجاي <span className="en">Up next</span></h6>
+        <div className="next"><h6>التالي <span className="en">Up next</span></h6>
           {next.map((m) => <div key={m.id}><span>{names.get(m.home_id as string)}</span><i>ضد</i><span>{names.get(m.away_id as string)}</span></div>)}</div>
       )}
       <button className="link" onClick={() => void archive()}>{t.is_active ? "أرشفة البطولة" : "إرجاع من الأرشيف"}</button>
@@ -415,13 +415,13 @@ export function TournamentsScreen(): React.JSX.Element {
 
   if (error) {
     const msg: Record<Exclude<typeof error, null>, string> = {
-      missing: "جداول البطولات لسه ما اتضافتش في قاعدة البيانات. بعد موافقة المالك على إضافتها، الشاشة هتشتغل على طول.",
-      schema: "مخطط training مش ظاهر في إعدادات Data API.",
-      other: "حصلت مشكلة في تحميل البيانات. جرّب تاني بعد شوية.",
+      missing: "لم تُضف جداول البطولات إلى قاعدة البيانات بعد. بعد موافقة المالك على إضافتها تعمل الشاشة مباشرة.",
+      schema: "مخطط training غير ظاهر في إعدادات Data API.",
+      other: "حدثت مشكلة في تحميل البيانات. أعد المحاولة بعد قليل.",
     }
     return <div className="tr"><Dock active="tournaments" /><main className="center"><div className="card msg"><h3>البطولات <span className="en">Tournaments</span></h3><p>{msg[error]}</p><button className="btn" onClick={reload}>إعادة المحاولة</button></div></main></div>
   }
-  if (!data) return <div className="tr"><Dock active="tournaments" /><main className="center"><p className="mut">بيحمّل…</p></main></div>
+  if (!data) return <div className="tr"><Dock active="tournaments" /><main className="center"><p className="mut">جارٍ التحميل…</p></main></div>
 
   const list = data.tours.filter((t) => t.is_active !== archived)
   const t = data.tours.find((x) => x.id === sel) ?? list[0]
@@ -437,12 +437,12 @@ export function TournamentsScreen(): React.JSX.Element {
       <Dock active="tournaments" />
       <main>
         <div className="head">
-          <div><h1>البطولات <span className="en">Tournaments</span></h1><p>{GAMES.length} لعبة · 4 أنظمة · جدول المباريات والترتيب بيتحسبوا لوحدهم</p></div>
+          <div><h1>البطولات <span className="en">Tournaments</span></h1><p>{GAMES.length} لعبة · 4 أنظمة · جدول المباريات والترتيب يُحتسبان تلقائيًا</p></div>
           <button className="btn p" onClick={() => setWizard(true)}>+ بطولة جديدة</button>
         </div>
         {!t ? (
           <div className="empty card">
-            <h3>{archived ? "مفيش بطولات في الأرشيف" : "ابدأ أول بطولة"}</h3>
+            <h3>{archived ? "لا توجد بطولات في الأرشيف" : "ابدأ أول بطولة"}</h3>
             <div className="systems big">{(Object.keys(SYSTEMS) as System[]).map((s) => <div key={s}><i>{SYSTEMS[s].icon}</i><b>{SYSTEMS[s].ar}</b><span className="en">{SYSTEMS[s].en}</span><p>{SYSTEMS[s].note}</p></div>)}</div>
             {archived ? <button className="btn" onClick={() => setArchived(false)}>رجوع للبطولات</button> : <button className="btn p" onClick={() => setWizard(true)}>+ بطولة جديدة</button>}
           </div>
@@ -469,7 +469,7 @@ export function TournamentsScreen(): React.JSX.Element {
               {curTab === "fixtures" && (t.system === "ranking" ? <Ranking t={t} es={es} after={after} /> : <Fixtures t={t} ms={ms} names={names} after={after} />)}
               {curTab === "table" && <Table t={t} es={es} ms={ms} />}
               {curTab === "bracket" && <Bracket ms={ms} names={names} />}
-              {curTab === "rules" && <ul className="rules pad">{systemRules(t.system).map((r) => <li key={r}>{r}</li>)}{t.system !== "ranking" && <li>النقاط: فوز {t.pts_win} · تعادل {t.pts_draw} · خسارة {t.pts_loss}. والتساوي بيتحسم بفارق الأهداف، ثم الأهداف المسجّلة، ثم المواجهة المباشرة.</li>}</ul>}
+              {curTab === "rules" && <ul className="rules pad">{systemRules(t.system).map((r) => <li key={r}>{r}</li>)}{t.system !== "ranking" && <li>النقاط: فوز {t.pts_win} · تعادل {t.pts_draw} · خسارة {t.pts_loss}. ويُحسم التساوي بفارق الأهداف، ثم الأهداف المسجّلة، ثم المواجهة المباشرة.</li>}</ul>}
             </section>
             <Pulse t={t} es={es} ms={ms} names={names} after={after} />
           </div>

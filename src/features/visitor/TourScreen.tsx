@@ -7,11 +7,11 @@ import "./visitor.css"
 interface Sec { ar: string; en: string; p: string; href?: string; icon: string }
 const OPEN: readonly Sec[] = [
   { ar: "المراكز والأدوار", en: "Positions & roles", icon: "◎", href: "#/roles", p: "ملعب ثلاثي الأبعاد لـ6 ألعاب: كل مركز ودوره ومهامه في كل مرحلة، ووضع الشرح لقطة بلقطة." },
-  { ar: "المكتبة", en: "Library", icon: "▤", href: "#/library", p: "أكتر من 400 تمرين و100 خطة متحركة ومهارات بالتصنيف والمرحلة السنية." },
+  { ar: "المكتبة", en: "Library", icon: "▤", href: "#/library", p: "أكثر من 400 تمرين و100 خطة متحركة ومهارات بالتصنيف والمرحلة السنية." },
   { ar: "مركز التعلّم", en: "Learning centre", icon: "✓", href: "#/learning", p: "اختبارات في قوانين الألعاب بإجابات مشروحة، وبطاقات مراجعة." },
 ]
 const MEMBERS: readonly Sec[] = [
-  { ar: "البطولات", en: "Tournaments", icon: "🏆", p: "161 لعبة · دوري وخروج المغلوب ومجموعات · جدول وترتيب بيتحسبوا لوحدهم." },
+  { ar: "البطولات", en: "Tournaments", icon: "🏆", p: "161 لعبة · دوري وخروج المغلوب ومجموعات · جدول وترتيب يُحتسبان تلقائيًا." },
   { ar: "الفرق واللاعبين", en: "Teams & players", icon: "👥", p: "فرق الجهة وملف كل لاعب وحالته." },
   { ar: "لوحة المدير", en: "Command centre", icon: "◈", p: "متابعة الجهات والأعضاء والنشاط لحظة بلحظة." },
   { ar: "البرنامج اليومي والوحدة التدريبية", en: "Daily program", icon: "◷", p: "خطة اليوم والوحدة التدريبية من المكتبة مباشرة." },
@@ -40,9 +40,9 @@ export function TourScreen(): React.JSX.Element {
       <section className="hero">
         <h1>علم الحركة وتطوير الأداء الرياضي</h1>
         <div className="cycle">{CYCLE.map((c, k) => <span key={c} style={{ "--k": k } as React.CSSProperties}>{c}</span>)}</div>
-        <p>منصة تدريب رياضي متعددة الألعاب للمدرب واللاعب والإدارة — بالعربي والإنجليزي.</p>
+        <p>منصة تدريب رياضي متعددة الألعاب للمدرب واللاعب والإدارة، بالعربية والإنجليزية.</p>
         <div className="aud">{AUDIENCE.map((a) => <span key={a}>{a}</span>)}</div>
-        <div className="cta"><a className="btn p" href="#/roles">جرّب المنصة الآن</a><a className="btn" href="#/tour#join" onClick={toJoin}>إزاي أشترك؟</a></div>
+        <div className="cta"><a className="btn p" href="#/roles">جرّب المنصة الآن</a><a className="btn" href="#/tour#join" onClick={toJoin}>كيف أشترك؟</a></div>
       </section>
       </div>
       <section className="blk">
@@ -58,10 +58,10 @@ export function TourScreen(): React.JSX.Element {
         ))}</div>
       </section>
       <section className="blk join" id="join">
-        <h2>طريقتين للدخول الكامل <span className="en">Full access</span></h2>
+        <h2>طريقتان للدخول الكامل <span className="en">Full access</span></h2>
         <div className="two">
-          <div><i>🔑</i><b>عضوية جهتك</b><p>لو جهتك (نادي، أو أكاديمية، أو مدرسة) مشتركة، إدارة الجهة بتضيفك عضو. ادخل بحساب Google أو بإيميلك، والأقسام بتتفتح حسب دورك.</p><a className="btn p" href="#/">دخول الأعضاء</a></div>
-          <div><i>★</i><b>الاشتراك السنوي</b><p>اشتراك سنوي بسعر في المتناول للأفراد والجهات. ولحد ما الدفع الإلكتروني يتفعّل، الاشتراك بيتم من خلال إدارة المنصة.</p><span className="soon">الدفع الإلكتروني قريبًا <i>Coming soon</i></span></div>
+          <div><i>🔑</i><b>عضوية جهتك</b><p>إذا كانت جهتك (نادٍ أو أكاديمية أو مدرسة) مشتركة، تضيفك إدارة الجهة عضوًا. سجّل الدخول بحساب Google أو ببريدك الإلكتروني، وتُفتح الأقسام حسب دورك.</p><a className="btn p" href="#/">دخول الأعضاء</a></div>
+          <div><i>★</i><b>الاشتراك السنوي</b><p>اشتراك سنوي بسعر مناسب للأفراد والجهات. وإلى حين تفعيل الدفع الإلكتروني، يتم الاشتراك عبر إدارة المنصة.</p><span className="soon">الدفع الإلكتروني قريبًا <i>Coming soon</i></span></div>
         </div>
       </section>
       <footer className="vt-foot">Instructor: Mohamed Ayad · مشرف التربية البدنية</footer>
@@ -73,7 +73,7 @@ export function TourScreen(): React.JSX.Element {
 export function VisitorBar(): React.JSX.Element {
   return (
     <div className="vbar" dir="rtl">
-      <span>إنت بتتصفّح كزائر <i>Visitor</i> — المحتوى ده مفتوح للتجربة.</span>
+      <span>أنت تتصفّح بصفة زائر <i>Visitor</i> — هذا المحتوى متاح للتجربة.</span>
       <a href="#/tour">جولة المنصة</a><a className="p" href="#/">دخول المشتركين</a>
     </div>
   )

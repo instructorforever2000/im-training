@@ -65,15 +65,15 @@ export function smartAlerts(d: AdminData): Alert[] {
   const now = Date.now()
   const noCoach: Alert[] = d.orgs.filter((o) => o.is_active && now - Date.parse(o.created_at) > R.noCoachDays * DAY_MS
     && !d.members.some((m) => m.org_id === o.id && m.status === "approved" && COACH_ROLES.has(m.role)))
-    .map((o) => ({ tone: "r", icon: "!", title: `${o.name_ar ?? o.name_en ?? ""} ما فيهاش ولا مدرب`, note: `مسجّلة من ${o.created_at.slice(0, "YYYY-MM-DD".length)} · قاعدة: جهة بلا مدرب أكتر من ${R.noCoachDays} أيام`, action: "رمز مدرب", to: "inv" }))
+    .map((o) => ({ tone: "r", icon: "!", title: `${o.name_ar ?? o.name_en ?? ""} ليس فيها أي مدرب`, note: `مسجّلة من ${o.created_at.slice(0, "YYYY-MM-DD".length)} · القاعدة: جهة بلا مدرب أكثر من ${R.noCoachDays} أيام`, action: "رمز مدرب", to: "inv" }))
   const pending = d.members.filter((m) => m.status === "pending")
   const pendingAlert: Alert[] = pending.length ? [{ tone: "a", icon: "⏳", title: `${pending.length} طلب انضمام بانتظار موافقتك`, note: "Pending approvals", action: "راجع", to: "app" }] : []
   const live = d.invites.filter((i) => inviteLive(i, now))
   const expiring: Alert[] = live.filter((i) => i.expires_at && Date.parse(i.expires_at) - now < R.expiringHours * HOUR_MS)
-    .map((i) => ({ tone: "a", icon: "⌛", title: `الرمز ${i.code} هينتهي قريب`, note: `ينتهي ${new Date(i.expires_at ?? "").toLocaleString("ar")}`, action: "رمز جديد", to: "inv" }))
-  const noInvites: Alert[] = live.length ? [] : [{ tone: "a", icon: "⏳", title: "مفيش رموز دعوة نشطة", note: "محدش يقدر ينضم دلوقتي · أول رمز بيفتح رحلة العضو", action: "إصدار", to: "inv" }]
+    .map((i) => ({ tone: "a", icon: "⌛", title: `الرمز ${i.code} سينتهي قريبًا`, note: `ينتهي ${new Date(i.expires_at ?? "").toLocaleString("ar")}`, action: "رمز جديد", to: "inv" }))
+  const noInvites: Alert[] = live.length ? [] : [{ tone: "a", icon: "⏳", title: "لا توجد رموز دعوة نشطة", note: "لا يمكن لأحد الانضمام الآن · أول رمز يفتح رحلة العضو", action: "إصدار", to: "inv" }]
   const left = TILES.length - TILES.filter((t) => t.st === "b").length
-  const build: Alert[] = [{ tone: "i", icon: "◔", title: `${left} قسم من ${TILES.length} لسه ما اتبناش`, note: "الأولوية حسب خريطة النقل: الفرق واللاعبين ← الوحدة التدريبية", action: "الخريطة", to: "map" }]
+  const build: Alert[] = [{ tone: "i", icon: "◔", title: `${left} قسم من ${TILES.length} لم يُبنَ بعد`, note: "الأولوية حسب خريطة النقل: الفرق واللاعبين ← الوحدة التدريبية", action: "الخريطة", to: "map" }]
   return [...noCoach, ...pendingAlert, ...expiring, ...noInvites, ...build].slice(0, R.alertsMax)
 }
 
@@ -91,10 +91,10 @@ export function briefing(d: AdminData, name: string): string {
   const j = journey(d)
   const orgs = d.orgs.filter((o) => o.is_active)
   const alerts = smartAlerts(d).filter((a) => a.tone !== "i")
-  const orgLine = orgs.length ? `المنظومة فيها ${orgs.length} جهة نشطة: ${orgs.map((o) => o.name_ar).join("، ")}.` : "لسه مفيش جهات مسجّلة."
-  const memLine = `الأعضاء النشطين ${j.active}، وبانتظار الموافقة ${j.pending}.`
+  const orgLine = orgs.length ? `المنظومة فيها ${orgs.length} جهة نشطة: ${orgs.map((o) => o.name_ar).join("، ")}.` : "لا توجد جهات مسجّلة بعد."
+  const memLine = `الأعضاء النشطون ${j.active}، وبانتظار الموافقة ${j.pending}.`
   const content = `المنصة فيها ${CONTENT_TOTAL} عنصر محتوى تدريبي، و${READY_SECTIONS} أقسام من ${TILES.length} محتواها جاهز.`
-  const al = alerts.length ? `فيه تنبيه مهم: ${alerts[0].title}.` : "مفيش تنبيهات مهمة."
+  const al = alerts.length ? `يوجد تنبيه مهم: ${alerts[0].title}.` : "لا توجد تنبيهات مهمة."
   return `${greeting()} يا كابتن ${name}. ${orgLine} ${memLine} ${content} ${al}`
 }
 

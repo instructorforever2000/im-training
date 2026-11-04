@@ -113,7 +113,7 @@ function Fitness({ players, data, team, after }: { players: Player[]; data: ADat
     return t.lower ? Math.min(...v) : Math.max(...v)
   }
   const save = async (): Promise<void> => {
-    if (!edit || val.trim() === "" || Number.isNaN(Number(val))) { setErr("اكتب رقم صحيح."); return }
+    if (!edit || val.trim() === "" || Number.isNaN(Number(val))) { setErr("اكتب رقمًا صحيحًا."); return }
     const r = await addFitness(team.org_id, edit.p, edit.t, Number(val), on)
     if (r) setErr(r); else { setErr(null); setEdit(null); setVal(""); after() }
   }
@@ -144,14 +144,14 @@ function Fitness({ players, data, team, after }: { players: Player[]; data: ADat
         {sp ? (
           <>
             <h4>{sp.full_name}</h4>
-            <p className="mut">مكانه بين زمايله في كل اختبار (الأبعد = الأفضل في الفريق)</p>
+            <p className="mut">ترتيبه بين زملائه في كل اختبار (الأبعد = الأفضل في الفريق)</p>
             <Radar vals={prof} labels={TESTS.map((t) => MEASURES[t.k] ?? t.name.ar)} />
             {TESTS.map((t) => {
               const hist = rows.filter((r) => r.player_id === sp.id && r.test_key === t.k)
               return <div key={t.k} className="hist"><span>{t.name.ar}</span><b>{hist.map((h) => fmt(h.value, t.dp)).join(" ← ") || "—"}</b></div>
             })}
           </>
-        ) : <p className="mut">اختار لاعب.</p>}
+        ) : <p className="mut">اختر لاعبًا.</p>}
         {edit && (
           <div className="ed">
             <h5>نتيجة جديدة: {TESTS.find((t) => t.k === edit.t)?.name.ar}</h5>
@@ -177,7 +177,7 @@ function Skills({ players, data, team, after }: { players: Player[]; data: AData
     const r = await addRating(team.org_id, sel, skill, n)
     if (r) setErr(r); else { setErr(null); after() }
   }
-  if (!list.length) return <p className="mut pad">لسه مفيش قائمة مهارات للعبة دي. المهارات متاحة حاليًا لكرة القدم والصالات والسلة والطائرة واليد.</p>
+  if (!list.length) return <p className="mut pad">لا توجد قائمة مهارات لهذه اللعبة بعد. المهارات متاحة حاليًا لكرة القدم وكرة الصالات وكرة السلة والكرة الطائرة وكرة اليد.</p>
   return (
     <div className="sk">
       <nav>{players.map((p) => {
@@ -222,12 +222,12 @@ export function AssessmentScreen(): React.JSX.Element {
   const reload = (): void => { sq.reload(); a.reload() }
 
   const body = (): React.JSX.Element => {
-    if (sq.error || a.error === "other") return <div className="card msg"><p>حصلت مشكلة في تحميل البيانات.</p><button className="btn" onClick={reload}>إعادة المحاولة</button></div>
-    if (!sq.data) return <p className="mut pad">بيحمّل…</p>
-    if (!team) return <div className="card msg"><p>مفيش فرق لسه. أضف فريق ولاعبين من «الفرق واللاعبين» الأول.</p><a className="btn p" href="#/squad">الفرق واللاعبين</a></div>
-    if (!players.length) return <div className="card msg"><p>الفريق ده مفيهوش لاعبين لسه.</p><a className="btn p" href="#/squad">أضف لاعبين</a></div>
+    if (sq.error || a.error === "other") return <div className="card msg"><p>حدثت مشكلة في تحميل البيانات.</p><button className="btn" onClick={reload}>إعادة المحاولة</button></div>
+    if (!sq.data) return <p className="mut pad">جارٍ التحميل…</p>
+    if (!team) return <div className="card msg"><p>لا توجد فرق بعد. أضف فريقًا ولاعبين من «الفرق واللاعبون» أولًا.</p><a className="btn p" href="#/squad">الفرق واللاعبين</a></div>
+    if (!players.length) return <div className="card msg"><p>لا يضم هذا الفريق لاعبين بعد.</p><a className="btn p" href="#/squad">أضف لاعبين</a></div>
     if (tab === "status") return <Availability players={players} after={reload} />
-    if (a.error === "missing" || !a.data) return <div className="card msg"><p>جداول الاختبارات والتقييم لسه ما اتضافتش في قاعدة البيانات. بعد موافقة المالك، القسم ده هيشتغل على طول.</p></div>
+    if (a.error === "missing" || !a.data) return <div className="card msg"><p>لم تُضف جداول الاختبارات والتقييم إلى قاعدة البيانات بعد. بعد موافقة المالك يعمل هذا القسم مباشرة.</p></div>
     return tab === "fitness" ? <Fitness key={team.id} players={players} data={a.data} team={team} after={reload} /> : <Skills key={team.id} players={players} data={a.data} team={team} after={reload} />
   }
 
@@ -236,7 +236,7 @@ export function AssessmentScreen(): React.JSX.Element {
       <Dock active="assessment" />
       <main>
         <div className="head">
-          <div><h1>التقييم والحالة البدنية <span className="en">Assessment</span></h1><p>{TESTS.length} اختبارات بدنية · {SKILLS.length} مهارة · كل نتيجة بتاريخها عشان التطوّر يبان</p></div>
+          <div><h1>التقييم والحالة البدنية <span className="en">Assessment</span></h1><p>{TESTS.length} اختبارات بدنية · {SKILLS.length} مهارة · كل نتيجة بتاريخها ليتّضح التطوّر</p></div>
         </div>
         {teams.length > 0 && <div className="teams">{teams.map((t) => <button key={t.id} className={t.id === team?.id ? "on" : ""} onClick={() => setTeamId(t.id)} style={{ "--c": t.color } as React.CSSProperties}><b>{t.name}</b><span>{orgName(t.org_id)}</span></button>)}</div>}
         <div className="tabs">{(Object.keys(TABS) as Tab[]).map((k) => <button key={k} className={k === tab ? "on" : ""} onClick={() => setTab(k)}>{TABS[k].ar} <span className="en">{TABS[k].en}</span></button>)}</div>

@@ -205,7 +205,7 @@ export function Board({ data }: { data: AdminData }): React.JSX.Element {
               <span className="pulse"><i />المنظومة تعمل · <span className="en">All systems live</span></span>
               <small className="greet">{greeting()}، كابتن {name}</small>
               <h1>كل المنظومة<br />تحت <em>عينك</em>.</h1>
-              <p>{activeOrgs.length} جهة نشطة، و{pending ? `${pending} طلب مستني قرارك` : "ولا يوجد طلبات مستنية قرارك"}. المنصة فيها {CONTENT_TOTAL} عنصر محتوى تدريبي، و{READY_SECTIONS} أقسام من {TILES.length} محتواها جاهز.</p>
+              <p>{activeOrgs.length} جهة نشطة، و{pending ? `${pending} طلب بانتظار قرارك` : "لا توجد طلبات بانتظار قرارك"}. المنصة فيها {CONTENT_TOTAL} عنصر محتوى تدريبي، و{READY_SECTIONS} أقسام من {TILES.length} محتواها جاهز.</p>
               <div className="acts"><button className="btn p" onClick={() => open({ k: "inv" })}>+ رمز دعوة</button><button className="btn" onClick={() => open({ k: "org" })}>+ جهة</button><button className="btn" onClick={() => mapRef.current?.scrollIntoView({ behavior: "smooth" })}>خريطة النقل</button></div></div></div>
             <div data-v="overview" className="c kpi"><span className="ic"><Icon id="org" /></span><div className="v"><Count n={activeOrgs.length} /></div><div className="l">جهات نشطة <span className="en">Orgs</span></div></div>
             <div data-v="overview" className="c kpi ro"><span className="ic"><Icon id="user" /></span><div className="v"><Count n={snap.members.filter((m) => m.status === "approved").length} /></div><div className="l">أعضاء <span className="en">Members</span></div></div>
@@ -277,10 +277,10 @@ export function Board({ data }: { data: AdminData }): React.JSX.Element {
                 {data.audit.slice(0, cfg.rules.auditShown).reverse().map((a) => <div className="ev" key={a.id}>{a.action}<small>{a.target_table ?? ""} · {new Date(a.created_at).toLocaleString("ar")}</small></div>)}
                 {data.orgs.slice(0, cfg.rules.auditShown).map((o) => <div className="ev" key={o.id}>تسجيل جهة: {o.name_ar}<small>جهة · {new Date(o.created_at).toLocaleDateString("ar")}</small></div>)}
                 <div className="ev">إضافة محتوى المكتبة ({CONTENT_TOTAL} عنصر)<small>محتوى · 2026-10-25</small></div>
-                <div className="ev nx">الحدث الجاي هيظهر هنا<small>مباشر · Live</small></div></div></div>
-            <div data-v="activity" className="c aic"><h3 className="center">المساعد الذكي <span className="en">AI Assistant</span></h3><div className="orb" /><b>اسأل عن أي حاجة في المنظومة</b><p>«مين الجهات اللي ما فيهاش مدرب؟»</p>
+                <div className="ev nx">سيظهر الحدث التالي هنا<small>مباشر · Live</small></div></div></div>
+            <div data-v="activity" className="c aic"><h3 className="center">المساعد الذكي <span className="en">AI Assistant</span></h3><div className="orb" /><b>اسأل عن أي شيء في المنظومة</b><p>«ما الجهات التي ليس فيها مدرب؟»</p>
               <div className="ask" onClick={() => setAiNote(true)}><span>اكتب سؤالك…</span><button>➤</button></div>
-              {aiNote && <p className="ok-msg soon-note">المساعد قيد البناء — هيتربط ببيانات المنظومة في مرحلة لاحقة. <span className="en">Coming soon</span></p>}</div>
+              {aiNote && <p className="ok-msg soon-note">المساعد قيد البناء، وسيُربط ببيانات المنظومة في مرحلة لاحقة. <span className="en">Coming soon</span></p>}</div>
           </div>
           {view === "activity" && <div className="tbar"><span>⟲ آلة الزمن <span className="en">Time machine</span></span>
             <input type="range" min="0" max={days.length - 1} step="1" value={idx} onChange={(e) => setDayIdx(Number(e.target.value))} />

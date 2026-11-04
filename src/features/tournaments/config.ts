@@ -23,13 +23,13 @@ export interface SystemMeta { ar: string; en: string; icon: string; legacy: stri
 const SYS_TEXT = systems as { id: string; t: { ar: string; en: string }; b: { ar: string[]; en: string[] } }[]
 export const SYSTEMS: Record<System, SystemMeta> = {
   league: { ar: "دوري", en: "League", icon: "◎", legacy: "sys-league", note: "كل فريق يقابل الجميع" },
-  knockout: { ar: "خروج المغلوب", en: "Knockout", icon: "⟢", legacy: "sys-ko", note: "اللي يخسر يخرج" },
+  knockout: { ar: "خروج المغلوب", en: "Knockout", icon: "⟢", legacy: "sys-ko", note: "الخاسر يغادر المنافسة" },
   mixed: { ar: "مجموعات ثم إقصائيات", en: "Groups + knockout", icon: "◫", legacy: "sys-groups", note: "الأنسب للمدارس والأكاديميات" },
   ranking: { ar: "ترتيب بالنتيجة", en: "Ranking", icon: "≡", legacy: null, note: "زمن · مسافة · نقاط تحكيم" },
 }
 export const systemRules = (s: System): string[] => SYS_TEXT.find((x) => x.id === SYSTEMS[s].legacy)?.b.ar ?? [
   "كل مشارك يسجّل نتيجته (زمن، أو مسافة، أو وزن، أو درجة تحكيم).",
-  "الترتيب يتحسب تلقائي: الأقل أفضل في الزمن، والأعلى أفضل في المسافة والدرجات.",
+  "يُحتسب الترتيب تلقائيًا: الأقل أفضل في الزمن، والأعلى أفضل في المسافة والدرجات.",
   "مناسب لألعاب القوى والسباحة ورفع الأثقال والألعاب التحكيمية.",
 ]
 export const HEAD_SYSTEMS: readonly System[] = ["league", "knockout", "mixed"]

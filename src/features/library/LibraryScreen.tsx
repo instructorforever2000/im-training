@@ -127,9 +127,9 @@ function DrillCard({ x, s, i, on, toggle }: { x: Drill; s: number; i: number; on
 
 // ---------------- Session builder ----------------
 function fitNote(total: number, goal: number): string {
-  if (total > goal) return `⚠ الوحدة ${total} دقيقة — أطول من المطلوب بـ ${total - goal} دقيقة.`
-  if (total < goal) return `باقي ${goal - total} دقيقة — اختار تمرين تاني من الاقتراحات.`
-  return "✓ الوحدة مظبوطة على الزمن المطلوب."
+  if (total > goal) return `⚠ مدة الوحدة ${total} دقيقة، أي أطول من المطلوب بـ ${total - goal} دقيقة.`
+  if (total < goal) return `يتبقى ${goal - total} دقيقة — اختر تمرينًا آخر من الاقتراحات.`
+  return "✓ الوحدة مطابقة للزمن المطلوب."
 }
 
 function Builder({ ids, ask, remove }: { ids: string[]; ask: Ask; remove: (id: string) => void }): React.JSX.Element {
@@ -160,8 +160,8 @@ function Builder({ ids, ask, remove }: { ids: string[]; ask: Ask; remove: (id: s
       <div className="blocks">{xs.map((x) => { const s = t; t += x.dur; return (
         <div key={x.id} className="blk" style={{ "--c": DRILL_CAT[x.cat].color } as React.CSSProperties}><span className="tm">{s}′</span>
           <span><b>{x.ar.name}</b><small>{DRILL_CAT[x.cat].ar} · RPE {x.rpe} · {x.ar.eq || "بدون أدوات"}</small></span>
-          <button className="d" onClick={() => remove(x.id)} title="شيل من الوحدة">{x.dur}د ✕</button></div>) })}
-        {!xs.length && <p className="sub">اختار تمارين من الاقتراحات — هتتحط هنا بالترتيب.</p>}</div>
+          <button className="d" onClick={() => remove(x.id)} title="إزالة من الوحدة">{x.dur}د ✕</button></div>) })}
+        {!xs.length && <p className="sub">اختر تمارين من الاقتراحات، وستُضاف هنا بالترتيب.</p>}</div>
       <div className="radar"><svg viewBox={`${-RADAR.box} ${-RADAR.box} ${RADAR.box * HALF} ${RADAR.box * HALF}`}>
         {RADAR.levels.map((v) => <polygon key={v} points={ORDER.map((_, i) => pt(i, v)).join(" ")} fill="none" stroke="var(--ln)" />)}
         <polygon points={mins.map((m, i) => pt(i, RADAR.floor + (1 - RADAR.floor) * (m / mx))).join(" ")} fill="#1FB5A833" stroke="#1FB5A8" strokeWidth="2" /></svg>

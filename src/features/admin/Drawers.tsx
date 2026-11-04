@@ -37,18 +37,18 @@ function OrgForm({ org, done }: { org?: Org; done: () => void }): React.JSX.Elem
     const v = { ...f, name_ar: f.name_ar.trim(), name_en: f.name_en.trim(), city: f.city.trim() }
     const r = org ? await updateOrg(org.id, v) : await createOrg(v)
     setBusy(false)
-    if (r) setErr(`ما اتحفظش: ${r}`); else done()
+    if (r) setErr(`تعذّر الحفظ: ${r}`); else done()
   }
   const toggleActive = async (): Promise<void> => {
     if (!org) return
     if (org.is_active && !confirm) { setConfirm(true); return }
     const r = await setOrgActive(org.id, !org.is_active)
-    if (r) setErr(`ما اتنفّذش: ${r}`); else done()
+    if (r) setErr(`تعذّر التنفيذ: ${r}`); else done()
   }
   return (
     <form onSubmit={(e) => void submit(e)}>
       <h3>{org ? "تعديل بيانات الجهة" : "جهة جديدة"}<span className="en">{org ? "Edit organization" : "New organization"}</span></h3>
-      {org && <p className="fld">صلاحية التعديل لك أنت فقط كمالك، وتقدر تمنحها لمن تختار. <span className="en">Owner only</span></p>}
+      {org && <p className="fld">صلاحية التعديل لك وحدك بصفتك المالك، ويمكنك منحها لمن تختار. <span className="en">Owner only</span></p>}
       <p className="fld">نوع الجهة <span className="en">Type</span></p>
       <Pills items={Object.keys(ORG_TYPES) as OrgType[]} value={f.org_type} label={(v) => ORG_TYPES[v]} onPick={(v) => setF({ ...f, org_type: v })} />
       <label className="fld">الاسم بالعربي <span className="en">Arabic name</span><input value={f.name_ar} onChange={(e) => setF({ ...f, name_ar: e.target.value })} required /></label>
@@ -60,9 +60,9 @@ function OrgForm({ org, done }: { org?: Org; done: () => void }): React.JSX.Elem
       <button className="btn p" style={GAP} disabled={busy}>{busy ? "جارٍ الحفظ…" : org ? "حفظ التعديل" : "تسجيل الجهة"}</button>
       {org && (
         <div className="danger">
-          <p>{org.is_active ? "إيقاف الجهة يخفيها من الاستخدام من غير ما يمسح أي بيانات — وتقدر ترجّعها في أي وقت." : "الجهة موقوفة حاليًا."}</p>
+          <p>{org.is_active ? "إيقاف الجهة يخفيها من الاستخدام دون حذف أي بيانات، ويمكنك إعادة تفعيلها في أي وقت." : "الجهة موقوفة حاليًا."}</p>
           <button type="button" className="btn" onClick={() => void toggleActive()}>
-            {org.is_active ? (confirm ? "متأكد؟ اضغط تاني للإيقاف" : "إيقاف الجهة") : "إعادة تفعيل الجهة"}</button>
+            {org.is_active ? (confirm ? "هل أنت متأكد؟ اضغط مرة أخرى للإيقاف" : "إيقاف الجهة") : "إعادة تفعيل الجهة"}</button>
         </div>
       )}
     </form>
@@ -84,10 +84,10 @@ function NewInvite({ data, orgId }: { data: AdminData; orgId?: string }): React.
   const issue = async (): Promise<void> => {
     setErr(null)
     const r = await createInvite({ org_id: org, role, days, max_uses: uses, access_days: access || null })
-    if (r.error) setErr(`ما اتصدرش: ${r.error}`); else setCode(r.code ?? null)
+    if (r.error) setErr(`تعذّر الإصدار: ${r.error}`); else setCode(r.code ?? null)
   }
   const copy = async (): Promise<void> => { await navigator.clipboard.writeText(msg); setCopied(true) }
-  if (!orgs.length) return <><h3>رمز دعوة جديد<span className="en">New invite code</span></h3><div className="empty">سجّل جهة الأول — كل رمز مربوط بجهة واحدة.</div></>
+  if (!orgs.length) return <><h3>رمز دعوة جديد<span className="en">New invite code</span></h3><div className="empty">سجّل جهة أولًا؛ فكل رمز مرتبط بجهة واحدة.</div></>
   const live = data.invites.filter((i) => inviteLive(i))
   return (
     <>
@@ -106,9 +106,9 @@ function NewInvite({ data, orgId }: { data: AdminData; orgId?: string }): React.
         <>
           <div className="code">{code}</div>
           <div className="codebox">
-            <button className="btn p" onClick={() => void copy()}>{copied ? "اتنسخ ✓" : "نسخ الرسالة"}</button>
+            <button className="btn p" onClick={() => void copy()}>{copied ? "تم النسخ ✓" : "نسخ الرسالة"}</button>
             <a className="btn" style={{ display: "inline-flex", alignItems: "center" }} href={`https://wa.me/?text=${encodeURIComponent(msg)}`} target="_blank" rel="noreferrer">واتساب</a>
-            <button className="btn" onClick={() => { setCode(null); setCopied(false) }}>رمز تاني</button>
+            <button className="btn" onClick={() => { setCode(null); setCopied(false) }}>رمز آخر</button>
           </div>
         </>
       ) : <button className="btn p" style={GAP} onClick={() => void issue()}>إصدار الرمز</button>}
@@ -118,7 +118,7 @@ function NewInvite({ data, orgId }: { data: AdminData; orgId?: string }): React.
         <div className="req" key={i.id}><div><b className="en" style={{ color: "#b9c3ff" }}>{i.code}</b>
           <small>{ROLE_AR[i.default_role]} · دخول {accessLabel(i.access_days ?? null)} · {i.uses}/{i.max_uses ?? "∞"} · ينتهي {i.expires_at ? new Date(i.expires_at).toLocaleDateString("ar") : "—"}</small></div>
           <div className="act"><button className="btn" onClick={() => void deactivateInvite(i.id)}>إيقاف</button></div></div>
-      )) : <div className="empty">مفيش رموز نشطة.</div>}
+      )) : <div className="empty">لا توجد رموز نشطة.</div>}
     </>
   )
 }
@@ -137,7 +137,7 @@ function Approvals({ data, alerts }: { data: AdminData; alerts: Alert[] }): Reac
             <button className="btn" onClick={() => void setMemberStatus(m.id, "suspended")}>رفض</button>
           </div>
         </div>
-      )) : <div className="empty">لا توجد طلبات انضمام الآن.<br />أول ما حد يسجّل برمز دعوة يظهر هنا: الاسم، والجهة، والدور — وقدامه <b>موافقة</b> أو <b>رفض</b>.</div>}
+      )) : <div className="empty">لا توجد طلبات انضمام الآن.<br />عند تسجيل أي شخص برمز دعوة يظهر هنا: الاسم، والجهة، والدور، وأمامه <b>موافقة</b> أو <b>رفض</b>.</div>}
       {alerts.map((a) => <div key={a.title} className={`al ${a.tone}`}><span className="k">{a.icon}</span><div>{a.title}<small>{a.note}</small></div></div>)}
     </>
   )
@@ -150,7 +150,7 @@ export function DrawerBody({ kind, data, alerts, close }: { kind: DrawerKind; da
   return (
     <>
       <h3>{kind.title}<span className="en">Section</span></h3>
-      <div className="empty">المكان الجديد: {kind.to}<br />{kind.ready ? "المحتوى جاهز — شاشة القسم هتتبني بعد اعتماد تصميمها." : "القسم في خطة البناء."}</div>
+      <div className="empty">المكان الجديد: {kind.to}<br />{kind.ready ? "المحتوى جاهز، وستُبنى شاشة القسم بعد اعتماد تصميمها." : "القسم في خطة البناء."}</div>
     </>
   )
 }

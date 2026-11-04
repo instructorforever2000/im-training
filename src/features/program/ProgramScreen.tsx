@@ -22,7 +22,7 @@ const PHASES: readonly { k: string; ar: string; en: string; cats: string[]; c: s
 ]
 const PHASE_C: Record<string, string> = Object.fromEntries(PHASES.map((p) => [p.k, p.c]))
 const CAT_AR: Record<string, string> = { warm: "إحماء", tech: "فني", tact: "خططي", phys: "بدني", game: "لعب", cool: "تهدئة" }
-const ST: Record<SessionStatus, { ar: string; c: string }> = { planned: { ar: "مخطّطة", c: "#5b6fe0" }, done: { ar: "اتنفّذت", c: "#2fa36b" }, cancelled: { ar: "اتلغت", c: "#94a3b8" } }
+const ST: Record<SessionStatus, { ar: string; c: string }> = { planned: { ar: "مخطّطة", c: "#5b6fe0" }, done: { ar: "نُفّذت", c: "#2fa36b" }, cancelled: { ar: "أُلغيت", c: "#94a3b8" } }
 const DAYS_AR = ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"]
 const WEEK = 7
 const DAY_MS = 86_400_000
@@ -56,7 +56,7 @@ function Builder({ teams, orgOf, init, close, saved }: { teams: Team[]; orgOf: (
   }, [pick, q, team])
   const add = (d: Drill): void => { setBlocks([...blocks, { phase: pick as string, drill_id: d.id, min: d.dur }]); setPick(null); setQ("") }
   const submit = async (): Promise<void> => {
-    if (!team) { setErr("اختار الفريق."); return }
+    if (!team) { setErr("اختر الفريق."); return }
     if (f.title.trim().length < MIN_TITLE) { setErr("اكتب عنوان الوحدة."); return }
     const v: SessionInput = {
       org_id: team.org_id, team_id: team.id, session_on: f.session_on, starts_at: f.starts_at || null, title: f.title.trim(),
@@ -65,7 +65,7 @@ function Builder({ teams, orgOf, init, close, saved }: { teams: Team[]; orgOf: (
     setBusy(true)
     const r = await saveSession(v, init.id)
     setBusy(false)
-    if (r) setErr(`ما اتحفظتش: ${r}`); else saved()
+    if (r) setErr(`تعذّر الحفظ: ${r}`); else saved()
   }
   const unsupported = team && !DRILLS.some((d) => sportsOf(d).includes(team.sport))
   return (
@@ -79,8 +79,8 @@ function Builder({ teams, orgOf, init, close, saved }: { teams: Team[]; orgOf: (
             <label className="fld">الساعة<input type="time" value={f.starts_at} onChange={(e) => setF({ ...f, starts_at: e.target.value })} /></label>
           </div>
           <label className="fld">عنوان الوحدة <span className="en">Title</span><input value={f.title} onChange={(e) => setF({ ...f, title: e.target.value })} placeholder="مثال: البناء من الخلف تحت الضغط" /></label>
-          <label className="fld">هدف الوحدة <span className="en">Goal</span><input value={f.goal} onChange={(e) => setF({ ...f, goal: e.target.value })} placeholder="اللاعب يعرف يطلع بالكرة من الخلف ضد ضغط مهاجمين" /></label>
-          {unsupported && <p className="mut">مكتبة التمارين لسه مفيهاش تمارين لـلعبة الفريق ده. تقدر تكتب الوحدة وملاحظاتها، والتمارين بتتضاف لما المكتبة تكبر.</p>}
+          <label className="fld">هدف الوحدة <span className="en">Goal</span><input value={f.goal} onChange={(e) => setF({ ...f, goal: e.target.value })} placeholder="أن يتمكن اللاعب من الخروج بالكرة من الخلف تحت ضغط المهاجمين" /></label>
+          {unsupported && <p className="mut">لا تحتوي مكتبة التمارين بعد على تمارين للعبة هذا الفريق. يمكنك كتابة الوحدة وملاحظاتها، وتُضاف التمارين مع توسّع المكتبة.</p>}
           <div className="phases">{PHASES.map((ph) => {
             const list = blocks.map((b, i) => ({ b, i })).filter((x) => x.b.phase === ph.k)
             return (
@@ -92,7 +92,7 @@ function Builder({ teams, orgOf, init, close, saved }: { teams: Team[]; orgOf: (
                     <div key={i} className="blk">
                       <div><b>{d?.ar.name ?? b.drill_id}</b><span>{d ? `${CAT_AR[d.cat]} · ${d.ar.area} · ${d.ar.eq}` : ""}</span></div>
                       <input type="number" min={1} value={b.min} onChange={(e) => setBlocks(blocks.map((x, j) => (j === i ? { ...x, min: Math.max(1, Number(e.target.value) || 1) } : x)))} /><em>د</em>
-                      <button className="rm" onClick={() => setBlocks(blocks.filter((_, j) => j !== i))} title="شيل التمرين">✕</button>
+                      <button className="rm" onClick={() => setBlocks(blocks.filter((_, j) => j !== i))} title="إزالة التمرين">✕</button>
                     </div>
                   )
                 })}
@@ -100,7 +100,7 @@ function Builder({ teams, orgOf, init, close, saved }: { teams: Team[]; orgOf: (
                   <div className="picker">
                     <input autoFocus value={q} onChange={(e) => setQ(e.target.value)} placeholder="ابحث في المكتبة…" />
                     <div className="opts">{options.map((d) => <button key={d.id} onClick={() => add(d)}><b>{d.ar.name}</b><span>{CAT_AR[d.cat]} · {d.dur} د · من سن {d.age}</span></button>)}
-                      {!options.length && <p className="mut">مفيش تمارين مطابقة.</p>}</div>
+                      {!options.length && <p className="mut">لا توجد تمارين مطابقة.</p>}</div>
                     <button className="link" onClick={() => setPick(null)}>إغلاق</button>
                   </div>
                 ) : <button className="addb" onClick={() => { setPick(ph.k); setQ("") }}>+ تمرين من المكتبة</button>}
@@ -110,7 +110,7 @@ function Builder({ teams, orgOf, init, close, saved }: { teams: Team[]; orgOf: (
           <label className="fld">ملاحظات المدرب <span className="en">Notes</span><textarea rows={2} value={f.notes} onChange={(e) => setF({ ...f, notes: e.target.value })} /></label>
         </div>
         {err && <p className="err">{err}</p>}
-        <footer><button className="btn" onClick={close}>إلغاء</button><button className="btn p" disabled={busy} onClick={() => void submit()}>{busy ? "بيتحفظ…" : "حفظ الوحدة"}</button></footer>
+        <footer><button className="btn" onClick={close}>إلغاء</button><button className="btn p" disabled={busy} onClick={() => void submit()}>{busy ? "جارٍ الحفظ…" : "حفظ الوحدة"}</button></footer>
       </div>
     </div>
   )
@@ -134,9 +134,9 @@ function SessionCard({ s, team, players, open, after }: { s: Session; team?: Tea
       </div>
       <div className="acts">
         <button onClick={open}>فتح</button>
-        {s.status === "planned" && <button className="ok" onClick={() => void mark("done")}>✓ اتنفّذت</button>}
+        {s.status === "planned" && <button className="ok" onClick={() => void mark("done")}>✓ نُفّذت</button>}
         {s.status === "planned" && <button onClick={() => void mark("cancelled")}>إلغاء</button>}
-        {s.status !== "planned" && <button onClick={() => void mark("planned")}>رجّعها مخطّطة</button>}
+        {s.status !== "planned" && <button onClick={() => void mark("planned")}>إعادتها إلى «مخطّطة»</button>}
         <button className="rm" onClick={() => void remove()} title="أرشفة">أرشفة</button>
       </div>
     </article>
@@ -164,20 +164,20 @@ export function ProgramScreen(): React.JSX.Element {
   const todayTeams = [...new Set(today.map((s) => s.team_id))].map(teamOf).filter((t): t is Team => !!t)
 
   const body = (): React.JSX.Element => {
-    if (sq.error || ss.error === "other") return <div className="card msg"><p>حصلت مشكلة في تحميل البيانات.</p><button className="btn" onClick={reload}>إعادة المحاولة</button></div>
-    if (ss.error === "missing") return <div className="card msg"><p>جدول الوحدات التدريبية لسه ما اتضافش في قاعدة البيانات.</p></div>
-    if (!sq.data || !ss.sessions) return <p className="mut pad">بيحمّل…</p>
-    if (!teams.length) return <div className="card msg"><p>أضف فريق الأول من «الفرق واللاعبين»، وبعدها خطّط وحداته هنا.</p><a className="btn p" href="#/squad">الفرق واللاعبين</a></div>
+    if (sq.error || ss.error === "other") return <div className="card msg"><p>حدثت مشكلة في تحميل البيانات.</p><button className="btn" onClick={reload}>إعادة المحاولة</button></div>
+    if (ss.error === "missing") return <div className="card msg"><p>لم يُضف جدول الوحدات التدريبية إلى قاعدة البيانات بعد.</p></div>
+    if (!sq.data || !ss.sessions) return <p className="mut pad">جارٍ التحميل…</p>
+    if (!teams.length) return <div className="card msg"><p>أضف فريقًا أولًا من «الفرق واللاعبون»، ثم خطّط وحداته هنا.</p><a className="btn p" href="#/squad">الفرق واللاعبين</a></div>
     return (
       <div className="lay">
         <section className="tl">
           <h3>{dayName(day)} <span>{day}</span></h3>
           {today.length ? today.map((s) => <SessionCard key={s.id} s={s} team={teamOf(s.team_id)} players={playersOf(s.team_id)} open={() => setEdit(s)} after={reload} />)
-            : <div className="empty"><p>مفيش وحدات تدريبية في اليوم ده.</p><button className="btn p" onClick={() => setEdit({ session_on: day })}>+ خطّط وحدة</button></div>}
+            : <div className="empty"><p>لا توجد وحدات تدريبية في هذا اليوم.</p><button className="btn p" onClick={() => setEdit({ session_on: day })}>+ خطّط وحدة</button></div>}
         </section>
         <aside className="side">
           <div className="pane">
-            <h5>جاهزية الفرق النهارده <span className="en">Readiness</span></h5>
+            <h5>جاهزية الفرق اليوم <span className="en">Readiness</span></h5>
             {(todayTeams.length ? todayTeams : teams).map((t) => {
               const ps = playersOf(t.id), r = ps.filter((p) => p.status === "ready").length
               return <div key={t.id} className="rd"><span>{t.name}</span><b>{r}/{ps.length}</b><i><em style={{ width: `${ps.length ? (r / ps.length) * PCT : 0}%` }} /></i></div>
@@ -186,7 +186,7 @@ export function ProgramScreen(): React.JSX.Element {
           </div>
           <div className="pane">
             <h5>حِمل الأسبوع <span className="en">Weekly minutes</span></h5>
-            {loads.length ? loads.map(({ t, min }) => <div key={t.id} className="rd"><span>{t.name}</span><b>{min} د</b><i><em style={{ width: `${(min / maxLoad) * PCT}%`, background: t.color }} /></i></div>) : <p className="mut">لسه مفيش دقائق مخطّطة الأسبوع ده.</p>}
+            {loads.length ? loads.map(({ t, min }) => <div key={t.id} className="rd"><span>{t.name}</span><b>{min} د</b><i><em style={{ width: `${(min / maxLoad) * PCT}%`, background: t.color }} /></i></div>) : <p className="mut">لا توجد دقائق مخطّطة لهذا الأسبوع بعد.</p>}
           </div>
           <div className="pane legend">{PHASES.map((p) => <span key={p.k}><i style={{ background: p.c }} />{p.ar}</span>)}</div>
         </aside>
@@ -209,7 +209,7 @@ export function ProgramScreen(): React.JSX.Element {
             return <button key={d} className={`${d === day ? "on" : ""} ${d === iso(new Date()) ? "today" : ""}`} onClick={() => setDay(d)}><span>{dayName(d)}</span><b>{d.slice(-DAY_DIGITS)}</b><i>{Array.from({ length: n }, (_, k) => <em key={k} />)}</i></button>
           })}
           <button className="nav" onClick={() => setDay(addDays(day, WEEK))}>‹</button>
-          <button className="todayb" onClick={() => setDay(iso(new Date()))}>النهارده</button>
+          <button className="todayb" onClick={() => setDay(iso(new Date()))}>اليوم</button>
         </div>
         {body()}
         <p className="sig">Instructor: Mohamed Ayad</p>

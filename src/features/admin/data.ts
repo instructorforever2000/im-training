@@ -111,7 +111,7 @@ export async function createOrg(v: { name_ar: string; name_en: string; org_type:
   return error ? error.message : null
 }
 
-const NO_ROWS = "قاعدة البيانات رفضت التعديل — الحساب ده مالوش صلاحية تعديل الجهة (RLS)."
+const NO_ROWS = "رفضت قاعدة البيانات التعديل؛ فهذا الحساب لا يملك صلاحية تعديل الجهة (RLS)."
 
 export interface OrgFields { name_ar: string; name_en: string; org_type: OrgType; country: string; city: string }
 

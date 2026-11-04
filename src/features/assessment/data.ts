@@ -10,7 +10,7 @@ export interface AData { fitness: FitnessRow[]; ratings: RatingRow[] }
 export type LoadError = "missing" | "other" | null
 
 const db = (): ReturnType<typeof supabase.schema> => supabase.schema("training")
-const NO_ROWS = "قاعدة البيانات رفضت العملية — الحساب ده مالوش الصلاحية دي."
+const NO_ROWS = "رفضت قاعدة البيانات العملية؛ فهذا الحساب لا يملك هذه الصلاحية."
 const MISSING: ReadonlySet<string> = new Set(["PGRST205", "42P01"])
 
 function outcome(r: { data: unknown[] | null; error: { message: string } | null }): string | null {

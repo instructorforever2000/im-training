@@ -8,7 +8,7 @@
    "en": "Playing out from the back against a two-striker press"
   },
   "desc": {
-   "ar": "درس من 6 لقطات: نخلق تفوق 3 ضد 2 بالحارس وقلبي الدفاع والارتكاز، ونكسر خطين من الضغط بتمريرتين.",
+   "ar": "درس من 6 لقطات: نصنع تفوقًا عدديًا 3 ضد 2 بالحارس وقلبي الدفاع ولاعب الارتكاز، ونكسر خطّي ضغط بتمريرتين.",
    "en": "A 6-shot lesson: create a 3v2 with the keeper, centre-backs and pivot, then break two pressing lines with two passes."
   },
   "tokens": [
@@ -102,11 +102,11 @@
    {
     "k": "sit",
     "c": {
-     "ar": "الكرة مع الحارس، ومهاجمين المنافس واقفين قدام قلبي الدفاع.",
+     "ar": "الكرة مع الحارس، ومهاجما المنافس يتمركزان أمام قلبي الدفاع.",
      "en": "The keeper has the ball; two opposing strikers stand in front of the centre-backs."
     },
     "q": {
-     "ar": "لو قلبي الدفاع فضلوا مكانهم، هيبقى 2 ضد 2. نعمل إيه عشان نطلع بالكرة على الأرض؟",
+     "ar": "إذا بقي قلبا الدفاع في مكانهما، يصبح الموقف 2 ضد 2. فماذا نفعل للخروج بالكرة أرضيًا؟",
      "en": "If the centre-backs stay put it is 2v2. How do we play out on the ground?"
     },
     "focus": [
@@ -121,7 +121,7 @@
    {
     "k": "react",
     "c": {
-     "ar": "قلبي الدفاع يتسعوا لحدود المنطقة، والارتكاز ينزل بينهم، والظهيرين يتقدموا.",
+     "ar": "يتّسع قلبا الدفاع إلى حدود منطقة الجزاء، وينزل لاعب الارتكاز بينهما، ويتقدّم الظهيران.",
      "en": "Centre-backs split to the box corners, the pivot drops between them, full-backs push on."
     },
     "m": {
@@ -161,15 +161,15 @@
     ],
     "why": {
      "a4": {
-      "ar": "يبعد عن المهاجم ويفتح زاوية تمرير من الحارس",
+      "ar": "يبتعد عن المهاجم ويفتح زاوية تمرير من الحارس",
       "en": "Moves away from the striker and opens a passing angle"
      },
      "a5": {
-      "ar": "نفس الفكرة على الجهة التانية: الملعب يتفتح عرضيًا",
+      "ar": "الفكرة نفسها على الجهة الأخرى: يتّسع الملعب عرضيًا",
       "en": "Same on the other side: the pitch opens wide"
      },
      "a6": {
-      "ar": "ينزل بين قلبي الدفاع فيبقى 3 ضد 2",
+      "ar": "ينزل بين قلبي الدفاع فيصبح الموقف 3 ضد 2",
       "en": "Drops between the centre-backs to make it 3v2"
      }
     },
@@ -186,11 +186,11 @@
    {
     "k": "trig",
     "c": {
-     "ar": "الحارس يمرر لقلب الدفاع الأيمن، والمهاجم يخرج يضغط عليه.",
+     "ar": "يمرّر الحارس إلى قلب الدفاع الأيمن، فيخرج المهاجم للضغط عليه.",
      "en": "The keeper finds the right centre-back; a striker jumps to press him."
     },
     "q": {
-     "ar": "المهاجم ساب مكانه… مين اللي بقى حر دلوقتي؟",
+     "ar": "ترك المهاجم مكانه… فمن أصبح حرًّا الآن؟",
      "en": "The striker left his zone… who is free now?"
     },
     "m": {
@@ -211,7 +211,7 @@
     ],
     "why": {
      "b9": {
-      "ar": "خرج يضغط، فساب المساحة اللي وراه",
+      "ar": "خرج للضغط، فترك المساحة خلفه",
       "en": "Presses and leaves space behind him"
      }
     }
@@ -219,7 +219,7 @@
    {
     "k": "react",
     "c": {
-     "ar": "الارتكاز يتحرك للمساحة اللي سابها المهاجم ويستلم.",
+     "ar": "يتحرك لاعب الارتكاز إلى المساحة التي تركها المهاجم ويستلم الكرة.",
      "en": "The pivot moves into the space the striker left and receives."
     },
     "m": {
@@ -245,7 +245,7 @@
     ],
     "why": {
      "a6": {
-      "ar": "يستلم وجسمه مفتوح على الملعب، مش ضهره للمنافس",
+      "ar": "يستلم وجسمه مفتوح على الملعب، لا وظهره للمنافس",
       "en": "Receives with an open body, not with his back to play"
      }
     },
@@ -262,7 +262,7 @@
    {
     "k": "res",
     "c": {
-     "ar": "تمريرة للاعب الوسط بين الخطوط: كسرنا خطين من الضغط بتمريرتين.",
+     "ar": "تمريرة إلى لاعب الوسط بين الخطوط: كسرنا خطّي ضغط بتمريرتين.",
      "en": "A pass into the eight between the lines: two pressing lines broken with two passes."
     },
     "m": {
@@ -283,7 +283,7 @@
     ],
     "why": {
      "a8": {
-      "ar": "يستلم بين خط الوسط وخط الدفاع ويلف للأمام",
+      "ar": "يستلم بين خط الوسط وخط الدفاع ويستدير إلى الأمام",
       "en": "Receives between midfield and defence and turns forward"
      }
     },
@@ -300,11 +300,11 @@
    {
     "k": "err",
     "c": {
-     "ar": "الخطأ الشائع (نفس لحظة اللقطة 3): الارتكاز يفضل عالي ورا وسط المنافس، فقلب الدفاع ملوش حل غير الكرة الطويلة.",
+     "ar": "الخطأ الشائع (في لحظة اللقطة 3 نفسها): يبقى لاعب الارتكاز متقدمًا خلف وسط المنافس، فلا يجد قلب الدفاع حلًّا سوى الكرة الطويلة.",
      "en": "Common mistake (the moment of shot 3): the pivot stays high behind their midfield, so the centre-back can only go long."
     },
     "q": {
-     "ar": "قارن مكان الشبح الأحمر بمكان الارتكاز الصح. الفرق كام متر؟",
+     "ar": "قارن موضع الشبح الأحمر بالموضع الصحيح للاعب الارتكاز. كم مترًا الفرق؟",
      "en": "Compare the red ghost with the correct pivot position. How many metres apart?"
     },
     "focus": [
@@ -319,7 +319,7 @@
     },
     "why": {
      "a6": {
-      "ar": "صح: تحت المهاجمين وبينهم. غلط: عالي ومتغطّي",
+      "ar": "صحيح: خلف المهاجمين وبينهما. خطأ: متقدم ومُغطّى",
       "en": "Right: below and between the strikers. Wrong: high and screened"
      }
     },

@@ -52,9 +52,9 @@ function writeBest(v: Record<string, number>): void {
 }
 
 const VERDICT: readonly { min: number; ar: string; en: string }[] = [
-  { min: EXCELLENT, ar: "ممتاز — فاهم القانون كويس جدًا", en: "Excellent" },
-  { min: PASS, ar: "ناجح — فاضل تفاصيل بسيطة", en: "Pass" },
-  { min: 0, ar: "محتاج مراجعة — راجع الإجابات تحت", en: "Needs review" },
+  { min: EXCELLENT, ar: "ممتاز — فهمٌ متمكّن للقانون", en: "Excellent" },
+  { min: PASS, ar: "ناجح — تبقى تفاصيل يسيرة", en: "Pass" },
+  { min: 0, ar: "يحتاج إلى مراجعة — راجع الإجابات أدناه", en: "Needs review" },
 ]
 
 export function LearningScreen(): React.JSX.Element {
@@ -110,11 +110,11 @@ export function LearningScreen(): React.JSX.Element {
             <div className="modes">
               <button className="mode quiz" onClick={() => start("quiz")}>
                 <i>✓</i><b>اختبار سريع <span className="en">Quick quiz</span></b>
-                <p>{Math.min(QUIZ_LEN, pool.length)} أسئلة عشوائية من «{SP[sport].ar}». كل إجابة بتتشرح فورًا، وفي الآخر نتيجتك ومراجعة أخطائك.</p>
+                <p>{Math.min(QUIZ_LEN, pool.length)} أسئلة عشوائية من «{SP[sport].ar}». تُشرح كل إجابة فورًا، وفي النهاية تظهر نتيجتك ومراجعة أخطائك.</p>
               </button>
               <button className="mode cards" onClick={() => start("cards")}>
                 <i>⇆</i><b>بطاقات المراجعة <span className="en">Flashcards</span></b>
-                <p>السؤال على وش البطاقة، والإجابة والشرح على ضهرها. مناسبة للمذاكرة قبل الاختبار أو لشرح القانون للاعبين.</p>
+                <p>السؤال على وجه البطاقة، والإجابة والشرح على ظهرها. مناسبة للمراجعة قبل الاختبار أو لشرح القانون للاعبين.</p>
               </button>
             </div>
           </>
@@ -130,7 +130,7 @@ export function LearningScreen(): React.JSX.Element {
             })}</div>
             {cur.picked !== null && (
               <div className={`exp ${cur.picked === CORRECT ? "ok" : "no"}`}>
-                <b>{cur.picked === CORRECT ? "إجابة صحيحة ✓" : "مش دي — الإجابة الصح متعلّمة بالأخضر"}</b>
+                <b>{cur.picked === CORRECT ? "إجابة صحيحة ✓" : "إجابة غير صحيحة — الإجابة الصحيحة مظلّلة بالأخضر"}</b>
                 <p>{T(cur.q)[EXPLAIN]}</p>
               </div>
             )}
@@ -138,7 +138,7 @@ export function LearningScreen(): React.JSX.Element {
               <button className="btn" onClick={() => setMode("home")}>خروج</button>
               {cur.picked !== null && (i + 1 < asked.length
                 ? <button className="btn p" onClick={() => setI(i + 1)}>السؤال التالي ←</button>
-                : <button className="btn p" onClick={finish}>شوف النتيجة</button>)}
+                : <button className="btn p" onClick={finish}>عرض النتيجة</button>)}
             </div>
           </section>
         )}

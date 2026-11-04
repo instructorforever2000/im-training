@@ -25,7 +25,7 @@ export type PlayerInput = Omit<Player, "id" | "created_at" | "is_active">
 const db = (): ReturnType<typeof supabase.schema> => supabase.schema("training")
 const TEAM_COLS = "id,org_id,name,sport,gender,age_group,grade_from,grade_to,play_format,color,is_active,created_at"
 const PLAYER_COLS = "id,org_id,team_id,full_name,shirt_number,position,birth_date,strong_foot,height_cm,weight_kg,status,guardian_consent_on,coach_notes,is_active,created_at"
-const NO_ROWS = "قاعدة البيانات رفضت العملية — الحساب ده مالوش الصلاحية دي."
+const NO_ROWS = "رفضت قاعدة البيانات العملية؛ فهذا الحساب لا يملك هذه الصلاحية."
 /** PostgREST answers this when the "training" schema is not exposed in the Data API settings yet. */
 const SCHEMA_HIDDEN = "PGRST106"
 

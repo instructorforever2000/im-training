@@ -43,9 +43,9 @@ function TeamForm({ orgId, team, close }: { orgId: string; team?: Team; close: (
   const num = (v: string): number | null => (v ? Number(v) : null)
   const submit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault()
-    if (!f.name.trim() || !f.sport) { setErr("اكتب اسم الفريق واختار اللعبة."); return }
+    if (!f.name.trim() || !f.sport) { setErr("اكتب اسم الفريق واختر اللعبة."); return }
     const r = await saveTeam({ ...f, name: f.name.trim() }, team?.id)
-    if (r) setErr(`ما اتحفظش: ${r}`); else close()
+    if (r) setErr(`تعذّر الحفظ: ${r}`); else close()
   }
   const toggle = async (): Promise<void> => {
     if (!team) return
@@ -58,7 +58,7 @@ function TeamForm({ orgId, team, close }: { orgId: string; team?: Team; close: (
       <label className="fld">اسم الفريق <span className="en">Team name</span><input value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} placeholder="مثال: منتخب المتوسطة لكرة القدم" /></label>
       <div className="row2">
         <label className="fld">اللعبة <span className="en">Sport</span>
-          <select value={f.sport} onChange={(e) => setF({ ...f, sport: e.target.value })}><option value="">— اختار —</option>{SPORT_LIST.map((s) => <option key={s.id} value={s.id}>{s.ar}</option>)}</select></label>
+          <select value={f.sport} onChange={(e) => setF({ ...f, sport: e.target.value })}><option value="">— اختر —</option>{SPORT_LIST.map((s) => <option key={s.id} value={s.id}>{s.ar}</option>)}</select></label>
         <label className="fld">الجنس <span className="en">Gender</span>
           <select value={f.gender} onChange={(e) => setF({ ...f, gender: e.target.value as Gender })}>{(Object.keys(GENDER) as Gender[]).map((g) => <option key={g} value={g}>{GENDER[g]}</option>)}</select></label>
       </div>
@@ -87,12 +87,12 @@ function BulkForm({ team, close }: { team: Team; close: () => void }): React.JSX
   const [err, setErr] = useState<string | null>(null)
   const rows = parseRoster(text, team.sport)
   const submit = async (): Promise<void> => {
-    if (!rows.length) { setErr("مفيش أسماء."); return }
+    if (!rows.length) { setErr("لا توجد أسماء."); return }
     const payload: PlayerInput[] = rows.map((r) => ({
       ...r, org_id: team.org_id, team_id: team.id, strong_foot: null, height_cm: null, weight_kg: null, status: "ready", guardian_consent_on: null, coach_notes: null,
     }))
     const e = await addPlayers(payload)
-    if (e) setErr(`ما اتضافوش: ${e}`); else close()
+    if (e) setErr(`تعذّرت الإضافة: ${e}`); else close()
   }
   const codes = positionsFor(team.sport)
   return (
@@ -101,7 +101,7 @@ function BulkForm({ team, close }: { team: Team; close: () => void }): React.JSX
       <p className="muted" style={{ marginTop: "6px" }}>انسخ الأعمدة من Excel والصقها: سطر لكل لاعب — الاسم · الرقم · المركز · تاريخ الميلاد (YYYY-MM-DD). الأعمدة بعد الاسم اختيارية.</p>
       {codes.length > 0 && <p className="muted">رموز المراكز: {codes.map((c) => `${c.code} (${c.ar})`).join("، ")}</p>}
       <label className="fld"><textarea value={text} onChange={(e) => setText(e.target.value)} /></label>
-      <p className="muted">{rows.length ? `هيتضاف ${rows.length} لاعب` : ""}</p>
+      <p className="muted">{rows.length ? `سيُضاف ${rows.length} لاعب` : ""}</p>
       {err && <p className="err">{err}</p>}
       <div className="formacts"><button className="btn p" onClick={() => void submit()}>إضافة اللاعبين</button><button className="btn" onClick={close}>إلغاء</button></div>
     </div>
@@ -126,7 +126,7 @@ function PlayerFile({ team, player, close }: { team: Team; player: Player | "new
     setOk(false)
     if (!f.full_name.trim()) { setErr("اكتب اسم اللاعب."); return }
     const r = await savePlayer({ ...f, full_name: f.full_name.trim() }, p?.id)
-    if (r) setErr(`ما اتحفظش: ${r}`); else { setErr(null); setOk(true); close() }
+    if (r) setErr(`تعذّر الحفظ: ${r}`); else { setErr(null); setOk(true); close() }
   }
   const toggle = async (): Promise<void> => { if (p) { const r = await setPlayerActive(p.id, !p.is_active); if (r) setErr(r); else close() } }
   const pos = codes.find((c) => c.code === f.position)
@@ -149,7 +149,7 @@ function PlayerFile({ team, player, close }: { team: Team; player: Player | "new
       <div className="row2">
         <label className="fld">تاريخ الميلاد <span className="en">Birth date</span><input type="date" value={f.birth_date ?? ""} onChange={(e) => setF({ ...f, birth_date: e.target.value || null })} /></label>
         <label className="fld">القدم / اليد <span className="en">Strong side</span>
-          <select value={f.strong_foot ?? ""} onChange={(e) => setF({ ...f, strong_foot: (e.target.value || null) as Foot | null })}><option value="">—</option><option value="R">يمنى</option><option value="L">يسرى</option><option value="B">الاتنين</option></select></label>
+          <select value={f.strong_foot ?? ""} onChange={(e) => setF({ ...f, strong_foot: (e.target.value || null) as Foot | null })}><option value="">—</option><option value="R">يمنى</option><option value="L">يسرى</option><option value="B">كلتاهما</option></select></label>
       </div>
       <div className="row2">
         <label className="fld">الطول (سم) <span className="en">Height</span><input type="number" value={f.height_cm ?? ""} onChange={(e) => setF({ ...f, height_cm: num(e.target.value) })} /></label>
@@ -157,8 +157,8 @@ function PlayerFile({ team, player, close }: { team: Team; player: Player | "new
       </div>
       <label className="fld">موافقة ولي الأمر — التاريخ <span className="en">Guardian consent</span><input type="date" value={f.guardian_consent_on ?? ""} onChange={(e) => setF({ ...f, guardian_consent_on: e.target.value || null })} /></label>
       <label className="fld">ملاحظة المدرب <span className="en">Coach note</span><textarea value={f.coach_notes ?? ""} onChange={(e) => setF({ ...f, coach_notes: e.target.value || null })} /></label>
-      <div className="sec"><h4>آخر تقييم <span className="en">Last evaluation</span></h4><div className="empty">قسم «التقييم» لسه قيد البناء — أول ما يتبني هيظهر هنا رسم آخر تقييم.</div></div>
-      {err && <p className="err">{err}</p>}{ok && <p className="muted" style={{ color: "var(--green)" }}>اتحفظ ✓</p>}
+      <div className="sec"><h4>آخر تقييم <span className="en">Last evaluation</span></h4><div className="empty">يظهر هنا رسم آخر تقييم للاعب من قسم «التقييم».</div></div>
+      {err && <p className="err">{err}</p>}{ok && <p className="muted" style={{ color: "var(--green)" }}>تم الحفظ ✓</p>}
       <div className="formacts"><button className="btn p" onClick={() => void save()}>{isNew ? "إضافة اللاعب" : "حفظ"}</button>
         {p && <button className="btn" onClick={() => void toggle()}>{p.is_active ? "إيقاف اللاعب" : "إعادة تفعيل"}</button>}</div>
     </aside>
@@ -207,7 +207,7 @@ function TeamPanel({ team, players, selected, onPick, onNew, onEdit, onBulk }: {
         <div className="view"><button className={mode === "cards" ? "on" : ""} onClick={() => setMode("cards")}>بطاقات</button><button className={mode === "table" ? "on" : ""} onClick={() => setMode("table")}>جدول</button></div>
         <button className="btn p" style={{ height: "36px" }} onClick={onNew}>+ لاعب</button>
       </div>
-      {!players.length && <div className="empty">لسه مفيش لاعبين في الفريق ده.<br />ضيفهم واحد واحد بزر «+ لاعب»، أو الصق القائمة كلها من Excel مرة واحدة.</div>}
+      {!players.length && <div className="empty">لا يضم هذا الفريق لاعبين بعد.<br />أضفهم واحدًا تلو الآخر بزر «+ لاعب»، أو الصق القائمة كاملة من Excel دفعة واحدة.</div>}
       {players.length > 0 && mode === "cards" && (
         <div className="grid">
           {shown.map((p) => (
@@ -230,10 +230,10 @@ function TeamPanel({ team, players, selected, onPick, onNew, onEdit, onBulk }: {
           <div><h3 style={{ fontSize: "14px" }}>توزيع المراكز <span className="en">Positions</span></h3>
             <div className="bars">{byPos.map((b) => <div className="r" key={b.code}><span>{b.ar}</span><div className="t"><i style={{ width: `${(b.n / maxPos) * FULL}%` }} /></div><b>{b.n}</b></div>)}</div></div>
           <div><h3 style={{ fontSize: "14px" }}>الأعمار <span className="en">Age spread</span></h3>
-            {ageBins.length ? <div className="ages">{ageBins.map((b) => <div key={b.a} style={{ height: `${(b.n / maxAge) * FULL}%` }}><span>{b.a} سنة</span></div>)}</div> : <p className="muted" style={{ marginTop: "10px" }}>أضف تواريخ الميلاد علشان يظهر توزيع الأعمار.</p>}</div>
+            {ageBins.length ? <div className="ages">{ageBins.map((b) => <div key={b.a} style={{ height: `${(b.n / maxAge) * FULL}%` }}><span>{b.a} سنة</span></div>)}</div> : <p className="muted" style={{ marginTop: "10px" }}>أضف تواريخ الميلاد ليظهر توزيع الأعمار.</p>}</div>
         </div>
       )}
-      <div className="bulk"><p><b>عندك القائمة في Excel؟</b> انسخ الأعمدة (الاسم · الرقم · المركز · تاريخ الميلاد) والصقها مرة واحدة.</p><button className="btn p" onClick={onBulk}>لصق القائمة</button></div>
+      <div className="bulk"><p><b>هل لديك القائمة في Excel؟</b> انسخ الأعمدة (الاسم · الرقم · المركز · تاريخ الميلاد) والصقها مرة واحدة.</p><button className="btn p" onClick={onBulk}>لصق القائمة</button></div>
     </section>
   )
 }
@@ -254,7 +254,7 @@ export function Squad({ data, reload }: { data: SquadData; reload: () => void })
   const sportsHere = [...new Set(data.teams.filter((t) => t.org_id === orgId).map((t) => t.sport))]
   const choose = (t: Team): void => { setTeamId(t.id); setPick(null) }
 
-  if (!data.orgs.length) return <div className="loading">سجّل جهة الأول من لوحة المدير — كل فريق بيتبع جهة.</div>
+  if (!data.orgs.length) return <div className="loading">سجّل جهة أولًا من لوحة المدير؛ فكل فريق يتبع جهة.</div>
   return (
     <div className="app">
       <nav className="rail"><img src={logo} alt="IM Training" />
@@ -268,7 +268,7 @@ export function Squad({ data, reload }: { data: SquadData; reload: () => void })
         </div>
         <div className="head">
           <div><h1>الفرق واللاعبين<span className="en">Teams &amp; Players</span></h1>
-            <p>كل فريق بفئته ولعبته · اضغط على لاعب يفتح ملفه جنب القائمة من غير ما تسيب الصفحة</p></div>
+            <p>كل فريق بفئته ولعبته · اضغط على لاعب ليُفتح ملفه بجوار القائمة دون مغادرة الصفحة</p></div>
           <div className="acts">{team && <button className="btn" onClick={() => setModal({ k: "bulk" })}>⇪ لصق قائمة من Excel</button>}<button className="btn p" onClick={() => setModal({ k: "team" })}>+ فريق جديد</button></div>
         </div>
         <div className="lay">
@@ -283,13 +283,13 @@ export function Squad({ data, reload }: { data: SquadData; reload: () => void })
               <button className="addt" onClick={() => setModal({ k: "team" })}>+ فريق جديد — بأي لعبة</button>
             </div>
             <div className="coaches"><h3>المدربون <span className="en">Coaches</span></h3>
-              <p className="muted" style={{ marginTop: "8px" }}>المدربين بينضموا برمز دعوة بدور «مدرب» من لوحة المدير، وبيظهروا هنا أول ما توافق عليهم.</p></div>
+              <p className="muted" style={{ marginTop: "8px" }}>ينضم المدربون برمز دعوة بدور «مدرب» من لوحة المدير، ويظهرون هنا فور موافقتك عليهم.</p></div>
           </section>
           {team ? <TeamPanel key={team.id} team={team} players={roster} selected={pick && pick !== "new" ? pick.id : null} onPick={setPick} onNew={() => setPick("new")} onEdit={() => setModal({ k: "team", team })} onBulk={() => setModal({ k: "bulk" })} />
-            : <section className="card"><div className="empty">لسه مفيش فرق للجهة دي.<br />اضغط «+ فريق جديد» واختار اللعبة والفئة.</div></section>}
+            : <section className="card"><div className="empty">لا توجد فرق لهذه الجهة بعد.<br />اضغط «+ فريق جديد» واختر اللعبة والفئة.</div></section>}
           {team && pick && <PlayerFile key={pick === "new" ? "new" : pick.id} team={team} player={pick} close={() => { setPick(null); reload() }} />}
         </div>
-        <div className="foot"><span>IM Training · الفرق واللاعبين — كل البيانات حقيقية من قاعدة البيانات</span><span className="en">Instructor: Mohamed Ayad</span></div>
+        <div className="foot"><span>IM Training · الفرق واللاعبون — كل البيانات حقيقية من قاعدة البيانات</span><span className="en">Instructor: Mohamed Ayad</span></div>
       </main>
       {modal && <div className="modal" onClick={(e) => { if (e.target === e.currentTarget) setModal(null) }}>
         {modal.k === "team" ? <TeamForm orgId={orgId} team={modal.team} close={() => { setModal(null); reload() }} /> : team && <BulkForm team={team} close={() => { setModal(null); reload() }} />}</div>}
@@ -300,7 +300,7 @@ export function Squad({ data, reload }: { data: SquadData; reload: () => void })
 export function SquadScreen(): React.JSX.Element {
   const { data, error, reload } = useSquadData()
   const wrap = (c: React.ReactNode): React.JSX.Element => <div className="sq" dir="rtl" lang="ar">{c}</div>
-  if (error === "schema") return wrap(<div className="loading"><p><b>قسم الفرق واللاعبين محتاج خطوة تفعيل واحدة في Supabase</b><br />(إظهار درج training للمنصة — Exposed schemas). بعدها اضغط إعادة المحاولة.</p><button className="btn p" onClick={reload}>إعادة المحاولة</button></div>)
+  if (error === "schema") return wrap(<div className="loading"><p><b>يحتاج قسم الفرق واللاعبين إلى خطوة تفعيل واحدة في Supabase</b><br />(إظهار مخطط training للمنصة — Exposed schemas)، ثم اضغط «إعادة المحاولة».</p><button className="btn p" onClick={reload}>إعادة المحاولة</button></div>)
   if (error) return wrap(<div className="loading"><p>تعذّر تحميل الفرق.</p><button className="btn" onClick={reload}>إعادة المحاولة</button></div>)
   if (!data) return wrap(<div className="loading">جارٍ تحميل الفرق… <span className="en">Loading</span></div>)
   return wrap(<Squad data={data} reload={reload} />)
