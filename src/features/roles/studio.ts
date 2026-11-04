@@ -195,7 +195,8 @@ function trails() {
 const camGoal = { p: new THREE.Vector3(), t: new THREE.Vector3(), on: false };
 function freeRect() {
   const sb = $('#stage').getBoundingClientRect(); let l = sb.left, r = sb.right, t = sb.top, b = sb.bottom;
-  if (innerWidth > 900) { const hb = $('.hud').getBoundingClientRect(); t = Math.max(t, hb.bottom + 8);
+  /* الملعب ثابت بحجمه الكامل: اللوحات والقائمة طبقات عائمة فوقه ولا تغيّر الكاميرا */
+  if (false) { const hb = $('.hud').getBoundingClientRect(); t = Math.max(t, hb.bottom + 8);
     $$('.pnl').forEach(p => { if (p.classList.contains('hidden')) return; const q = p.getBoundingClientRect(); if (q.width > sb.width * .6) { if (q.top > sb.top + sb.height / 2) b = Math.min(b, q.top - 8); return } if (p.classList.contains('min')) return; const cx = q.left + q.width / 2; if (cx > sb.left + sb.width / 2) r = Math.min(r, q.left - 8); else l = Math.max(l, q.right + 8) }) }
   if (r - l < sb.width * .3) { l = sb.left; r = sb.right } return { sb, l, r, t, b }
 }
@@ -517,16 +518,15 @@ $$('#camv button').forEach(b => b.onclick = () => setCam(b.dataset.v));
 $$('#lang button').forEach(b => b.onclick = () => { E.setLang(b.dataset.l); $$('#lang button').forEach(x => x.classList.toggle('on', x === b)); all() });
 /* ---------- more room for the pitch: top bar auto-hides, side dock folds, caption bar moves ---------- */
 { const rs = host, prefs = store.get('im-roles-ui', { pin: false, dock: true }), saveUi = () => store.set('im-roles-ui', prefs);
-  let hideT = 0; const show = v => { if (rs.classList.contains('hh') === !v) return; rs.classList.toggle('hh', !v); setTimeout(refit, 320) };
+  let hideT = 0; const show = v => { if (rs.classList.contains('hh') === !v) return; rs.classList.toggle('hh', !v) };
   const pinUi = () => { $('#pin').classList.toggle('on', prefs.pin); if (prefs.pin) show(true) };
-  const dockUi = () => { rs.classList.toggle('dh', !prefs.dock); $('#dockb').classList.toggle('on', !prefs.dock); setTimeout(() => { resize(); placePanels() }, 320) };
-  $('#pin').onclick = () => { prefs.pin = !prefs.pin; saveUi(); pinUi(); toast(prefs.pin ? L('القائمة العلوية مثبّتة', 'Top bar pinned') : L('القائمة العلوية بتختفي وتظهر لما تقرّب من فوق', 'Top bar hides — move to the top to show it')) };
+  const dockUi = () => { rs.classList.toggle('dh', !prefs.dock); $('#dockb').classList.toggle('on', !prefs.dock); setTimeout(placePanels, 320) };
+  $('#pin').onclick = () => { prefs.pin = !prefs.pin; saveUi(); pinUi(); toast(prefs.pin ? L('القائمة العلوية مثبّتة', 'Top bar pinned') : L('القائمة العلوية تُفتح بالضغط على زر القائمة', 'Top bar opens from the menu button')) };
   $('#dockb').onclick = () => { prefs.dock = !prefs.dock; saveUi(); dockUi() };
-  $('#hudtab').onclick = () => show(true);
-  on(window, 'pointermove', e => { if (prefs.pin || innerWidth <= 900 || e.pointerType === 'touch') return; const t = e.target, overBar = t.closest && t.closest('.hud,.hud2,#hudtab,#pmenu');
-    if (e.clientY < 46 || overBar) { clearTimeout(hideT); show(true) } else if (!rs.classList.contains('hh')) { clearTimeout(hideT); hideT = setTimeout(() => show(false), 900) } });
+  $('#hudtab').onclick = () => show(rs.classList.contains('hh'));
+  /* القائمة تُفتح بالضغط فقط — لا فتح تلقائي عند مرور الماوس */
   on($('#gl'), 'pointerdown', () => { if (!prefs.pin && innerWidth > 900) show(false) });
-  pinUi(); dockUi(); if (!prefs.pin && innerWidth > 900) setTimeout(() => show(false), 2500);
+  pinUi(); dockUi(); if (!prefs.pin && innerWidth > 900) show(false);
   /* caption bar: drag it anywhere, double-click to put it back */
   const cap = $('#capbar'); let cd = null; const capPos = () => { const q = store.get('im-roles-cap', null); cap.classList.toggle('moved', !!q && innerWidth > 900); if (q && innerWidth > 900) Object.assign(cap.style, { left: q.x + 'px', top: q.y + 'px' }) };
   on(cap, 'pointerdown', e => { if (innerWidth <= 900 || e.target.closest('button')) return; const b = cap.getBoundingClientRect(); cd = [e.clientX - b.left, e.clientY - b.top]; cap.setPointerCapture(e.pointerId); cap.classList.add('moved', 'drag') });
