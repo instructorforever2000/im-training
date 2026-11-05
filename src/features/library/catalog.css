@@ -105,3 +105,11 @@
   .dv{position:static}.dcard{position:static;width:100%;max-height:none;box-shadow:none;background:#fff}
   .dcard .scroll{overflow:visible}
 }
+/* صور وفيديو حقيقية */
+.dcard .media{display:flex;flex-direction:column;gap:8px}
+.dcard .mgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.dcard .mgrid figure{position:relative;margin:0;border-radius:12px;overflow:hidden;background:var(--soft);aspect-ratio:4/3}
+.dcard .mgrid img,.dcard .mgrid video{width:100%;height:100%;object-fit:cover;display:block}
+.dcard .mhide{position:absolute;top:6px;left:6px;width:26px;height:26px;border-radius:8px;background:#0b1b33cc;color:#fff}
+.dcard .mup{display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--mu)}
+.dcard .mup button{height:40px;border-radius:12px;border:1.5px dashed var(--teal);color:var(--teal2);font-weight:700;font-size:13px}

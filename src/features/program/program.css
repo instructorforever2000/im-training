@@ -62,3 +62,21 @@
 @media(max-width:1100px){.pg .lay{grid-template-columns:1fr}.pg .side{position:static;grid-template-columns:1fr 1fr}}
 @media(max-width:900px){.pg main{padding:16px 12px 92px}.pg .head{flex-direction:column;align-items:stretch}.pg .week{overflow-x:auto}.pg .week>button{min-width:58px}
 .pg .sc{grid-template-columns:56px 1fr}.pg .sc .acts{grid-column:1/-1;flex-direction:row;flex-wrap:wrap}.pg .side{grid-template-columns:1fr}.pg-sheet .row3{grid-template-columns:1fr 1fr}.pg-sheet .row3 .fld:first-child{grid-column:1/-1}}
+/* الحضور والجهد */
+.pg .att{grid-column:1/-1;border-top:1px dashed var(--ln);padding-top:12px;display:grid;gap:10px}
+.pg .atth{display:flex;justify-content:space-between;align-items:center}.pg .atth h3{font-size:15px}.pg .atth .en{font:500 11.5px Outfit;color:var(--teal2);margin-inline-start:6px}
+.pg .atth button{width:30px;height:30px;border-radius:9px;background:var(--soft)}
+.pg .attsum{display:flex;flex-wrap:wrap;gap:8px;font-size:12.5px}
+.pg .attsum span{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:var(--soft)}.pg .attsum i{width:8px;height:8px;border-radius:50%;background:var(--c)}
+.pg .attsum .ld{background:#e6f7f5;color:var(--teal2)}
+.pg .attlist{display:grid;gap:6px;max-height:420px;overflow:auto}
+.pg .attrow{display:grid;grid-template-columns:minmax(140px,1fr) auto 90px 110px;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--soft)}
+.pg .attrow .nm{display:flex;gap:8px;align-items:center;font-size:13.5px}.pg .attrow .nm b{font:700 13px Outfit;width:28px;height:28px;border-radius:8px;background:#fff;display:grid;place-items:center}
+.pg .attrow .sts{display:flex;gap:4px;flex-wrap:wrap}
+.pg .attrow .sts button{font-size:12px;padding:5px 10px;border-radius:999px;background:#fff;border:1px solid var(--ln)!important}
+.pg .attrow .sts button.on{background:var(--c);color:#fff;border-color:var(--c)!important}
+.pg .attrow label{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--mu)}
+.pg .attrow select,.pg .attrow input{height:32px;border:1px solid var(--ln);border-radius:8px;padding:0 6px;width:60px;background:#fff}
+.pg .attgo{display:flex;justify-content:space-between;align-items:center;gap:12px}.pg .attgo .mut{font-size:12px;color:var(--mu)}
+.pg .attgo .p{height:40px;padding:0 18px;border-radius:12px;background:var(--teal);color:#fff;font-weight:700}
+@media(max-width:900px){.pg .attrow{grid-template-columns:1fr 1fr}.pg .attrow .nm,.pg .attrow .sts{grid-column:1/-1}}

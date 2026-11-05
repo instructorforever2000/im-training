@@ -1,6 +1,7 @@
 // البرنامج اليومي (Daily program) + الوحدة التدريبية (Training session).
 // The day's sessions on a timeline, the week at a glance, each team's readiness, and a session builder
 // that pulls drills straight from the library, phase by phase (warm-up → main → game → cool-down).
+import { AttendancePanel } from "./Attendance"
 import { useMemo, useState } from "react"
 import "@fontsource/outfit/500.css"
 import { Dock } from "@/components/ui/Dock"
@@ -122,6 +123,7 @@ function SessionCard({ s, team, players, open, after }: { s: Session; team?: Tea
   const ready = players.filter((p) => p.status === "ready").length
   const mark = async (st: SessionStatus): Promise<void> => { await setSessionStatus(s.id, st); after() }
   const remove = async (): Promise<void> => { await archiveSession(s.id); after() }
+  const [att, setAtt] = useState(false)
   return (
     <article className={`sc ${s.status}`} style={{ "--c": team?.color ?? "#1FB5A8" } as React.CSSProperties}>
       <div className="time"><b>{s.starts_at?.slice(0, TIME_LEN) ?? "—"}</b><span>{tot} د</span></div>
@@ -134,11 +136,13 @@ function SessionCard({ s, team, players, open, after }: { s: Session; team?: Tea
       </div>
       <div className="acts">
         <button onClick={open}>فتح</button>
+        <button onClick={() => setAtt(true)}>الحضور</button>
         {s.status === "planned" && <button className="ok" onClick={() => void mark("done")}>✓ نُفّذت</button>}
         {s.status === "planned" && <button onClick={() => void mark("cancelled")}>إلغاء</button>}
         {s.status !== "planned" && <button onClick={() => void mark("planned")}>إعادتها إلى «مخطّطة»</button>}
         <button className="rm" onClick={() => void remove()} title="أرشفة">أرشفة</button>
       </div>
+      {att && <AttendancePanel sessionId={s.id} orgId={s.org_id} minutes={tot} players={players} close={() => setAtt(false)} />}
     </article>
   )
 }

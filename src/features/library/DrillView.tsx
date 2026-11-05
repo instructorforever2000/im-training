@@ -1,6 +1,7 @@
 // بطاقة التمرين — the drill opens on its own 3D stage (fixed, full size); the standard card floats over it as glass.
 import { useEffect, useRef, useState } from "react"
 import { DRILLS, SPORTS, type Drill } from "./content"
+import { DrillMedia } from "./DrillMedia"
 import { FORMATS, STAGES, formatOf, goalLabel, goalOf, loadOf, refOf, sportsOf, stageOf } from "./catalog"
 
 export function DrillView({ id, list, dark, ctx, back, go, addToSession }: {
@@ -73,6 +74,7 @@ export function DrillView({ id, list, dark, ctx, back, go, addToSession }: {
             <div><h2>التدرّج <span className="en">Progression</span></h2><p>{d.ar.prog}</p></div>
             <div><h2>التبسيط <span className="en">Regression</span></h2><p>{d.ar.reg}</p></div>
           </section>
+          <DrillMedia drillId={d.id} />
           {d.ar.note && <section className="note"><h2>ملاحظة المدرب</h2><p>{d.ar.note}</p></section>}
           <section className="tags">
             <span className="chip">{st?.ar} · {st?.ages} سنة</span>

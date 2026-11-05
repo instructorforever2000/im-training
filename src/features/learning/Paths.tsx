@@ -1,6 +1,7 @@
 // مركز التعلّم — role learning paths (Coach · Player · Referee · PE teacher), graded levels, applied cases on the 3D pitch, certificates.
 // Approved direction (Nov 2026): the curriculum reads like a professional coaching manual (C) with mastery rings (B).
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
+import { pushName, pushUnit, syncProgress } from "./progressCloud"
 import cur from "./curriculum.json"
 import lessonsA from "./lessons-a.json"
 import lessonsB from "./lessons-b.json"
@@ -60,11 +61,17 @@ function Ring({ pct, c }: { pct: number; c: string }): React.JSX.Element {
 
 export function Paths(): React.JSX.Element {
   const [prog, setProg] = useState<Progress>(loadProgress)
+  useEffect(() => {
+    let alive = true
+    const run = async (): Promise<void> => { const merged = await syncProgress(loadProgress()); if (alive && merged) setProg(merged) }
+    void run()
+    return () => { alive = false }
+  }, [])
   const [pathKey, setPathKey] = useState<string>(PATHS[0].key)
   const [view, setView] = useState<View>({ v: "home" })
   const path = PATHS.find((p) => p.key === pathKey) ?? PATHS[0]
-  if (view.v === "unit") return <UnitView id={view.id} prog={prog} done={(pct) => setProg((p) => recordUnit(p, view.id, pct))} back={() => setView({ v: "path" })} />
-  if (view.v === "cert") return <Certificate path={PATHS.find((p) => p.key === view.path) ?? path} level={view.level} prog={prog} rename={(n) => setProg((p) => setName(p, n))} back={() => setView({ v: "path" })} />
+  if (view.v === "unit") return <UnitView id={view.id} prog={prog} done={(pct) => { setProg((p) => recordUnit(p, view.id, pct)); if (pct > (prog.units[view.id]?.best ?? -1)) void pushUnit(view.id, pct) }} back={() => setView({ v: "path" })} />
+  if (view.v === "cert") return <Certificate path={PATHS.find((p) => p.key === view.path) ?? path} level={view.level} prog={prog} rename={(n) => { setProg((p) => setName(p, n)); void pushName(n) }} back={() => setView({ v: "path" })} />
   if (view.v === "home") return (
     <div className="lp">
       <p className="lpintro">اختر مسارك حسب دورك. كل مسار ثلاثة مستويات، وكل مستوى وحدتان؛ والوحدة درس مفصّل، ثم حالة تطبيقية على الملعب ثلاثي الأبعاد، ثم اختبار. وعند اجتياز وحدتي المستوى تحصل على شهادة.</p>
