@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anatomy Figure Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&family=Outfit:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#f3f5f8; --card:#ffffff; --ink:#0d1b2a; --mu:#6b7a8c; --ln:#e3e9ef; --teal:#1FB5A8; --teal2:#0f8f84; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#0b1324; --card:#111c33; --ink:#eef2ff; --mu:#9fb0c6; --ln:#22304d; --teal2:#5fd6cb; } }
+  :root[data-theme="dark"] { --bg:#0b1324; --card:#111c33; --ink:#eef2ff; --mu:#9fb0c6; --ln:#22304d; --teal2:#5fd6cb; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--ink); font-family: "IBM Plex Sans Arabic", system-ui, sans-serif; min-height: 100vh; }
+  .en { font-family: Outfit, system-ui, sans-serif; color: var(--teal2); font-weight: 500; }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 22px 16px 32px; display: grid; gap: 14px; }
+  header h1 { font-size: 26px; } header h1 .en { font-size: 15px; margin-inline-start: 8px; }
+  header p { color: var(--mu); font-size: 14px; margin-top: 4px; }
+  .grid { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 14px; align-items: start; }
+  .stage { position: relative; background: #fff; border: 1px solid var(--ln); border-radius: 22px; overflow: hidden; aspect-ratio: 4 / 3.5; }
+  .stage canvas { display: block; width: 100%; height: 100%; cursor: grab; touch-action: none; }
+  .stage svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; direction: ltr; }
+  .lbl text { font-family: "IBM Plex Sans Arabic", sans-serif; font-size: 13px; font-weight: 700; fill: #1b2433; }
+  .lbl text.e { font-family: Outfit, sans-serif; font-weight: 500; font-size: 11.5px; fill: #5c6878; }
+  .tag { font-family: Outfit, sans-serif; font-weight: 600; font-size: 13px; letter-spacing: .08em; fill: #1b2433; }
+  .tag.ar { font-family: "IBM Plex Sans Arabic", sans-serif; font-size: 11px; letter-spacing: 0; fill: #6b7380; font-weight: 600; }
+  .tools { position: absolute; top: 12px; inset-inline-start: 12px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .tools button { border: 1px solid #dfe5ec; background: #ffffffe6; backdrop-filter: blur(6px); border-radius: 999px; padding: 7px 13px; font: 600 13px "IBM Plex Sans Arabic", sans-serif; color: #0d1b2a; cursor: pointer; }
+  .tools button.on { background: #0b1b33; color: #fff; border-color: #0b1b33; }
+  .hint { position: absolute; bottom: 10px; inset-inline-start: 14px; font-size: 12px; color: #7a8696; }
+  .wait { position: absolute; inset: 0; display: grid; place-items: center; color: #7a8696; font-size: 14px; background: #fff; transition: opacity .4s; }
+  aside { background: var(--card); border: 1px solid var(--ln); border-radius: 22px; padding: 18px; display: grid; gap: 12px; }
+  aside h2 { font-size: 16px; } aside h2 .en { font-size: 12px; }
+  .mus { display: grid; gap: 7px; }
+  .mus div { display: grid; grid-template-columns: 16px 1fr; column-gap: 8px; align-items: center; font-size: 14px; }
+  .mus i { width: 12px; height: 12px; border-radius: 4px; grid-row: span 2; }
+  .mus small { color: var(--mu); font-family: Outfit, sans-serif; font-size: 12px; }
+  ol { padding-inline-start: 20px; display: grid; gap: 6px; font-size: 14px; line-height: 1.7; }
+  .note { font-size: 12.5px; color: var(--mu); line-height: 1.7; border-top: 1px dashed var(--ln); padding-top: 10px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; } .chips span { font-size: 12px; background: var(--bg); border-radius: 999px; padding: 3px 10px; color: var(--mu); }
+  @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } .stage { aspect-ratio: 3 / 3.8; } .lbl text { font-size: 11px; } .lbl text.e { font-size: 10px; } }
+</style>
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>التجديف واقفًا بالحبل المطاطي <span class="en">Standing resistance-band row</span></h1>
+    <p>نموذج تجريبي للشخصية التشريحية: العضلات المستهدفة ملوّنة ومسمّاة، وشبح وضع البداية، وسهم مسار الحركة.</p>
+  </header>
+  <div class="grid">
+    <div class="stage" id="stage">
+      <canvas id="cv"></canvas>
+      <svg id="ov"></svg>
+      <div class="tools"><button id="bStill" class="on">البداية والنهاية</button><button id="bPlay">تشغيل الحركة</button><button id="bBack">خلفي</button><button id="bSide">جانبي</button><button id="bFront">أمامي</button></div>
+      <span class="hint">اسحب لتدوير الشخصية</span>
+      <div class="wait" id="wait">جارٍ بناء الشخصية…</div>
+    </div>
+    <aside>
+      <h2>العضلات العاملة <span class="en">Muscles worked</span></h2>
+      <div class="mus" id="mus"></div>
+      <h2>خطوات الأداء <span class="en">Technique</span></h2>
+      <ol>
+        <li>ثبّت الحبل أمامك بارتفاع الصدر، وقف والقدمان بعرض الكتفين والركبتان مثنيتان قليلًا.</li>
+        <li>ابدأ والذراعان ممدودتان للأمام والجذع مائل قليلًا مع ظهر مستقيم.</li>
+        <li>اسحب المقبضين نحو أسفل القفص الصدري، والمرفقان قريبان من الجسم.</li>
+        <li>اضغط لوحَي الكتف معًا في نهاية الحركة ثانية واحدة، ثم ارجع ببطء.</li>
+      </ol>
+      <div class="chips"><span>3 × 12–15</span><span>إيقاع 2/1/2</span><span>راحة 45–60 ث</span><span>من عمر 10 سنوات</span></div>
+      <p class="note">نموذج تصميم للمراجعة — الشخصية مبنية بالكامل داخل منصتنا (ثلاثية الأبعاد)، وتُعمَّم على كل التمارين بعد اعتماد الشكل.</p>
+    </aside>
+  </div>
+</div>
+<script type="module">
+import * as THREE from "three"
+import { MarchingCubes } from "three/addons/objects/MarchingCubes.js"
+import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js"
+
+const DEG = Math.PI / 180
+const COL = { skin: [0.74, 0.745, 0.76], skin2: [0.66, 0.67, 0.69], red: [0.78, 0.25, 0.21], blue: [0.36, 0.52, 0.78], shorts: [0.11, 0.115, 0.13], hair: [0.13, 0.13, 0.14] }
+
+// ---------- signed-distance sculpting ----------
+// Every body part is a set of primitives (capsules / ellipsoids) blended into ONE continuous skin with a smooth union,
+// so muscles read as bulges of the same body (like an anatomy illustration), not as separate blobs.
+const smin = (a, b, k) => { const h = Math.max(k - Math.abs(a - b), 0) / k; return Math.min(a, b) - h * h * k * 0.25 }
+function sdCap(p, a, b, ra, rb) {
+  const pax = p[0] - a[0], pay = p[1] - a[1], paz = p[2] - a[2], bax = b[0] - a[0], bay = b[1] - a[1], baz = b[2] - a[2]
+  const h = Math.max(0, Math.min(1, (pax * bax + pay * bay + paz * baz) / (bax * bax + bay * bay + baz * baz)))
+  const dx = pax - bax * h, dy = pay - bay * h, dz = paz - baz * h
+  return Math.hypot(dx, dy, dz) - (ra + (rb - ra) * h)
+}
+function sdEll(q, r) {
+  const k0 = Math.hypot(q[0] / r[0], q[1] / r[1], q[2] / r[2]), k1 = Math.hypot(q[0] / (r[0] * r[0]), q[1] / (r[1] * r[1]), q[2] / (r[2] * r[2]))
+  return k1 === 0 ? -Math.min(...r) : (k0 * (k0 - 1)) / k1
+}
+const E = (c, r, o = {}) => ({ t: "e", c, r, rot: o.rot ?? [0, 0, 0], k: o.k ?? 0.02, col: o.col ?? "skin", name: o.name, bias: o.bias ?? 0 })
+const C = (a, b, ra, rb, o = {}) => ({ t: "c", a, b, ra, rb, k: o.k ?? 0.03, col: o.col ?? "skin", name: o.name, bias: o.bias ?? 0 })
+const mirror = (x, list) => list.map((p) => {
+  const q = { ...p }
+  if (p.t === "e") { q.c = [p.c[0] * x, p.c[1], p.c[2]]; q.rot = [p.rot[0], p.rot[1] * x, p.rot[2] * x] }
+  else { q.a = [p.a[0] * x, p.a[1], p.a[2]]; q.b = [p.b[0] * x, p.b[1], p.b[2]] }
+  if (p.name) q.name = p.name + (x > 0 ? "L" : "R")
+  return q
+})
+
+/** Separable box blur of the colour grid, so colour borders (shorts, hair, muscle regions) are soft, not stair-stepped. */
+function blurPalette(pal, n, passes) {
+  const tmp = new Float32Array(pal.length), st = [1, n, n * n]
+  for (let it = 0; it < passes; it++) for (const s of st) {
+    for (let i = s; i < pal.length / 3 - s; i++) for (let c = 0; c < 3; c++) tmp[i * 3 + c] = (pal[(i - s) * 3 + c] + pal[i * 3 + c] + pal[(i + s) * 3 + c]) / 3
+    pal.set(tmp)
+  }
+}
+/** Builds one smooth mesh from primitives defined in a common local frame. */
+function sculpt(prims, center, half, N, hi) {
+  const mc = new MarchingCubes(N, SKIN_MAT, false, true, 260000)
+  mc.isolation = 0
+  const size = N, cell = (2 * half) / N
+  const dist = new Float32Array(size ** 3).fill(0.05), near = new Float32Array(size ** 3).fill(1e3)
+  const pal = mc.palette; for (let i = 0; i < pal.length; i += 3) { pal[i] = COL.skin[0]; pal[i + 1] = COL.skin[1]; pal[i + 2] = COL.skin[2] }
+  const idx = (x, y, z) => x + y * size + z * size * size
+  const toW = (i, c) => c + (i - size / 2) * cell
+  for (const p of prims) {
+    let lo, hi2, f
+    if (p.t === "c") {
+      const m = Math.max(p.ra, p.rb) + p.k + cell * 2
+      lo = [0, 1, 2].map((j) => Math.min(p.a[j], p.b[j]) - m); hi2 = [0, 1, 2].map((j) => Math.max(p.a[j], p.b[j]) + m)
+      f = (q) => sdCap(q, p.a, p.b, p.ra, p.rb)
+    } else {
+      const m = Math.max(...p.r) + p.k + cell * 2
+      lo = p.c.map((v) => v - m); hi2 = p.c.map((v) => v + m)
+      const inv = new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(...p.rot)).invert()
+      const v = new THREE.Vector3()
+      f = (q) => { v.set(q[0] - p.c[0], q[1] - p.c[1], q[2] - p.c[2]).applyMatrix4(inv); return sdEll([v.x, v.y, v.z], p.r) }
+    }
+    const i0 = lo.map((v, j) => Math.max(1, Math.floor((v - center[j]) / cell + size / 2)))
+    const i1 = hi2.map((v, j) => Math.min(size - 2, Math.ceil((v - center[j]) / cell + size / 2)))
+    const col = COL[hi[p.name] ?? p.col]
+    for (let z = i0[2]; z <= i1[2]; z++) for (let y = i0[1]; y <= i1[1]; y++) for (let x = i0[0]; x <= i1[0]; x++) {
+      const q = [toW(x, center[0]), toW(y, center[1]), toW(z, center[2])]
+      const d = f(q), i = idx(x, y, z)
+      dist[i] = smin(dist[i], d, p.k)
+      const dn = d + p.bias
+      if (dn < near[i]) { near[i] = dn; pal[i * 3] = col[0]; pal[i * 3 + 1] = col[1]; pal[i * 3 + 2] = col[2] }
+    }
+  }
+  for (let i = 0; i < dist.length; i++) mc.field[i] = -dist[i]
+  blurPalette(pal, size, 2)
+  mc.update()
+  // freeze into a plain geometry (local units → metres)
+  const g = new THREE.BufferGeometry(), n = mc.count
+  const pos = mc.geometry.getAttribute("position").array.slice(0, n * 3), nor = mc.geometry.getAttribute("normal").array.slice(0, n * 3), cl = mc.geometry.getAttribute("color").array.slice(0, n * 3)
+  for (let i = 0; i < n; i++) { pos[i * 3] = pos[i * 3] * half + center[0]; pos[i * 3 + 1] = pos[i * 3 + 1] * half + center[1]; pos[i * 3 + 2] = pos[i * 3 + 2] * half + center[2] }
+  g.setAttribute("position", new THREE.BufferAttribute(pos, 3)); g.setAttribute("normal", new THREE.BufferAttribute(nor, 3)); g.setAttribute("color", new THREE.BufferAttribute(cl, 3))
+  g.normalizeNormals?.()
+  const nn = g.getAttribute("normal"); for (let i = 0; i < n; i++) { const v = new THREE.Vector3().fromBufferAttribute(nn, i).normalize(); nn.setXYZ(i, v.x, v.y, v.z) }
+  mc.geometry.dispose()
+  return g
+}
+
+// ---------- materials ----------
+const SKIN_MAT = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.58, metalness: 0.02 })
+SKIN_MAT.onBeforeCompile = (sh) => {
+  sh.vertexShader = sh.vertexShader.replace("#include <common>", "#include <common>\nvarying vec3 vObj;").replace("#include <begin_vertex>", "#include <begin_vertex>\nvObj = position;")
+  sh.fragmentShader = sh.fragmentShader.replace("#include <common>", "#include <common>\nvarying vec3 vObj;").replace("#include <color_fragment>", `#include <color_fragment>
+    float sat = max(max(diffuseColor.r, diffuseColor.g), diffuseColor.b) - min(min(diffuseColor.r, diffuseColor.g), diffuseColor.b);
+    float tilt = sign(vObj.x) * 0.45;
+    float u = (vObj.x * cos(tilt) - vObj.y * sin(tilt)) * 520.0 + sin(vObj.y * 90.0) * 1.6;
+    float fib = 0.5 + 0.5 * sin(u);
+    diffuseColor.rgb *= mix(1.0, 0.82 + 0.3 * fib, smoothstep(0.12, 0.3, sat));`)
+}
+function hullMat(color, push, opacity = 1) {
+  const m = new THREE.MeshBasicMaterial({ color, side: THREE.BackSide, transparent: opacity < 1, opacity, depthWrite: opacity === 1 })
+  m.onBeforeCompile = (s) => { s.vertexShader = s.vertexShader.replace("#include <begin_vertex>", `vec3 transformed = position + normal * ${push.toFixed(4)};`) }
+  return m
+}
+const OUTLINE = hullMat(0x2c3138, 0.0035)
+const GHOST = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.86, depthWrite: false })
+const GHOST_EDGE = hullMat(0x5d646d, 0.005, 0.95)
+const SHOE = new THREE.MeshStandardMaterial({ color: 0xeef0f3, roughness: 0.55 }), SOLE = new THREE.MeshStandardMaterial({ color: 0x8c939c, roughness: 0.7 })
+const BAND_MAT = new THREE.MeshStandardMaterial({ color: 0x2fa36b, roughness: 0.45 }), GRIP = new THREE.MeshStandardMaterial({ color: 0x1d1f24, roughness: 0.6 })
+const POST = new THREE.MeshStandardMaterial({ color: 0x9aa3ad, roughness: 0.35, metalness: 0.5 })
+
+// ---------- anatomy (metres, bone-local frames; the figure faces +Z, its left is +X) ----------
+const ANAT = {
+  trunk: [
+    // pelvis + shorts
+    E([0, -0.02, 0], [0.165, 0.11, 0.12], { k: 0.04 }),
+    ...[1, -1].flatMap((x) => mirror(x, [E([0.075, -0.08, -0.06], [0.088, 0.105, 0.08], { k: 0.03, name: "glute" }), E([0.078, -0.085, -0.065], [0.097, 0.115, 0.088], { k: 0.02, col: "shorts", bias: -0.004 })])),
+    E([0, -0.03, 0.005], [0.178, 0.122, 0.13], { k: 0.03, col: "shorts", bias: -0.004 }),
+    // waist (spine frame translated: +0.07 y)
+    E([0, 0.17, 0], [0.138, 0.15, 0.102], { k: 0.05 }),
+    E([0, 0.18, 0.074], [0.072, 0.15, 0.032], { k: 0.012, name: "abs" }),
+    ...[1, -1].flatMap((x) => mirror(x, [
+      E([0.03, 0.11, 0.088], [0.027, 0.028, 0.018], { k: 0.006, name: "abs" }), E([0.03, 0.17, 0.09], [0.027, 0.027, 0.018], { k: 0.006, name: "abs" }), E([0.03, 0.23, 0.09], [0.027, 0.026, 0.018], { k: 0.006, name: "abs" }),
+      E([0.104, 0.15, 0.025], [0.05, 0.12, 0.072], { rot: [0, 0, -0.14], k: 0.02, name: "oblique" }),
+      E([0.036, 0.18, -0.083], [0.03, 0.16, 0.03], { k: 0.014, name: "erector" }),
+    ])),
+    // ribcage (chest frame: +0.31 y)
+    E([0, 0.43, 0], [0.152, 0.2, 0.113], { k: 0.05 }),
+    ...[1, -1].flatMap((x) => mirror(x, [
+      E([0.07, 0.51, 0.072], [0.085, 0.066, 0.046], { rot: [0, 0, -0.1], k: 0.014, name: "pec" }),
+      E([0.03, 0.31, 0.09], [0.027, 0.026, 0.018], { k: 0.006, name: "abs" }),
+      E([0.116, 0.36, -0.045], [0.055, 0.175, 0.058], { rot: [0.12, 0, -0.32], k: 0.018, name: "lat" }),
+      E([0.137, 0.36, 0.04], [0.02, 0.012, 0.02], { rot: [0, 0, -0.5], k: 0.006, name: "serratus" }),
+      E([0.135, 0.395, 0.045], [0.02, 0.012, 0.02], { rot: [0, 0, -0.5], k: 0.006, name: "serratus" }),
+      E([0.13, 0.43, 0.05], [0.02, 0.012, 0.02], { rot: [0, 0, -0.5], k: 0.006, name: "serratus" }),
+      E([0.142, 0.5, -0.055], [0.036, 0.026, 0.036], { rot: [0, 0, -0.6], k: 0.01, name: "teres" }),
+      E([0.095, 0.52, -0.088], [0.058, 0.058, 0.028], { rot: [0, 0, 0.2], k: 0.012, name: "infra" }),
+      E([0.046, 0.51, -0.1], [0.034, 0.06, 0.022], { rot: [0, 0, 0.55], k: 0.008, name: "rhomboid", bias: -0.003 }),
+      C([0.04, 0.61, -0.02], [0.16, 0.57, -0.012], 0.045, 0.026, { k: 0.03, name: "trapUpper" }),
+      E([0.165, 0.555, 0.0], [0.05, 0.035, 0.05], { k: 0.025 }),
+    ])),
+    E([0, 0.5, -0.11], [0.05, 0.12, 0.018], { k: 0.01, name: "trapMid" }),
+    // neck (neck frame: +0.61 y)
+    C([0, 0.6, 0.0], [0, 0.71, 0.018], 0.06, 0.052, { k: 0.035 }),
+    ...[1, -1].flatMap((x) => mirror(x, [C([0.028, 0.6, 0.045], [0.045, 0.7, 0.005], 0.017, 0.015, { k: 0.015 })])),
+  ],
+  head: [
+    E([0, 0.12, -0.005], [0.088, 0.105, 0.1], { k: 0.03 }),
+    E([0, 0.06, 0.04], [0.064, 0.072, 0.066], { k: 0.03 }),
+    E([0, 0.012, 0.072], [0.03, 0.024, 0.024], { k: 0.02 }),
+    E([0, 0.085, 0.104], [0.012, 0.022, 0.017], { k: 0.01 }),
+    E([0, 0.127, 0.088], [0.062, 0.014, 0.018], { k: 0.012 }),
+    ...[1, -1].flatMap((x) => mirror(x, [E([0.086, 0.09, -0.002], [0.012, 0.026, 0.018], { k: 0.008 }), E([0.032, 0.06, 0.088], [0.022, 0.016, 0.014], { k: 0.012 })])),
+    E([0, 0.152, -0.016], [0.094, 0.086, 0.104], { k: 0.01, col: "hair", bias: -0.004 }),
+  ],
+  upper: [
+    E([0.012, -0.045, 0], [0.058, 0.09, 0.06], { k: 0.02, name: "deltLat" }),
+    E([0.004, -0.04, 0.036], [0.04, 0.078, 0.036], { k: 0.012, name: "deltAnt" }),
+    E([0.004, -0.04, -0.04], [0.04, 0.078, 0.036], { k: 0.012, name: "deltPost", bias: -0.002 }),
+    C([0, -0.03, 0], [0, -0.275, 0], 0.044, 0.035, { k: 0.03 }),
+    E([0, -0.155, 0.03], [0.038, 0.088, 0.04], { k: 0.014, name: "biceps" }),
+    E([-0.004, -0.135, -0.032], [0.044, 0.108, 0.04], { k: 0.014, name: "triceps" }),
+    E([0.025, -0.12, -0.02], [0.028, 0.08, 0.03], { k: 0.01, name: "triceps" }),
+  ],
+  fore: [
+    E([0, 0, -0.005], [0.04, 0.04, 0.04], { k: 0.03 }),
+    C([0, 0, 0], [0, -0.245, 0], 0.041, 0.025, { k: 0.03 }),
+    E([0.006, -0.07, 0.012], [0.042, 0.085, 0.036], { k: 0.014, name: "forearm" }),
+    E([0, -0.3, 0.008], [0.034, 0.05, 0.042], { k: 0.025 }),
+    E([0.0, -0.335, 0.03], [0.03, 0.025, 0.025], { k: 0.02 }),
+  ],
+  thigh: [
+    C([0, 0, 0], [0, -0.43, 0], 0.082, 0.052, { k: 0.04 }),
+    E([0.035, -0.22, 0.008], [0.05, 0.15, 0.055], { k: 0.016, name: "quad" }),
+    E([0, -0.22, 0.044], [0.044, 0.16, 0.04], { k: 0.016, name: "quad" }),
+    E([-0.034, -0.35, 0.03], [0.038, 0.062, 0.04], { k: 0.012, name: "quad" }),
+    E([0, -0.22, -0.045], [0.054, 0.15, 0.045], { k: 0.016, name: "ham" }),
+    C([0, 0.03, 0], [0, -0.19, 0.004], 0.1, 0.09, { k: 0.02, col: "shorts", bias: -0.005 }),
+  ],
+  shank: [
+    E([0, 0, 0.034], [0.034, 0.04, 0.024], { k: 0.015 }),
+    C([0, 0, 0], [0, -0.39, 0], 0.05, 0.03, { k: 0.035 }),
+    E([0.016, -0.12, -0.035], [0.044, 0.1, 0.044], { k: 0.016, name: "calf" }),
+    E([-0.02, -0.11, -0.035], [0.04, 0.09, 0.04], { k: 0.016, name: "calf" }),
+    E([0.016, -0.15, 0.026], [0.024, 0.1, 0.022], { k: 0.01 }),
+  ],
+}
+// a limb defined for the left side is mirrored for the right side
+const side = (list, x) => (x > 0 ? list.map((p) => ({ ...p, name: p.name ? p.name + "L" : undefined })) : mirror(-1, list))
+
+// ---------- skeleton & figure ----------
+function bone(parent, at) { const g = new THREE.Group(); g.position.set(...at); g.rotation.order = "XZY"; parent.add(g); return g }
+const GEO = {}
+function figure(hi, parts = "all") {
+  const root = new THREE.Group()
+  const pelvis = bone(root, [0, 0.98, 0])
+  const f = { root, pelvis, arms: {}, legs: {}, names: {} }
+  const addMesh = (parent, key, prims, center, half, N, ghost) => {
+    GEO[key] ??= sculpt(prims, center, half, N, hi)
+    const m = new THREE.Mesh(GEO[key], ghost ? GHOST : SKIN_MAT)
+    m.castShadow = !ghost; m.receiveShadow = !ghost; m.renderOrder = ghost ? 3 : 0
+    const o = new THREE.Mesh(GEO[key], ghost ? GHOST_EDGE : OUTLINE); o.renderOrder = ghost ? 2 : 0
+    parent.add(m, o); return m
+  }
+  const anchor = (parent, prims) => prims.filter((p) => p.name).forEach((p) => {
+    const o = new THREE.Object3D(); o.position.set(...(p.c ?? p.a.map((v, j) => (v + p.b[j]) / 2))); parent.add(o); f.names[p.name] = o
+  })
+  const ghost = parts === "arms"
+  if (!ghost) {
+    addMesh(pelvis, "trunk", ANAT.trunk, [0, 0.29, 0], 0.5, 160)
+    anchor(pelvis, ANAT.trunk)
+    const head = bone(pelvis, [0, 0.71, 0.018]); f.head = head
+    addMesh(head, "head", ANAT.head, [0, 0.08, 0.01], 0.17, 84)
+  }
+  for (const x of [1, -1]) {
+    const L = x > 0 ? "L" : "R"
+    const sh = bone(pelvis, [0.2 * x, 0.565, -0.005])
+    const up = bone(sh, [0, 0, 0])
+    const upP = side(ANAT.upper, x)
+    addMesh(up, "upper" + L, upP, [0, -0.13, 0], 0.2, 84, ghost); anchor(up, upP)
+    const el = bone(up, [0, -0.29, 0])
+    const foP = side(ANAT.fore, x)
+    addMesh(el, "fore" + L, foP, [0, -0.17, 0.01], 0.22, 84, ghost); anchor(el, foP)
+    const hand = new THREE.Object3D(); hand.position.set(0, -0.3, 0.012); el.add(hand)
+    f.arms[L] = { sh, up, el, hand }
+    if (ghost) continue
+    const hip = bone(pelvis, [0.092 * x, -0.06, 0])
+    const thP = side(ANAT.thigh, x)
+    addMesh(hip, "thigh" + L, thP, [0, -0.2, 0], 0.26, 96); anchor(hip, thP)
+    const knee = bone(hip, [0, -0.44, 0])
+    const shP = side(ANAT.shank, x)
+    addMesh(knee, "shank" + L, shP, [0, -0.19, 0], 0.24, 84); anchor(knee, shP)
+    const ank = bone(knee, [0, -0.415, 0])
+    const shoe = new THREE.Mesh(new RoundedBoxGeometry(0.098, 0.08, 0.27, 4, 0.03), SHOE); shoe.position.set(0, -0.035, 0.055); shoe.castShadow = true
+    const sole = new THREE.Mesh(new RoundedBoxGeometry(0.104, 0.024, 0.275, 3, 0.01), SOLE); sole.position.set(0, -0.074, 0.055)
+    ank.add(shoe, sole)
+    const toe = new THREE.Object3D(); toe.position.set(0, -0.086, 0.17); const heel = new THREE.Object3D(); heel.position.set(0, -0.086, -0.075); ank.add(toe, heel)
+    f.legs[L] = { hip, knee, ank, toe, heel }
+  }
+  return f
+}
+
+// ---------- poses ----------
+const START = { sh: -82, abd: 5, el: 6, ret: 0, rot: 0 }
+const FINISH = { sh: 24, abd: 13, el: 104, ret: 1, rot: 0 }
+const STANCE = { lean: 12, thigh: 25, shank: 18 }
+function pose(f, p) {
+  f.pelvis.rotation.x = STANCE.lean * DEG
+  for (const [L, x] of [["L", 1], ["R", -1]]) {
+    const a = f.arms[L]
+    a.sh.position.set((0.2 - 0.016 * p.ret) * x, 0.565, -0.005 - 0.026 * p.ret)
+    a.up.rotation.set(p.sh * DEG - STANCE.lean * DEG, 0, p.abd * DEG * x)
+    a.el.rotation.set(-p.el * DEG, 0, 0)
+    const g = f.legs[L]
+    if (!g) continue
+    // world angles: thigh forward (knee ahead), shank back (ankle behind knee), foot flat
+    g.hip.rotation.set((-STANCE.thigh - STANCE.lean) * DEG, 0, 0.045 * x)
+    g.knee.rotation.set((STANCE.thigh + STANCE.shank) * DEG, 0, 0)
+    g.ank.rotation.set(-STANCE.shank * DEG, 0, 0)
+  }
+  if (f.head) f.head.rotation.x = -STANCE.lean * DEG * 0.7
+}
+function seat(f) {
+  f.root.position.y = 0; f.root.updateMatrixWorld(true)
+  const ys = ["L", "R"].flatMap((L) => [f.legs[L].toe, f.legs[L].heel].map((o) => o.getWorldPosition(new THREE.Vector3()).y))
+  f.root.position.y = -Math.min(...ys); f.root.updateMatrixWorld(true)
+  return f.root.position.y
+}
+const lerpPose = (a, b, t) => Object.fromEntries(Object.keys(a).map((k) => [k, a[k] + (b[k] - a[k]) * t]))
+
+// ---------- scene ----------
+const cv = document.getElementById("cv"), ov = document.getElementById("ov"), stage = document.getElementById("stage")
+const renderer = new THREE.WebGLRenderer({ canvas: cv, antialias: true, preserveDrawingBuffer: true })
+renderer.setPixelRatio(Math.min(2, devicePixelRatio)); renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap
+renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.0
+const scene = new THREE.Scene(); scene.background = new THREE.Color(0xffffff)
+const cam = new THREE.PerspectiveCamera(28, 1, 0.1, 40)
+scene.add(new THREE.HemisphereLight(0xffffff, 0x9aa1ab, 1.25))
+const key = new THREE.DirectionalLight(0xffffff, 2.3); key.position.set(2.2, 4.2, -2.8); key.castShadow = true
+key.shadow.mapSize.set(2048, 2048); key.shadow.bias = -0.0004; Object.assign(key.shadow.camera, { left: -1.8, right: 1.8, top: 2.4, bottom: -0.6 }); scene.add(key)
+const fill = new THREE.DirectionalLight(0xe4ecff, 0.75); fill.position.set(-3, 2, 1.5); scene.add(fill)
+const rim = new THREE.DirectionalLight(0xffffff, 0.8); rim.position.set(0, 3, 4); scene.add(rim)
+const floor = new THREE.Mesh(new THREE.CircleGeometry(2.4, 64), new THREE.ShadowMaterial({ opacity: 0.14 })); floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor)
+
+const HI = { latL: "red", latR: "red", rhomboidL: "red", rhomboidR: "red", trapMid: "red", deltPostL: "red", deltPostR: "red", teresL: "red", teresR: "red", infraL: "red", infraR: "red", bicepsL: "blue", bicepsR: "blue", erectorL: "blue", erectorR: "blue", forearmL: "blue", forearmR: "blue" }
+let fig, ghost, ANCHOR, bands, ghostBands, arrow
+const LABELS = [
+  { n: "latL", c: "red", ar: "العضلة الظهرية العريضة", en: "Latissimus dorsi" },
+  { n: "rhomboidR", c: "red", ar: "العضلة المعيّنية", en: "Rhomboids" },
+  { n: "trapMid", c: "red", ar: "شبه المنحرفة — الألياف الوسطى", en: "Middle trapezius" },
+  { n: "deltPostL", c: "red", ar: "الدالية الخلفية", en: "Posterior deltoid" },
+  { n: "infraR", c: "red", ar: "تحت الشوكة والمدوّرة الكبرى", en: "Infraspinatus & teres major" },
+  { n: "bicepsL", c: "blue", ar: "ذات الرأسين العضدية", en: "Biceps brachii" },
+  { n: "erectorR", c: "blue", ar: "ناصبة الفقار (مثبّتة)", en: "Erector spinae" },
+]
+document.getElementById("mus").innerHTML = LABELS.map((l, n) => `<div><i style="background:${l.c === "red" ? "#c8453b" : "#5f86c4"};color:#fff;font:600 9px Outfit;font-style:normal;display:grid;place-items:center;width:16px;height:16px">${n + 1}</i><b>${l.ar}</b><small>${l.en} · ${l.c === "red" ? "أساسية" : "مساعدة / مثبّتة"}</small></div>`).join("")
+
+function build() {
+  fig = figure(HI); scene.add(fig.root); pose(fig, FINISH); const lift = seat(fig)
+  ghost = figure(HI, "arms"); ghost.legs = fig.legs; scene.add(ghost.root); pose(ghost, START); ghost.root.position.y = lift; ghost.root.updateMatrixWorld(true)
+  ANCHOR = new THREE.Vector3(0, 1.18, 1.3)
+  const post = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 2.0, 24), POST); post.position.set(0, 1.0, 1.37); post.castShadow = true
+  const base = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.25, 0.04, 40), POST); base.position.set(0, 0.02, 1.37)
+  const loop = new THREE.Mesh(new THREE.TorusGeometry(0.05, 0.012, 12, 30), BAND_MAT); loop.position.copy(ANCHOR); loop.rotation.x = Math.PI / 2
+  scene.add(post, base, loop)
+  const ghostBandMat = new THREE.MeshBasicMaterial({ color: 0xa9dcc2, transparent: true, opacity: 0.55, depthWrite: false })
+  bands = ["L", "R"].map((L) => bandTo(fig.arms[L].hand, BAND_MAT, 0.011, true))
+  ghostBands = ["L", "R"].map((L) => bandTo(ghost.arms[L].hand, ghostBandMat, 0.008, false))
+  arrow = new THREE.Group(); scene.add(arrow); buildArrow()
+}
+function bandTo(hand, mat, r, grip) {
+  const g = new THREE.Group(); scene.add(g)
+  const update = () => {
+    g.clear()
+    const h = hand.getWorldPosition(new THREE.Vector3())
+    const mid = ANCHOR.clone().lerp(h, 0.5); mid.y -= 0.025
+    const tube = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([ANCHOR, mid, h]), 30, r, 10), mat); tube.castShadow = grip; g.add(tube)
+    if (grip) { const gr = new THREE.Mesh(new THREE.CylinderGeometry(0.019, 0.019, 0.12, 16), GRIP); gr.position.copy(h); gr.rotation.z = Math.PI / 2; g.add(gr) }
+  }
+  update(); return { g, update }
+}
+const ARROW_MAT = new THREE.MeshStandardMaterial({ color: 0xd2342b, roughness: 0.4, emissive: 0x4a0c08 })
+function buildArrow() {
+  arrow.clear()
+  const a = ghost.arms.L.hand.getWorldPosition(new THREE.Vector3()), b = fig.arms.L.hand.getWorldPosition(new THREE.Vector3())
+  a.x += 0.16; b.x += 0.16; a.y += 0.05; b.y += 0.05
+  const mid = a.clone().lerp(b, 0.5); mid.x += 0.12; mid.y += 0.12
+  const pts = new THREE.QuadraticBezierCurve3(a, mid, b).getPoints(48), endPt = pts[pts.length - 5]
+  arrow.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts.slice(0, -4)), 48, 0.016, 12), ARROW_MAT))
+  const head = new THREE.Mesh(new THREE.ConeGeometry(0.045, 0.11, 24), ARROW_MAT)
+  head.position.copy(endPt); head.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), b.clone().sub(endPt).normalize()); arrow.add(head)
+}
+
+// ---------- labels ----------
+const svgNS = "http://www.w3.org/2000/svg"
+function el(tag, attrs, parent) { const e = document.createElementNS(svgNS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e }
+function project(v) { const p = v.clone().project(cam); return [(p.x + 1) / 2 * stage.clientWidth, (1 - p.y) / 2 * stage.clientHeight] }
+function drawLabels(still) {
+  ov.innerHTML = ""
+  const W = stage.clientWidth, H = stage.clientHeight
+  const fx = project(new THREE.Vector3(0, 1.3, 0))[0]
+  // only muscles that face the camera get a label; on phones a numbered marker replaces the long leader lines
+  const axis = fig.pelvis.getWorldPosition(new THREE.Vector3())
+  const items = LABELS.map((l, n) => {
+    const o = fig.names[l.n]; const w = o.getWorldPosition(new THREE.Vector3())
+    const out = new THREE.Vector3(w.x - axis.x, 0, w.z - axis.z).normalize(), toCam = cam.position.clone().sub(w).setY(0).normalize()
+    const vis = out.dot(toCam) > -0.15
+    w.add(cam.position.clone().sub(w).normalize().multiplyScalar(0.06)); const [x, y] = project(w); return { ...l, n: n + 1, x, y, vis }
+  }).filter((i) => i.vis)
+  if (W < 600) {
+    items.forEach((i) => { const g = el("g", {}, ov); el("circle", { cx: i.x, cy: i.y, r: 9, fill: i.c === "red" ? "#c8453b" : "#5f86c4", stroke: "#fff", "stroke-width": 2 }, g); const t = el("text", { x: i.x, y: i.y + 4, "text-anchor": "middle", fill: "#fff", "font-size": 11, "font-family": "Outfit", "font-weight": 600 }, g); t.textContent = i.n })
+    return
+  }
+  const colW = Math.min(190, W * 0.26)
+  for (const s of [1, -1]) {
+    const col = items.filter((i) => (i.x < fx ? 1 : -1) === s).sort((a, b) => a.y - b.y)
+    const top = H * 0.2, step = Math.min(62, (H * 0.62) / Math.max(1, col.length))
+    col.forEach((i, k) => {
+      const ty = top + k * step, edge = s > 0 ? 14 + colW : W - 14 - colW
+      const g = el("g", { class: "lbl" }, ov)
+      el("polyline", { points: `${i.x},${i.y} ${edge + s * 18},${ty} ${edge},${ty}`, fill: "none", stroke: "#3b4350", "stroke-width": 1 }, g)
+      el("circle", { cx: i.x, cy: i.y, r: 3.2, fill: i.c === "red" ? "#c8453b" : "#5f86c4", stroke: "#fff", "stroke-width": 1.5 }, g)
+      const tx = s > 0 ? 14 : W - 14, anchor = s > 0 ? "start" : "end"
+      const t1 = el("text", { x: tx, y: ty - 4, "text-anchor": anchor }, g); t1.textContent = i.ar
+      const t2 = el("text", { class: "e", x: tx, y: ty + 12, "text-anchor": anchor }, g); t2.textContent = i.en
+    })
+  }
+  if (still) {
+    const s = project(ghost.arms.L.hand.getWorldPosition(new THREE.Vector3())), f = project(fig.arms.L.hand.getWorldPosition(new THREE.Vector3()))
+    const away = (p) => (p[0] < fx ? -1 : 1)
+    const tg = (p, en, ar, dy) => { const o = away(p), x = p[0] + o * 34, an = o < 0 ? "end" : "start"; const t = el("text", { class: "tag", x, y: p[1] + dy, "text-anchor": an }, ov); t.textContent = en; const a = el("text", { class: "tag ar", x, y: p[1] + dy + 15, "text-anchor": an }, ov); a.textContent = ar }
+    tg(s, "START", "البداية", -10); tg(f, "FINISH", "النهاية", 30)
+  }
+}
+
+// ---------- camera, interaction, loop ----------
+let yaw = 132 * DEG, pitch = 14 * DEG, mode = "still", t0 = performance.now()
+const TARGET = new THREE.Vector3(0, 1.0, 0.3), DIST = 5.0
+function placeCam() { cam.position.set(TARGET.x + DIST * Math.sin(yaw) * Math.cos(pitch), TARGET.y + DIST * Math.sin(pitch), TARGET.z + DIST * Math.cos(yaw) * Math.cos(pitch)); cam.lookAt(TARGET) }
+function resize() { const w = stage.clientWidth, h = stage.clientHeight; if (cv.width !== Math.round(w * renderer.getPixelRatio())) renderer.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix() }
+let drag = null
+cv.addEventListener("pointerdown", (e) => { drag = [e.clientX, e.clientY, yaw, pitch]; cv.setPointerCapture(e.pointerId) })
+cv.addEventListener("pointermove", (e) => { if (!drag) return; yaw = drag[2] - (e.clientX - drag[0]) * 0.008; pitch = Math.max(-0.05, Math.min(0.7, drag[3] + (e.clientY - drag[1]) * 0.005)) })
+cv.addEventListener("pointerup", () => { drag = null })
+const btn = (id, fn) => document.getElementById(id).addEventListener("click", fn)
+const setMode = (m) => { mode = m; t0 = performance.now(); document.getElementById("bStill").classList.toggle("on", m === "still"); document.getElementById("bPlay").classList.toggle("on", m === "play") }
+btn("bStill", () => setMode("still")); btn("bPlay", () => setMode("play"))
+btn("bBack", () => { yaw = 132 * DEG }); btn("bSide", () => { yaw = 92 * DEG }); btn("bFront", () => { yaw = 28 * DEG })
+
+function frame(now) {
+  resize(); placeCam()
+  const still = mode === "still"
+  if (still) pose(fig, FINISH)
+  else { const ph = ((now - t0) / 2800) % 1; pose(fig, lerpPose(START, FINISH, 0.5 - 0.5 * Math.cos(ph * Math.PI * 2))) }
+  fig.root.updateMatrixWorld(true)
+  ghost.root.visible = still; arrow.visible = still
+  bands.forEach((b) => b.update()); ghostBands.forEach((b) => { b.g.visible = still })
+  renderer.render(scene, cam)
+  drawLabels(still)
+  requestAnimationFrame(frame)
+}
+setTimeout(() => { build(); document.getElementById("wait").style.opacity = 0; setTimeout(() => document.getElementById("wait").remove(), 450); requestAnimationFrame(frame) }, 30)
+</script>
+</body>
+</html>
