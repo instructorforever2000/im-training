@@ -2,7 +2,9 @@
 // Approved direction (Nov 2026): the curriculum reads like a professional coaching manual (C) with mastery rings (B).
 import { useMemo, useState } from "react"
 import cur from "./curriculum.json"
-import bank from "@/content/legacy-v28/quiz-bank.json"
+import lessonsA from "./lessons-a.json"
+import lessonsB from "./lessons-b.json"
+import { LAW_BANK } from "./LawBank"
 import { DRILLS } from "@/features/library/content"
 import { DrillImage } from "@/features/library/DrillImage"
 import { PASS_PCT, certCode, loadProgress, passed, recordUnit, setName, type Progress } from "./progress"
@@ -17,17 +19,19 @@ interface Topic { readonly ar: string; readonly en: string; readonly c: string }
 const TOPICS = cur.topics as Record<string, Topic>
 const PATHS = cur.paths as readonly Path[]
 const UNITS = cur.units as unknown as Record<string, Unit>
-const LAW_BANK = cur.lawBank as unknown as Record<string, readonly QRow[]>
-const OLD_BANK = bank as unknown as readonly { sp: string; ar: QRow }[]
+interface Lesson { readonly intro: string; readonly sections: readonly { h: string; p: string }[]; readonly refs?: readonly string[] }
+const LESSONS = { ...lessonsA, ...lessonsB } as unknown as Record<string, Lesson>
+/** A unit test draws at most this many questions (law units have dozens in the bank). */
+const UNIT_QUIZ_MAX = 15
 const PCT = 100
 const RING_R = 26
 const HALF_TURNS = 2
 const TAU = Math.PI * HALF_TURNS
 const LETTERS = ["أ", "ب", "ج", "د"] as const
 
-type View = { v: "home" } | { v: "unit"; id: string } | { v: "cert"; path: string; level: number }
+type View = { v: "home" } | { v: "path" } | { v: "unit"; id: string } | { v: "cert"; path: string; level: number }
 
-const unitQs = (u: Unit): readonly QRow[] => [...(u.qs ?? []), ...(u.bank ?? []).flatMap((sp) => [...OLD_BANK.filter((b) => b.sp === sp).map((b) => b.ar), ...(LAW_BANK[sp] ?? [])])]
+const unitQs = (u: Unit): readonly QRow[] => [...(u.qs ?? []), ...(u.bank ?? []).flatMap((sp) => LAW_BANK.filter((b) => b.sp === sp).map((b) => b.row))]
 /** Every question across the pathways (unit questions + law banks + applied cases), shown in the header. */
 export const TOTAL_QS = Object.values(UNITS).reduce((a, u) => a + unitQs(u).length + (u.case ? 1 : 0), 0)
 const levelDone = (p: Progress, l: Level): boolean => l.units.every((id) => passed(p, id))
@@ -59,10 +63,24 @@ export function Paths(): React.JSX.Element {
   const [pathKey, setPathKey] = useState<string>(PATHS[0].key)
   const [view, setView] = useState<View>({ v: "home" })
   const path = PATHS.find((p) => p.key === pathKey) ?? PATHS[0]
-  if (view.v === "unit") return <UnitView id={view.id} prog={prog} done={(pct) => setProg((p) => recordUnit(p, view.id, pct))} back={() => setView({ v: "home" })} />
-  if (view.v === "cert") return <Certificate path={PATHS.find((p) => p.key === view.path) ?? path} level={view.level} prog={prog} rename={(n) => setProg((p) => setName(p, n))} back={() => setView({ v: "home" })} />
+  if (view.v === "unit") return <UnitView id={view.id} prog={prog} done={(pct) => setProg((p) => recordUnit(p, view.id, pct))} back={() => setView({ v: "path" })} />
+  if (view.v === "cert") return <Certificate path={PATHS.find((p) => p.key === view.path) ?? path} level={view.level} prog={prog} rename={(n) => setProg((p) => setName(p, n))} back={() => setView({ v: "path" })} />
+  if (view.v === "home") return (
+    <div className="lp">
+      <p className="lpintro">اختر مسارك حسب دورك. كل مسار ثلاثة مستويات، وكل مستوى وحدتان؛ والوحدة درس مفصّل، ثم حالة تطبيقية على الملعب ثلاثي الأبعاد، ثم اختبار. وعند اجتياز وحدتي المستوى تحصل على شهادة.</p>
+      <div className="roles4 big">
+        {PATHS.map((p) => (
+          <button key={p.key} onClick={() => { setPathKey(p.key); setView({ v: "path" }) }}>
+            <Ring pct={pathPct(prog, p)} c="var(--teal)" />
+            <span><i>{p.icon}</i><b>{p.ar}</b><span className="en">{p.en}</span><small>{p.levels.length} مستويات · {p.levels.flatMap((l) => l.units).length} وحدات</small><em>{p.about}</em><strong>ادخل المسار ←</strong></span>
+          </button>
+        ))}
+      </div>
+    </div>
+  )
   return (
     <div className="lp">
+      <div className="pbar"><button className="btn" onClick={() => setView({ v: "home" })}>→ كل المسارات</button></div>
       <div className="roles4">
         {PATHS.map((p) => (
           <button key={p.key} className={p.key === pathKey ? "on" : ""} onClick={() => setPathKey(p.key)}>
@@ -108,7 +126,7 @@ const ask = (r: QRow): Asked => ({ q: r[0], right: r[1], exp: r[5], opts: shuffl
 function UnitView({ id, prog, done, back }: { id: string; prog: Progress; done: (pct: number) => void; back: () => void }): React.JSX.Element {
   const u = UNITS[id], t = TOPICS[u.topic]
   const [step, setStep] = useState<Step>("lesson")
-  const qs = useMemo(() => shuffle(unitQs(u)).map(ask), [u])
+  const qs = useMemo(() => shuffle(unitQs(u)).slice(0, UNIT_QUIZ_MAX).map(ask), [u])
   const caseQ = useMemo(() => (u.case ? ask(u.case.q) : null), [u])
   const drill = u.case?.drill ? DRILLS.find((d) => d.id === u.case?.drill) : undefined
   const [i, setI] = useState(0)
@@ -127,8 +145,11 @@ function UnitView({ id, prog, done, back }: { id: string; prog: Progress; done: 
 
       {step === "lesson" && (
         <section className="lesson">
-          <h3>النقاط الأساسية <span className="en">Key points</span></h3>
-          <ol>{u.pts.map((p) => <li key={p}>{p}</li>)}</ol>
+          {LESSONS[id] && <p className="lintro">{LESSONS[id].intro}</p>}
+          {LESSONS[id]?.sections.map((x, k) => <article key={x.h} className="lsec"><h3><b>{k + 1}</b>{x.h}</h3><p>{x.p}</p></article>)}
+          <div className="lsum"><h3>خلاصة النقاط الأساسية <span className="en">Key points</span></h3>
+            <ol>{u.pts.map((p) => <li key={p}>{p}</li>)}</ol></div>
+          {LESSONS[id]?.refs && <p className="lrefs">المراجع: {LESSONS[id].refs?.join(" · ")}</p>}
           <div className="nav"><button className="btn p" onClick={() => setStep(u.case ? "case" : "quiz")}>{u.case ? "الحالة التطبيقية ←" : "ابدأ الاختبار ←"}</button></div>
         </section>
       )}

@@ -71,3 +71,47 @@
 @media(max-width:1100px){.lc .roles4{grid-template-columns:repeat(2,minmax(0,1fr))}.lc .case{grid-template-columns:1fr}.lc .cvis{position:static}}
 @media(max-width:700px){.lc .roles4{grid-template-columns:1fr}.lc .urow{grid-template-columns:36px minmax(0,1fr) 70px}.lc .urow .tp,.lc .urow .meta{display:none}.lc .manual>header{flex-direction:column;align-items:flex-start}.lc .passnote{white-space:normal}.lc article.cert{padding:32px 22px}.lc article.cert h1{font-size:28px;padding:0 10px 8px}}
 @media print{.lc .noprint,.lc .dock{display:none!important}.lc main{padding:0!important;max-width:none}.lc .certv{display:block}.lc article.cert{box-shadow:none;border:0;max-width:none}}
+/* paths home + lesson body */
+.lc .lpintro{font-size:14.5px;line-height:1.9;color:var(--mu);max-width:860px}
+.lc .roles4.big>button{flex-direction:column;align-items:flex-start;padding:20px;gap:14px}
+.lc .roles4.big em{font-style:normal;font-size:13px;line-height:1.8;color:var(--mu)}
+.lc .roles4.big strong{font-size:13px;color:var(--teal2);margin-top:4px}
+.lc .pbar{display:flex;gap:10px}
+.lc .lintro{font-size:16px;line-height:2;background:color-mix(in srgb,var(--c) 8%,#fff);border-radius:16px;padding:16px 18px;border-inline-start:4px solid var(--c)}
+.lc .lsec{display:grid;gap:6px}
+.lc .lsec h3{display:flex;gap:10px;align-items:center;font-size:17px}
+.lc .lsec h3 b{width:28px;height:28px;border-radius:8px;background:var(--c);color:#fff;display:grid;place-items:center;font:700 13px Outfit;flex:none}
+.lc .lsec p{font-size:15px;line-height:2.05;color:#2b3a4c;padding-inline-start:38px}
+.lc .lsum{background:var(--soft);border-radius:16px;padding:16px 18px;display:grid;gap:10px}
+.lc .lrefs{font-size:12.5px;color:var(--mu);border-top:1px dashed var(--ln);padding-top:10px}
+.lc .lesson{max-width:920px;gap:18px}
+/* laws bank */
+.lc .lb{display:grid;gap:16px}
+.lc .lbsports{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
+.lc .lbsports button{background:#fff;border:1px solid var(--ln);border-radius:18px;padding:14px;display:grid;gap:3px;text-align:start;position:relative;overflow:hidden}
+.lc .lbsports button:before{content:"";position:absolute;inset:0 0 auto;height:4px;background:var(--c)}
+.lc .lbsports button.on{border-color:var(--c);box-shadow:0 0 0 3px color-mix(in srgb,var(--c) 20%,transparent)}
+.lc .lbsports b{font-size:14.5px}.lc .lbsports .en{font-size:11px;color:var(--c)}.lc .lbsports i{font-style:normal;font:600 12px Outfit;color:var(--mu)}
+.lc .lbpanel{background:#fff;border:1px solid var(--ln);border-radius:22px;padding:18px 20px;display:grid;gap:16px;border-top:4px solid var(--c)}
+.lc .lbch{display:grid;gap:10px}.lc .lbch .lbl{font-size:13px;font-weight:700}
+.lc .lbch .chips{display:flex;flex-wrap:wrap;gap:6px}
+.lc .lbch .chip{font-size:12.5px;padding:6px 12px;border-radius:999px;background:var(--soft);color:var(--mu);border:1px solid var(--ln)}
+.lc .lbch .chip.on{background:color-mix(in srgb,var(--c) 14%,#fff);color:var(--ink);border-color:var(--c);font-weight:600}
+.lc .lbch .chip small{font:600 10.5px Outfit;opacity:.7;margin-inline-start:4px}
+.lc .lbmodes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.lc .lbmode{border-radius:18px;padding:18px;display:grid;gap:10px;align-content:start;color:#fff}
+.lc .lbmode.q{background:linear-gradient(150deg,#0f8f84,#0b1b33)}.lc .lbmode.c{background:linear-gradient(150deg,#5b6fe0,#0b1b33)}.lc .lbmode.s{background:linear-gradient(150deg,#3a4b63,#0b1b33)}
+.lc .lbmode i{font-style:normal;width:42px;height:42px;border-radius:12px;background:#ffffff1f;display:grid;place-items:center;font-size:18px}
+.lc .lbmode b{font-size:18px}.lc .lbmode p{font-size:13px;line-height:1.85;color:#d5e0ec}
+.lc .lbmode .seg{background:#ffffff1a;border-color:#ffffff33;justify-self:start}.lc .lbmode .seg button{color:#d5e0ec}.lc .lbmode .seg button.on{background:#fff;color:var(--navy)}
+.lc .lbmode .btn.p{justify-self:start}
+.lc .lbbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.lc .lbstudy{background:#fff;border:1px solid var(--ln);border-radius:18px;padding:14px 18px;display:grid;gap:6px}
+.lc .lbstudy h3{font-size:16px;display:flex;gap:8px;align-items:center}.lc .lbstudy h3 small{font:600 12px Outfit;color:var(--mu)}
+.lc .lbstudy details{border-bottom:1px solid var(--ln);padding:8px 0}.lc .lbstudy details:last-child{border-bottom:0}
+.lc .lbstudy summary{cursor:pointer;font-size:14.5px;line-height:1.8;font-weight:500}
+.lc .lbstudy .right{color:var(--green);font-weight:700;margin-top:6px}.lc .lbstudy details p{font-size:13.5px;line-height:1.85;color:var(--mu)}
+.lc .lb .qz,.lc .lb .fc{max-width:860px;width:100%;margin:0 auto;display:grid;gap:14px}
+.lc .lb .res{max-width:860px;width:100%;margin:0 auto;display:grid;gap:16px}
+@media(max-width:1100px){.lc .lbsports{grid-template-columns:repeat(3,minmax(0,1fr))}.lc .lbmodes{grid-template-columns:1fr}}
+@media(max-width:600px){.lc .lbsports{grid-template-columns:repeat(2,minmax(0,1fr))}.lc .lsec p{padding-inline-start:0}}
