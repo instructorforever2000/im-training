@@ -84,3 +84,14 @@
   .as .rep,.as .rep *{visibility:visible}.as .rep .noprint{display:none!important}
   .as .rep{position:absolute;inset:0 auto auto 0;width:100%;background:none;padding:0;overflow:visible}.as .repc{border-radius:0;padding:0;width:100%}
 }
+/* مراقبة الحِمل */
+.as .lw{display:grid;gap:12px}
+.as .lwsum{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.as .lwsum div{background:#fff;border:1px solid var(--ln);border-top:4px solid var(--c);border-radius:16px;padding:12px 14px;display:grid;gap:2px}
+.as .lwsum b{font:700 28px Outfit;color:var(--c)}.as .lwsum span{font-weight:700;font-size:14px}.as .lwsum small{color:var(--mu);font-size:11.5px}
+.as .lwalert{background:#fdecea;border:1px solid #f3b9b3;color:#8a2a20;border-radius:14px;padding:10px 14px;font-size:13.5px;line-height:1.7}
+.as .lwc{position:relative;height:54px;vertical-align:bottom;min-width:70px}
+.as .lwc i{position:absolute;inset-inline:22%;bottom:6px;background:linear-gradient(to top,var(--teal),#7fe3d8);border-radius:6px 6px 2px 2px;opacity:.55;max-height:calc(100% - 12px);transition:height .6s}
+.as .lwc span{position:relative;font:600 12.5px Outfit}
+.as .lwz{color:#fff;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:700;white-space:nowrap}
+@media(max-width:900px){.as .lwsum{grid-template-columns:repeat(2,1fr)}}

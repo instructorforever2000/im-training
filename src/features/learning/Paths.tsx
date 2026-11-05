@@ -1,10 +1,11 @@
-// مركز التعلّم — role learning paths (Coach · Player · Referee · PE teacher), graded levels, applied cases on the 3D pitch, certificates.
+// مركز التعلّم — role learning paths (Coach · Player · Referee · PE teacher · Fitness coach), graded levels, applied cases on the 3D pitch, certificates.
 // Approved direction (Nov 2026): the curriculum reads like a professional coaching manual (C) with mastery rings (B).
 import { useEffect, useMemo, useState } from "react"
 import { pushName, pushUnit, syncProgress } from "./progressCloud"
 import cur from "./curriculum.json"
 import lessonsA from "./lessons-a.json"
 import lessonsB from "./lessons-b.json"
+import lessonsC from "./lessons-c.json"
 import { LAW_BANK } from "./LawBank"
 import { DRILLS } from "@/features/library/content"
 import { DrillImage } from "@/features/library/DrillImage"
@@ -23,7 +24,7 @@ const TOPICS = cur.topics as Record<string, Topic>
 const PATHS = cur.paths as readonly Path[]
 const UNITS = cur.units as unknown as Record<string, Unit>
 interface Lesson { readonly intro: string; readonly sections: readonly { h: string; p: string }[]; readonly refs?: readonly string[] }
-const LESSONS = { ...lessonsA, ...lessonsB } as unknown as Record<string, Lesson>
+const LESSONS = { ...lessonsA, ...lessonsB, ...lessonsC } as unknown as Record<string, Lesson>
 /** A unit test draws at most this many questions (law units have dozens in the bank). */
 const UNIT_QUIZ_MAX = 15
 const PCT = 100

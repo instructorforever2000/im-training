@@ -11,10 +11,11 @@ import "./assessment.css"
 import { CapButton } from "@/components/ui/CapButton"
 import { printWith } from "@/features/auth/caps"
 import { TestsBank } from "@/features/tests/TestsBank"
+import { LoadWatch } from "./LoadWatch"
 import { COMP, TEST, TESTS as BANK, TONE_COLOR, ageOn, derived, rate, type Sex, type Test as BankTest } from "@/features/tests/norms"
 
 interface Skill { id: string; sp: string; cat: string; lvl: number; age: number; ar: { n: string; w: string } }
-type Tab = "status" | "fitness" | "skills" | "bank"
+type Tab = "status" | "fitness" | "load" | "skills" | "bank"
 
 type Test = BankTest
 /** The team's test battery (which bank tests appear in the matrix) and the norms' sex, kept on this device. */
@@ -29,7 +30,7 @@ const SKILLS = skills as unknown as Skill[]
 const ST = cfg.status as Record<PlayerStatus, { ar: string; en: string; color: string }>
 const STATUS_KEYS = Object.keys(ST) as PlayerStatus[]
 const TABS: Record<Tab, { ar: string; en: string }> = {
-  status: { ar: "الحالة البدنية للاعبين", en: "Availability" }, fitness: { ar: "الاختبارات البدنية", en: "Fitness tests" }, skills: { ar: "المهارات", en: "Skills" }, bank: { ar: "بنك الاختبارات والمعايير", en: "Tests & norms" },
+  status: { ar: "الحالة البدنية للاعبين", en: "Availability" }, fitness: { ar: "الاختبارات البدنية", en: "Fitness tests" }, load: { ar: "مراقبة الحِمل", en: "Load monitoring" }, skills: { ar: "المهارات", en: "Skills" }, bank: { ar: "بنك الاختبارات والمعايير", en: "Tests & norms" },
 }
 const CAT: Record<string, string> = { tech: "مهارات فنية", tact: "مهارات خططية", gk: "حراسة المرمى" }
 const SPORT_OF: Record<string, string> = { football: "football", futsal: "futsal", basketball: "basketball", volleyball: "volleyball", handball: "handball" }
@@ -290,6 +291,7 @@ export function AssessmentScreen(): React.JSX.Element {
     if (!team) return <div className="card msg"><p>لا توجد فرق بعد. أضف فريقًا ولاعبين من «الفرق واللاعبون» أولًا.</p><a className="btn p" href="#/squad">الفرق واللاعبين</a></div>
     if (!players.length) return <div className="card msg"><p>لا يضم هذا الفريق لاعبين بعد.</p><a className="btn p" href="#/squad">أضف لاعبين</a></div>
     if (tab === "status") return <Availability players={players} after={reload} />
+    if (tab === "load") return <LoadWatch key={team.id} team={team} players={players} />
     if (a.error === "missing" || !a.data) return <div className="card msg"><p>لم تُضف جداول الاختبارات والتقييم إلى قاعدة البيانات بعد. بعد موافقة المالك يعمل هذا القسم مباشرة.</p></div>
     return tab === "fitness" ? <Fitness key={team.id} players={players} data={a.data} team={team} after={reload} /> : <Skills key={team.id} players={players} data={a.data} team={team} after={reload} />
   }
