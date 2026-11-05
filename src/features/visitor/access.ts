@@ -6,7 +6,7 @@ import { supabase } from "@/lib/supabase"
 export type Route = "" | "tour" | "library" | "roles" | "learning" | "tournaments" | "squad"
 
 /** Open to every visitor — real content, nothing private, nothing that writes. */
-export const PUBLIC_ROUTES: ReadonlySet<string> = new Set(["tour", "library", "roles", "learning"])
+export const PUBLIC_ROUTES: ReadonlySet<string> = new Set(["tour", "library", "board", "roles", "learning"])
 /** "tour#join" → "tour" (the part after a second # is an in-page anchor). */
 export const baseRoute = (route: string): string => route.split("#")[0].split("?")[0]
 export const isPublic = (route: string): boolean => PUBLIC_ROUTES.has(baseRoute(route))

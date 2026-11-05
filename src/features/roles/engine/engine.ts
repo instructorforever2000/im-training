@@ -842,4 +842,4 @@ function stOpp(mode, phase) {
   return players;
 }
 const DRILLS=drillsData;const drillById=id=>DRILLS.find(d=>d.id===id);
-export const ENG={MODES,FORM,BB_OFF,BB_DEF,HB_OFF,HB_DEF,FNAME,FINFO,PHASES,phasesOf,CODE_FAMILY,CODE_NAME,POSITIONS,ATTR,FAM,ROLES,CATS,PHASE_INFO,ST,S,stPhases,stCfg,stForm,stOppForm,stDef,rvKey,stLayout,stOpp,roleById,defaultVariant,codeName,fname,vbName,drillById,setLang:l=>{LANG=l},getLang:()=>LANG,L,T};
+export const ENG={VB_FORMS,vbFormation,HB_CODE_NAME,MODES,FORM,BB_OFF,BB_DEF,HB_OFF,HB_DEF,FNAME,FINFO,PHASES,phasesOf,CODE_FAMILY,CODE_NAME,POSITIONS,ATTR,FAM,ROLES,CATS,PHASE_INFO,ST,S,stPhases,stCfg,stForm,stOppForm,stDef,rvKey,stLayout,stOpp,roleById,defaultVariant,codeName,fname,vbName,drillById,setLang:l=>{LANG=l},getLang:()=>LANG,L,T};

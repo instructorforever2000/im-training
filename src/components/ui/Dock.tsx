@@ -1,7 +1,7 @@
 // Floating side dock shared by the platform's field screens (links to the built sections).
 import "./dock.css"
 
-export type DockKey = "admin" | "library" | "roles" | "squad" | "tournaments" | "learning" | "assessment" | "program"
+export type DockKey = "admin" | "library" | "board" | "roles" | "squad" | "tournaments" | "learning" | "assessment" | "program"
 const logo = `${import.meta.env.BASE_URL}icon-192.png`
 /** Sections that need membership; a visitor sees them locked and is sent to the tour's "how to join". */
 const MEMBERS_ONLY: ReadonlySet<DockKey> = new Set(["admin", "tournaments", "squad", "assessment", "program"])
@@ -10,6 +10,7 @@ const ITEMS: readonly { k: DockKey; ar: string; href: string; d: string }[] = [
   { k: "admin", ar: "لوحة المدير", href: "#/", d: "M3 11l9-7 9 7v9H3z" },
   { k: "program", ar: "البرنامج", href: "#/program", d: "M4 5h16v15H4zM4 10h16M9 3v4M15 3v4M8 14h3v3H8z" },
   { k: "library", ar: "المكتبة", href: "#/library", d: "M5 4h4v16H5zM10 4h4v16h-4zM15.5 5l3.8 1-3.6 14-3.8-1z" },
+  { k: "board", ar: "السبورة", href: "#/board", d: "M3 4h18v13H3zM8 21l4-4 4 4M7 8l3 3M10 8l-3 3M14 12c2-4 4-4 4-2" },
   { k: "roles", ar: "المراكز", href: "#/roles", d: "M12 3v18M3 12h18M16 12a4 4 0 11-8 0 4 4 0 018 0z" },
   { k: "tournaments", ar: "البطولات", href: "#/tournaments", d: "M7 4h10v4a5 5 0 01-10 0zM7 6H4a3 3 0 003 4M17 6h3a3 3 0 01-3 4M12 13v4M8 20h8M10 17h4" },
   { k: "assessment", ar: "التقييم", href: "#/assessment", d: "M4 20V10M10 20V4M16 20v-7M22 20H2" },
