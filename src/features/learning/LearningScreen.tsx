@@ -5,6 +5,8 @@ import { Dock } from "@/components/ui/Dock"
 import bank from "@/content/legacy-v28/quiz-bank.json"
 import "@fontsource/outfit/500.css"
 import "./learning.css"
+import "./paths.css"
+import { Paths, TOTAL_QS } from "./Paths"
 
 type Lang = "ar" | "en"
 interface Q { sp: string; ref: string; ar: string[]; en: string[] }
@@ -57,8 +59,7 @@ const VERDICT: readonly { min: number; ar: string; en: string }[] = [
   { min: 0, ar: "يحتاج إلى مراجعة — راجع الإجابات أدناه", en: "Needs review" },
 ]
 
-export function LearningScreen(): React.JSX.Element {
-  const [lang, setLang] = useState<Lang>("ar")
+function LawsBank({ lang }: { lang: Lang }): React.JSX.Element {
   const [sport, setSport] = useState("all")
   const [mode, setMode] = useState<Mode>("home")
   const [asked, setAsked] = useState<Asked[]>([])
@@ -87,14 +88,7 @@ export function LearningScreen(): React.JSX.Element {
   const verdict = VERDICT.find((v) => score >= v.min) ?? VERDICT[VERDICT.length - 1]
 
   return (
-    <div className="lc" dir={lang === "ar" ? "rtl" : "ltr"}>
-      <Dock active="learning" />
-      <main>
-        <header className="top">
-          <div><h1>مركز التعلّم <span className="en">Learning centre</span></h1><p>اختبر فهمك لقوانين الألعاب والمسابقات · {BANK.length} سؤال بإجابات مشروحة</p></div>
-          <div className="seg"><button className={lang === "ar" ? "on" : ""} onClick={() => setLang("ar")}>ع</button><button className={lang === "en" ? "on" : ""} onClick={() => setLang("en")}>EN</button></div>
-        </header>
-
+      <>
         {mode === "home" && (
           <>
             <div className="sports">{SPORT_KEYS.map((k) => {
@@ -187,6 +181,25 @@ export function LearningScreen(): React.JSX.Element {
             </div>
           </section>
         )}
+      </>
+  )
+}
+
+type Tab = "paths" | "bank"
+export function LearningScreen(): React.JSX.Element {
+  const [lang, setLang] = useState<Lang>("ar")
+  const [tab, setTab] = useState<Tab>("paths")
+  return (
+    <div className="lc" dir={lang === "ar" ? "rtl" : "ltr"}>
+      <Dock active="learning" />
+      <main>
+        <header className="top">
+          <div><h1>مركز التعلّم <span className="en">Learning centre</span></h1>
+            <p>مسارات تعلّم حسب الدور بمستويات متدرجة، وحالات تطبيقية على الملعب ثلاثي الأبعاد، وشهادة لكل مستوى · {TOTAL_QS} سؤالًا بإجابات مشروحة</p></div>
+          <div className="seg"><button className={tab === "paths" ? "on" : ""} onClick={() => setTab("paths")}>المسارات</button><button className={tab === "bank" ? "on" : ""} onClick={() => setTab("bank")}>بنك القوانين</button></div>
+          <div className="seg"><button className={lang === "ar" ? "on" : ""} onClick={() => setLang("ar")}>ع</button><button className={lang === "en" ? "on" : ""} onClick={() => setLang("en")}>EN</button></div>
+        </header>
+        {tab === "paths" ? <Paths /> : <LawsBank lang={lang} />}
       </main>
     </div>
   )
