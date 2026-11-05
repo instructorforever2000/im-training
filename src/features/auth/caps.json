@@ -1,0 +1,118 @@
+{
+  "lockedNote": "ميزة حصرية لأعضاء المنصة",
+  "caps": [
+    {
+      "k": "edit",
+      "ar": "المشاركة والإضافة والتعديل",
+      "en": "Participate & edit",
+      "note": "إضافة الوحدات والحضور واللاعبين والتقييمات وتعديلها."
+    },
+    {
+      "k": "print",
+      "ar": "الطباعة",
+      "en": "Print",
+      "note": "طباعة بطاقات التمارين والوحدات والنتائج."
+    },
+    {
+      "k": "download",
+      "ar": "التحميل والتصدير",
+      "en": "Download & export",
+      "note": "حفظ صور السبورة وفيديو الخطط والملفات."
+    },
+    {
+      "k": "reports",
+      "ar": "التقارير",
+      "en": "Reports",
+      "note": "تقارير الأداء والحضور والأحمال والاختبارات."
+    },
+    {
+      "k": "certificates",
+      "ar": "الشهادات",
+      "en": "Certificates",
+      "note": "إصدار شهادات إتمام مسارات مركز التعلّم."
+    }
+  ],
+  "sections": [
+    {
+      "k": "program",
+      "ar": "البرنامج اليومي",
+      "en": "Program"
+    },
+    {
+      "k": "assessment",
+      "ar": "التقييم والاختبارات",
+      "en": "Assessment"
+    },
+    {
+      "k": "squad",
+      "ar": "الفرق واللاعبون",
+      "en": "Squad"
+    },
+    {
+      "k": "tournaments",
+      "ar": "البطولات",
+      "en": "Tournaments"
+    },
+    {
+      "k": "library",
+      "ar": "المكتبة",
+      "en": "Library"
+    },
+    {
+      "k": "board",
+      "ar": "السبورة التكتيكية",
+      "en": "Tactical board"
+    },
+    {
+      "k": "roles",
+      "ar": "المراكز والأدوار",
+      "en": "Roles"
+    },
+    {
+      "k": "learning",
+      "ar": "مركز التعلّم",
+      "en": "Learning"
+    }
+  ],
+  "roleDefaults": {
+    "org_admin": [
+      "edit",
+      "print",
+      "download",
+      "reports",
+      "certificates"
+    ],
+    "technical_director": [
+      "edit",
+      "print",
+      "download",
+      "reports",
+      "certificates"
+    ],
+    "coach": [
+      "edit",
+      "print",
+      "download",
+      "reports",
+      "certificates"
+    ],
+    "fitness_coach": [
+      "edit",
+      "print",
+      "download",
+      "reports",
+      "certificates"
+    ],
+    "supervisor": [
+      "print",
+      "download",
+      "reports",
+      "certificates"
+    ],
+    "player": [
+      "certificates"
+    ],
+    "parent": [],
+    "viewer": []
+  }
+}

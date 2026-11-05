@@ -5,6 +5,9 @@
 // Only the platform shell around it is new (state on this device, modal, toast); the behaviour is unchanged.
 /* eslint-disable */
 import { ENG } from "@/features/roles/engine/engine"
+import { can, guard } from "@/features/auth/caps"
+/** Image and video export need the "download" capability (new; the rest of the board is unchanged). */
+const noDownload = () => { if (can("download")) return false; guard("download", () => {}); return true }
 
 const { MODES, FORM, BB_OFF, BB_DEF, HB_OFF, HB_DEF, CODE_FAMILY, CODE_NAME, ROLES, VB_FORMS, vbFormation, phasesOf, roleById, defaultVariant, codeName, fname } = ENG
 let LANG = "ar"
@@ -323,6 +326,7 @@ function mountPlayer(host, play, opts = {}) {
 
 /* ---------- Video export (WebM) ---------- */
 async function exportPlayVideo(play, speed = 1) {
+  if (noDownload()) return;
   const cp = typeof play.segs === 'object' ? play : compilePlay(play);
   if (!window.MediaRecorder || !HTMLCanvasElement.prototype.captureStream) { toast(L('تصدير الفيديو غير مدعوم في هذا المتصفح', 'Video export is not supported in this browser')); return; }
   const vr = viewRect(cp.p.mode, playView(cp)), W = 1280, PH = Math.round(W * vr.h / vr.w), CH = 64, H = PH + CH, k = vr.w / W;
@@ -621,6 +625,7 @@ function saveBoardDialog() {
   m.querySelector('[data-ok]').onclick = () => doSave(false); const u = m.querySelector('[data-upd]'); if (u) u.onclick = () => doSave(true);
 }
 function exportPNG() {
+  if (noDownload()) return;
   const b = board(), vr = viewRect(b.mode, b.view), W = 1600, H = Math.round(W * vr.h / vr.w); const str = boardStatic(b, 800).replace('<svg ', `<svg width="${W}" height="${H}" `);
   const img = new Image(), url = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(str);
   img.onload = () => { const c = document.createElement('canvas'); c.width = W; c.height = H; c.getContext('2d').drawImage(img, 0, 0, W, H); let data; try { data = c.toDataURL('image/png'); } catch (e) { data = url; }

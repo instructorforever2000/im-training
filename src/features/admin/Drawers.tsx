@@ -3,10 +3,13 @@
 import { useState } from "react"
 import cfg from "./sections.json"
 import {
-  COUNTRIES, ORG_TYPES, ROLE_AR, createInvite, createOrg, deactivateInvite, inviteLive, setMemberStatus, setOrgActive, updateOrg,
+  COUNTRIES, ORG_TYPES, ROLE_AR, createInvite, createOrg, deactivateInvite, inviteLive, setMemberGrant, setMemberStatus, setOrgActive, updateOrg,
   type AdminData, type MemberRole, type Org, type OrgFields, type OrgType,
 } from "./data"
 import type { Alert } from "./model"
+import { GrantPicker, type GrantValue } from "./GrantPicker"
+import capsCfg from "@/features/auth/caps.json"
+import { ALL_CAPS, CAPS, SECTIONS } from "@/features/auth/caps"
 
 export type DrawerKind = { k: "org"; org?: Org } | { k: "inv"; orgId?: string } | { k: "app" } | { k: "sec"; title: string; to: string; ready: boolean }
 
@@ -16,6 +19,12 @@ const GAP: React.CSSProperties = { marginTop: "20px" }
 const OPEN = 0
 const ACCESS_DAYS: readonly number[] = [7, 30, 90, 365, OPEN]
 const accessLabel = (d: number | null): string => (d ? `${d} يوم` : "مفتوحة")
+const ROLE_CAPS = capsCfg.roleDefaults as Record<MemberRole, string[]>
+const capsLabel = (caps: readonly string[] | null | undefined): string => {
+  const list = caps ?? ALL_CAPS
+  return list.length ? CAPS.filter((c) => list.includes(c.k)).map((c) => c.ar).join("، ") : "مشاهدة فقط"
+}
+const sectionsLabel = (s: readonly string[] | null | undefined): string => (s && s.length ? SECTIONS.filter((x) => s.includes(x.k)).map((x) => x.ar).join("، ") : "كل الأقسام")
 const INVITE_ROLES: readonly MemberRole[] = ["org_admin", "technical_director", "coach", "fitness_coach", "supervisor", "player", "parent", "viewer"]
 
 function Pills<T extends string | number>({ items, value, label, onPick }: { items: readonly T[]; value: T; label: (v: T) => string; onPick: (v: T) => void }): React.JSX.Element {
@@ -76,6 +85,8 @@ function NewInvite({ data, orgId }: { data: AdminData; orgId?: string }): React.
   const [days, setDays] = useState(R.inviteDays[1])
   const [uses, setUses] = useState(R.inviteUses[0])
   const [access, setAccess] = useState<number>(OPEN)
+  const [grant, setGrant] = useState<GrantValue>({ caps: ROLE_CAPS.coach, sections: [] })
+  const pickRole = (r: MemberRole): void => { setRole(r); setGrant((g) => ({ ...g, caps: ROLE_CAPS[r] })) }
   const [code, setCode] = useState<string | null>(null)
   const [err, setErr] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
@@ -83,7 +94,7 @@ function NewInvite({ data, orgId }: { data: AdminData; orgId?: string }): React.
   const msg = code ? `رمز دعوتك لمنصة IM Training (${orgName}): ${code}\n${window.location.origin}${import.meta.env.BASE_URL}` : ""
   const issue = async (): Promise<void> => {
     setErr(null)
-    const r = await createInvite({ org_id: org, role, days, max_uses: uses, access_days: access || null })
+    const r = await createInvite({ org_id: org, role, days, max_uses: uses, access_days: access || null, capabilities: grant.caps, sections: grant.sections.length ? grant.sections : null })
     if (r.error) setErr(`تعذّر الإصدار: ${r.error}`); else setCode(r.code ?? null)
   }
   const copy = async (): Promise<void> => { await navigator.clipboard.writeText(msg); setCopied(true) }
@@ -95,7 +106,8 @@ function NewInvite({ data, orgId }: { data: AdminData; orgId?: string }): React.
       <p className="fld">الجهة <span className="en">Organization</span></p>
       <Pills items={orgs.map((o) => o.id)} value={org} label={(id) => orgs.find((o) => o.id === id)?.name_ar ?? ""} onPick={setOrg} />
       <p className="fld">الدور <span className="en">Role</span></p>
-      <Pills items={INVITE_ROLES} value={role} label={(r) => ROLE_AR[r]} onPick={setRole} />
+      <Pills items={INVITE_ROLES} value={role} label={(r) => ROLE_AR[r]} onPick={pickRole} />
+      <GrantPicker value={grant} onChange={setGrant} />
       <p className="fld">مدة الدخول بعد الانضمام <span className="en">Access period</span></p>
       <Pills items={ACCESS_DAYS} value={access} label={accessLabel} onPick={setAccess} />
       <p className="fld">الرمز نفسه صالح لمدة <span className="en">Code valid for</span></p>
@@ -116,7 +128,7 @@ function NewInvite({ data, orgId }: { data: AdminData; orgId?: string }): React.
       <h3 className="subh">الرموز النشطة <span className="en">Active codes · {live.length}</span></h3>
       {live.length ? live.map((i) => (
         <div className="req" key={i.id}><div><b className="en" style={{ color: "#b9c3ff" }}>{i.code}</b>
-          <small>{ROLE_AR[i.default_role]} · دخول {accessLabel(i.access_days ?? null)} · {i.uses}/{i.max_uses ?? "∞"} · ينتهي {i.expires_at ? new Date(i.expires_at).toLocaleDateString("ar") : "—"}</small></div>
+          <small>{ROLE_AR[i.default_role]} · دخول {accessLabel(i.access_days ?? null)} · {i.uses}/{i.max_uses ?? "∞"} · ينتهي {i.expires_at ? new Date(i.expires_at).toLocaleDateString("ar") : "—"}</small><span className="capsum">{capsLabel(i.capabilities)} · {sectionsLabel(i.sections)}</span></div>
           <div className="act"><button className="btn" onClick={() => void deactivateInvite(i.id)}>إيقاف</button></div></div>
       )) : <div className="empty">لا توجد رموز نشطة.</div>}
     </>
@@ -131,14 +143,46 @@ function Approvals({ data, alerts }: { data: AdminData; alerts: Alert[] }): Reac
       <h3>التنبيهات والطلبات<span className="en">Alerts & approvals</span></h3>
       {pending.length ? pending.map((m) => (
         <div className="req" key={m.id}>
-          <div>{data.names[m.user_id] ?? "عضو جديد"}<small>{orgName(m.org_id)} · {ROLE_AR[m.role]} · {new Date(m.created_at).toLocaleDateString("ar")}</small></div>
+          <div>{data.names[m.user_id] ?? "عضو جديد"}<small>{orgName(m.org_id)} · {ROLE_AR[m.role]} · {new Date(m.created_at).toLocaleDateString("ar")}</small><span className="capsum">{capsLabel(m.capabilities)} · {sectionsLabel(m.sections)}</span></div>
           <div className="act">
             <button className="btn p" onClick={() => void setMemberStatus(m.id, "approved")}>موافقة</button>
             <button className="btn" onClick={() => void setMemberStatus(m.id, "suspended")}>رفض</button>
           </div>
         </div>
       )) : <div className="empty">لا توجد طلبات انضمام الآن.<br />عند تسجيل أي شخص برمز دعوة يظهر هنا: الاسم، والجهة، والدور، وأمامه <b>موافقة</b> أو <b>رفض</b>.</div>}
+      <MemberGrants data={data} orgName={orgName} />
       {alerts.map((a) => <div key={a.title} className={`al ${a.tone}`}><span className="k">{a.icon}</span><div>{a.title}<small>{a.note}</small></div></div>)}
+    </>
+  )
+}
+
+/** Approved members and what each may do — the owner changes any detail at any time. */
+function MemberGrants({ data, orgName }: { data: AdminData; orgName: (id: string) => string }): React.JSX.Element | null {
+  const members = data.members.filter((m) => m.status === "approved")
+  const [open, setOpen] = useState<string | null>(null)
+  const [val, setVal] = useState<GrantValue>({ caps: [], sections: [] })
+  const [msg, setMsg] = useState("")
+  if (!members.length) return null
+  const edit = (id: string, caps: string[] | null | undefined, sections: string[] | null | undefined): void => {
+    setOpen(id); setMsg(""); setVal({ caps: caps ?? [...ALL_CAPS], sections: sections ?? [] })
+  }
+  const save = async (id: string): Promise<void> => {
+    const err = await setMemberGrant(id, val.caps, val.sections)
+    setMsg(err ? `تعذّر الحفظ: ${err}` : "✓ تم تحديث الصلاحيات")
+  }
+  return (
+    <>
+      <h3 className="subh">الأعضاء وصلاحياتهم <span className="en">Members & permissions · {members.length}</span></h3>
+      {members.map((m) => (
+        <div className="req" key={m.id} style={{ display: "block" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center" }}>
+            <div>{data.names[m.user_id] ?? "عضو"}<small>{orgName(m.org_id)} · {ROLE_AR[m.role]}</small><span className="capsum">{capsLabel(m.capabilities)} · {sectionsLabel(m.sections)}</span></div>
+            <div className="act"><button className="btn" onClick={() => (open === m.id ? setOpen(null) : edit(m.id, m.capabilities, m.sections))}>{open === m.id ? "إغلاق" : "الصلاحيات"}</button></div>
+          </div>
+          {open === m.id && <div className="mgrant"><GrantPicker value={val} onChange={setVal} />
+            <button className="btn p" style={GAP} onClick={() => void save(m.id)}>حفظ الصلاحيات</button>{msg && <p className="capsum">{msg}</p>}</div>}
+        </div>
+      ))}
     </>
   )
 }

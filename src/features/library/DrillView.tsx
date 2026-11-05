@@ -3,6 +3,8 @@ import { useEffect, useRef, useState } from "react"
 import { DRILLS, SPORTS, type Drill } from "./content"
 import { DrillMedia } from "./DrillMedia"
 import { FORMATS, STAGES, formatOf, goalLabel, goalOf, loadOf, refOf, sportsOf, stageOf } from "./catalog"
+import { CapButton } from "@/components/ui/CapButton"
+import { printWith } from "@/features/auth/caps"
 
 export function DrillView({ id, list, dark, ctx, back, go, addToSession }: {
   id: string; list: string[]; dark: boolean; ctx?: string; back: () => void; go: (id: string) => void; addToSession: (id: string) => void
@@ -84,7 +86,7 @@ export function DrillView({ id, list, dark, ctx, back, go, addToSession }: {
           </section>
           <div className="acts">
             <button className="p" onClick={() => addToSession(d.id)}>＋ أضف إلى الوحدة التدريبية</button>
-            <button onClick={() => window.print()}>طباعة البطاقة</button>
+            <CapButton cap="print" onClick={() => printWith("print")}>طباعة البطاقة</CapButton>
           </div>
         </div>}
       </article>

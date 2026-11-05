@@ -1,5 +1,6 @@
 // Floating side dock shared by the platform's field screens (links to the built sections).
 import "./dock.css"
+import { canOpen } from "@/features/auth/caps"
 
 export type DockKey = "admin" | "library" | "board" | "roles" | "squad" | "tournaments" | "learning" | "assessment" | "program"
 const logo = `${import.meta.env.BASE_URL}icon-192.png`
@@ -21,7 +22,7 @@ const ITEMS: readonly { k: DockKey; ar: string; href: string; d: string }[] = [
 export function Dock({ active }: { readonly active: DockKey }): React.JSX.Element {
   return (
     <nav className="dock"><img src={logo} alt="IM Training" />
-      {ITEMS.map((r) => { const lock = isVisitor() && MEMBERS_ONLY.has(r.k); return <a key={r.k} className={`${r.k === active ? "on" : ""}${lock ? " lock" : ""}`} href={lock ? "#/tour#join" : r.href}><svg viewBox="0 0 24 24"><path d={r.d} /></svg>{r.ar}</a> })}
+      {ITEMS.map((r) => { const lock = (isVisitor() && MEMBERS_ONLY.has(r.k)) || (r.k !== "admin" && !canOpen(r.k)); return <a key={r.k} className={`${r.k === active ? "on" : ""}${lock ? " lock" : ""}`} href={lock ? "#/tour#join" : r.href}><svg viewBox="0 0 24 24"><path d={r.d} /></svg>{r.ar}</a> })}
       <span className="sp" />
       <a title="المساعد الذكي — قريبًا" aria-disabled="true"><svg viewBox="0 0 24 24"><path d="M12 3l2.2 5.4L20 9l-4.4 3.8L17 18.5 12 15.6 7 18.5l1.4-5.7L4 9l5.8-.6z" /></svg>المساعد</a>
     </nav>

@@ -4,6 +4,8 @@
 import { useMemo, useState } from "react"
 import cfg from "./library-config.json"
 import { DRILLS, DRILL_CAT, FITNESS_FOCUS, GAME_FOCUS, SPORTS, parseAsk, scoreDrill, type Ask, type Drill, type DrillCat, type Sport } from "./content"
+import { CapButton } from "@/components/ui/CapButton"
+import { printWith } from "@/features/auth/caps"
 
 const ORDER: readonly DrillCat[] = ["warm", "phys", "tech", "tact", "game", "cool"]
 const CURVE = cfg.curve
@@ -130,7 +132,7 @@ function Timeline({ ids, minutes, remove }: { ids: string[]; minutes: number; re
         <polygon points={mins.map((m, i) => pt(i, RADAR.floor + (1 - RADAR.floor) * (m / mx))).join(" ")} fill="#1FB5A833" stroke="#1FB5A8" strokeWidth="2" /></svg>
         <ul>{ORDER.map((k, i) => <li key={k} style={{ "--c": DRILL_CAT[k].color } as React.CSSProperties}><i />{DRILL_CAT[k].ar}<b>{mins[i]} د</b></li>)}</ul></div>
       <div className="warn">{fitNote(total, minutes)}</div>
-      <div className="go"><a className="p" href="#/program">احفظها في البرنامج اليومي ↗</a><button onClick={() => window.print()}>اطبع</button></div>
+      <div className="go"><a className="p" href="#/program">احفظها في البرنامج اليومي ↗</a><CapButton cap="print" onClick={() => printWith("print")}>اطبع</CapButton></div>
     </aside>
   )
 }

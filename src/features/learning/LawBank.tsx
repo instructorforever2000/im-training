@@ -9,6 +9,8 @@ import basketball from "./laws/basketball.json"
 import handball from "./laws/handball.json"
 import volleyball from "./laws/volleyball.json"
 import comp from "./laws/comp.json"
+import { CapButton } from "@/components/ui/CapButton"
+import { printWith } from "@/features/auth/caps"
 
 type Row = readonly [string, string, string, string, string, string]
 export interface LawQ { readonly sp: string; readonly ch: string; readonly row: Row }
@@ -159,7 +161,7 @@ export function LawBank(): React.JSX.Element {
           <div className="lring"><svg viewBox="0 0 120 120"><circle className="bg" cx="60" cy="60" r={RING_R} /><circle className="fg" cx="60" cy="60" r={RING_R} strokeDasharray={len2} strokeDashoffset={len2 * (1 - pct / PCT)} /></svg>
             <div><b>{pct}%</b><span>{score} من {qs.length}</span></div></div>
           <h3>{verdict}</h3><p className="mut">{SP[sp].ar} · {ch === ALL ? "كل المواد" : ch}</p>
-          <div className="nav"><button className="btn" onClick={() => window.print()}>🖨 طباعة النتيجة</button><button className="btn p" onClick={() => start("quiz")}>اختبار جديد</button></div>
+          <div className="nav"><CapButton cap="print" className="btn" onClick={() => printWith("print")}>🖨 طباعة النتيجة</CapButton><button className="btn p" onClick={() => start("quiz")}>اختبار جديد</button></div>
         </div>
         <div className="rev"><h3>مراجعة الإجابات</h3>
           {qs.map((q, k) => { const ok = picks[k] === q.q.row[1]; return (

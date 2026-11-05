@@ -12,3 +12,18 @@
 html { background: #f3f7f8; color: var(--color-ink); }
 @media (prefers-color-scheme: dark) { html { background: #071318; color: #e6f1f2; } }
 body { margin: 0; font-family: var(--font-sans); }
+
+/* Capability locks (src/features/auth/caps.ts): a locked action stays visible; pressing it shows a polite note. */
+.cap-locked { opacity: .78; }
+.cap-lock { font-size: .78em; margin-inline-start: .4em; filter: grayscale(.2); }
+.cap-note { position: fixed; z-index: 9999; inset-inline: 0; bottom: 28px; margin-inline: auto; width: min(420px, calc(100vw - 32px));
+  display: grid; gap: 4px; padding: 14px 18px; border-radius: 14px; background: rgba(14, 22, 48, .94); color: #eef2ff;
+  border: 1px solid rgba(140, 160, 255, .35); box-shadow: 0 18px 40px rgba(0, 0, 0, .35); backdrop-filter: blur(10px);
+  animation: capIn .28s ease-out; text-align: start; }
+.cap-note b { font-size: 15px; } .cap-note small { opacity: .75; font-size: 13px; }
+@keyframes capIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+@media print { .cap-note { display: none; } }
+@media print {
+  html[data-noprint] body > * { display: none !important; }
+  html[data-noprint] body::after { content: "الطباعة ميزة حصرية لأعضاء منصة IM Training"; display: block; padding: 40px; font: 700 20px system-ui; text-align: center; }
+}

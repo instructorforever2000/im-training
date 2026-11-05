@@ -17,8 +17,8 @@ export type MemberRole = "org_admin" | "technical_director" | "coach" | "fitness
 export type MemberStatus = "pending" | "approved" | "suspended"
 
 export interface Org { id: string; name_ar: string | null; name_en: string | null; org_type: OrgType; country: string | null; city: string | null; is_active: boolean; created_at: string }
-export interface Member { id: string; user_id: string; org_id: string; role: MemberRole; status: MemberStatus; created_at: string; approved_at: string | null }
-export interface Invite { id: string; code: string; org_id: string; default_role: MemberRole; expires_at: string | null; max_uses: number | null; uses: number; is_active: boolean; created_at: string; access_days?: number | null }
+export interface Member { id: string; user_id: string; org_id: string; role: MemberRole; status: MemberStatus; created_at: string; approved_at: string | null; capabilities?: string[] | null; sections?: string[] | null }
+export interface Invite { id: string; code: string; org_id: string; default_role: MemberRole; expires_at: string | null; max_uses: number | null; uses: number; is_active: boolean; created_at: string; access_days?: number | null; capabilities?: string[] | null; sections?: string[] | null }
 export interface AuditRow { id: number; action: string; target_table: string | null; details: Record<string, unknown> | null; created_at: string }
 export interface Profile { id: string; full_name: string | null }
 
@@ -62,8 +62,8 @@ async function load(): Promise<AdminData> {
   const uid = u.user?.id
   const [o, m, i, a, p] = await Promise.all([
     supabase.from("organizations").select("id,name_ar,name_en,org_type,country,city,is_active,created_at").order("created_at"),
-    supabase.from("memberships").select("id,user_id,org_id,role,status,created_at,approved_at").eq("platform_id", PLATFORM_ID).order("created_at"),
-    supabase.from("invite_codes").select("id,code,org_id,default_role,expires_at,max_uses,uses,is_active,created_at,access_days").eq("platform_id", PLATFORM_ID).order("created_at", { ascending: false }),
+    supabase.from("memberships").select("id,user_id,org_id,role,status,created_at,approved_at,capabilities,sections").eq("platform_id", PLATFORM_ID).order("created_at"),
+    supabase.from("invite_codes").select("id,code,org_id,default_role,expires_at,max_uses,uses,is_active,created_at,access_days,capabilities,sections").eq("platform_id", PLATFORM_ID).order("created_at", { ascending: false }),
     supabase.from("audit_log").select("id,action,target_table,details,created_at").order("created_at", { ascending: false }).limit(AUDIT_LIMIT),
     supabase.from("profiles").select("id,full_name,role"),
   ])
@@ -139,12 +139,12 @@ export function newCode(): string {
   return s // same format the login screen accepts: 8 letters/digits
 }
 
-export async function createInvite(v: { org_id: string; role: MemberRole; days: number; max_uses: number; access_days: number | null }): Promise<{ code?: string; error?: string }> {
+export async function createInvite(v: { org_id: string; role: MemberRole; days: number; max_uses: number; access_days: number | null; capabilities: string[]; sections: string[] | null }): Promise<{ code?: string; error?: string }> {
   const { data: u } = await supabase.auth.getUser()
   const code = newCode()
   const expires = new Date(Date.now() + v.days * DAY_MS).toISOString()
   const { error } = await supabase.from("invite_codes").insert({
-    code, org_id: v.org_id, platform_id: PLATFORM_ID, default_role: v.role, expires_at: expires, max_uses: v.max_uses, uses: 0, is_active: true, created_by: u.user?.id, access_days: v.access_days,
+    code, org_id: v.org_id, platform_id: PLATFORM_ID, default_role: v.role, expires_at: expires, max_uses: v.max_uses, uses: 0, is_active: true, created_by: u.user?.id, access_days: v.access_days, capabilities: v.capabilities, sections: v.sections,
   })
   return error ? { error: error.message } : { code }
 }
@@ -163,3 +163,9 @@ export async function deactivateInvite(id: string): Promise<string | null> {
 
 export const inviteLive = (i: Invite, now = Date.now()): boolean =>
   i.is_active && (!i.expires_at || Date.parse(i.expires_at) > now) && (i.max_uses == null || i.uses < i.max_uses)
+
+/** Owner (or the organisation admin) changes what an existing member may do and see. */
+export async function setMemberGrant(id: string, capabilities: string[], sections: string[]): Promise<string | null> {
+  const { error } = await supabase.from("memberships").update({ capabilities, sections }).eq("id", id)
+  return error ? error.message : null
+}

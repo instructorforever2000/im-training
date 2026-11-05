@@ -247,3 +247,12 @@
 }
 .adm .reqc .req{margin-top:10px}
 .adm .pres-b,.adm .me b,.adm .me small{white-space:nowrap}
+/* Grant picker (invite permissions) */
+.adm .grant .gcaps{display:grid;gap:8px;margin:6px 0 4px}
+.adm .grant .gcap{display:grid;grid-template-columns:auto 1fr;column-gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--ln2);border-radius:12px;cursor:pointer;transition:border-color .2s,background .2s}
+.adm .grant .gcap input{grid-row:span 2;width:18px;height:18px;accent-color:var(--teal)}
+.adm .grant .gcap b{font-size:14px}.adm .grant .gcap small{opacity:.7;font-size:12px}
+.adm .grant .gcap.on{border-color:var(--teal);background:#1FB5A814}
+.adm .grant .gcap.fixed{opacity:.75;cursor:default}
+.adm .mgrant{margin-top:8px;padding:10px;border:1px dashed var(--ln2);border-radius:12px}
+.adm .capsum{display:block;opacity:.75;font-size:12px;margin-top:2px}

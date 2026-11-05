@@ -5,6 +5,7 @@ import type { AccessApi } from "@/features/auth/useAccess"
 import { supabase } from "@/lib/supabase"
 import { baseRoute, isPublic, useSignedIn, useVisitorFlag } from "@/features/visitor/access"
 import { TourScreen, VisitorBar } from "@/features/visitor/TourScreen"
+import { canOpen, setGrant } from "@/features/auth/caps"
 
 // Each screen loads only when opened, so nobody downloads what they don't use.
 const AdminDashboard = lazy(async () => ({ default: (await import("@/features/admin/AdminDashboard")).AdminDashboard }))
@@ -34,10 +35,17 @@ const MEMBER_SCREENS: Record<string, () => React.JSX.Element> = {
   program: () => <ProgramScreen />, assessment: () => <AssessmentScreen />, tournaments: () => <TournamentsScreen />, squad: () => <SquadScreen />,
   library: () => <LibraryScreen />, board: () => <BoardScreen />, roles: () => <RolesScreen />, learning: () => <LearningScreen />, tour: () => <TourScreen />,
 }
+/** A section left out of this member's invite. */
+function NotGranted(): React.JSX.Element {
+  return <main className="min-h-dvh grid place-items-center p-6 text-center"><div><p className="text-lg font-bold">هذا القسم غير مُفعّل في عضويتك الحالية</p><p className="opacity-70 mt-2">Section not included in your membership</p><a className="inline-block mt-5 underline" href="#/tour">العودة إلى الجولة</a></div></main>
+}
 function MemberArea({ route, access }: { route: string; access: AccessApi }): React.JSX.Element {
   useEffect(() => { document.documentElement.dataset.member = ""; return () => { delete document.documentElement.dataset.member } }, [])
+  const m = access.membership
+  setGrant(m ? m.capabilities ?? null : "all", m?.sections ?? null)
   const key = baseRoute(route)
   if (key === "welcome") return <AccessGranted access={access} />
+  if (key in MEMBER_SCREENS && !canOpen(key)) return <NotGranted />
   const screen = MEMBER_SCREENS[key] ?? MEMBER_SCREENS.program
   return <Suspense fallback={<main className="min-h-dvh grid place-items-center opacity-60">…</main>}>{screen()}</Suspense>
 }
@@ -51,6 +59,7 @@ function Home({ access }: { access: AccessApi }): React.JSX.Element {
   }, [])
   const wait = <main className="min-h-dvh grid place-items-center opacity-60">…</main>
   if (owner === null) return wait
+  if (owner) setGrant("all")
   if (!owner) return <MemberArea route={route} access={access} />
   return <Suspense fallback={wait}>{route === "squad" ? <SquadScreen /> : route === "library" ? <LibraryScreen /> : route === "roles" ? <RolesScreen /> : route === "tournaments" ? <TournamentsScreen /> : route === "learning" ? <LearningScreen /> : route === "assessment" ? <AssessmentScreen /> : route === "program" ? <ProgramScreen /> : baseRoute(route) === "tour" ? <TourScreen /> : baseRoute(route) === "board" ? <BoardScreen /> : <AdminDashboard />}</Suspense>
 }
@@ -58,6 +67,7 @@ function Home({ access }: { access: AccessApi }): React.JSX.Element {
 /** Open sections for anyone with the link (visitor strip on top); everything else goes through sign-in. */
 function OpenSection({ route, visitor }: { route: string; visitor: boolean }): React.JSX.Element {
   useVisitorFlag(visitor)
+  setGrant(visitor ? "none" : "all")
   const wait = <main className="min-h-dvh grid place-items-center opacity-60">…</main>
   const screen: Record<string, React.JSX.Element> = { tour: <TourScreen />, library: <LibraryScreen />, board: <BoardScreen />, roles: <RolesScreen />, learning: <LearningScreen /> }
   const key = baseRoute(route)

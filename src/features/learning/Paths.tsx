@@ -9,6 +9,8 @@ import { LAW_BANK } from "./LawBank"
 import { DRILLS } from "@/features/library/content"
 import { DrillImage } from "@/features/library/DrillImage"
 import { PASS_PCT, certCode, loadProgress, passed, recordUnit, setName, type Progress } from "./progress"
+import { CapButton } from "@/components/ui/CapButton"
+import { printWith } from "@/features/auth/caps"
 
 type QRow = readonly [string, string, string, string, string, string]
 interface Case { readonly drill?: string; readonly roles?: boolean; readonly ar: string; readonly q: QRow }
@@ -218,7 +220,7 @@ function Certificate({ path, level, prog, rename, back }: { path: Path; level: n
     <div className="lp certv">
       <div className="nav noprint"><button className="btn" onClick={back}>→ المسار</button>
         <label className="nm">اسم صاحب الشهادة<input value={prog.name} onChange={(e) => rename(e.target.value)} placeholder="اكتب الاسم كما يظهر في الشهادة" /></label>
-        <button className="btn p" disabled={!name} onClick={() => window.print()}>🖨 طباعة / حفظ PDF</button></div>
+        <CapButton cap="certificates" className="btn p" disabled={!name} onClick={() => printWith("certificates")}>🖨 طباعة / حفظ PDF</CapButton></div>
       <article className="cert">
         <img src={`${import.meta.env.BASE_URL}icon-192.png`} alt="Instructor Motion" />
         <span className="eyebrow">شهادة إتمام مستوى <span className="en">Certificate of completion</span></span>
