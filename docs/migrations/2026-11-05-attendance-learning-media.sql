@@ -66,8 +66,7 @@ on conflict (id) do nothing;
 create policy drill_media_files_owner_insert on storage.objects for insert to authenticated with check (bucket_id = 'drill-media' and public.is_owner());
 create policy drill_media_files_owner_update on storage.objects for update to authenticated using (bucket_id = 'drill-media' and public.is_owner());
 
--- Follow-up (needs the owner's confirmation in the Supabase connector because it drops a policy):
--- visitors (anon) cannot run is_owner(), so the shared read policy is split per role.
--- drop policy drill_media_read on training.drill_media;
--- create policy drill_media_read_public on training.drill_media for select to anon using (is_active);
--- create policy drill_media_read_members on training.drill_media for select to authenticated using (is_active or is_owner());
+-- Follow-up applied 2026-11-05 (owner approved): visitors (anon) cannot run is_owner(), so the read
+-- policy is limited to signed-in users and visitors get their own policy (no policy dropped).
+alter policy drill_media_read on training.drill_media to authenticated;
+create policy drill_media_read_public on training.drill_media for select to anon using (is_active);
