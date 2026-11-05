@@ -1,0 +1,51 @@
+/* بنك الاختبارات البدنية — shares the light coaching tokens of التقييم (.as) */
+.tb .cmps{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:16px}
+.tb .cmps button{--c:var(--teal);padding:8px 14px;border-radius:999px;border:1px solid var(--ln);background:#fff;font-weight:600;font-size:13.5px;display:inline-flex;gap:8px;align-items:center;transition:all .2s}
+.tb .cmps button i{font:600 12px Outfit;font-style:normal;color:var(--mu)}
+.tb .cmps button.on{background:var(--c);border-color:var(--c);color:#fff}.tb .cmps button.on i{color:#ffffffcc}
+.tb .cmps .q{margin-inline-start:auto;height:38px;border:1px solid var(--ln);border-radius:11px;padding:0 12px;min-width:220px;background:#fff}
+.tb .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.tb .tc{background:#fff;border:1px solid var(--ln);border-top:4px solid var(--c);border-radius:16px;padding:14px;display:grid;gap:4px;text-align:start;transition:transform .2s,box-shadow .2s}
+.tb .tc:hover{transform:translateY(-3px);box-shadow:0 10px 24px #0d1b2a14}
+.tb .tc .cmp{font-size:11.5px;color:var(--c);font-weight:700}.tb .tc b{font-size:15.5px}.tb .tc .en{font-size:12px}
+.tb .tc .ft{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.tb .tc .ft i{font-style:normal;font-size:11px;background:var(--soft);border-radius:999px;padding:2px 8px;color:var(--mu)}
+.tb .tc .ft i.nm{background:#1fb5a81f;color:var(--teal2);font-weight:700}
+.tb .tp{--c:var(--teal);display:grid;gap:14px}
+.tb .back{justify-self:start;font-weight:700;color:var(--teal2);padding:6px 0}
+.tb .tp header{background:var(--navy);color:#fff;border-radius:20px;padding:20px 22px;border-inline-start:6px solid var(--c)}
+.tb .tp header .cmp{font-size:12.5px;color:#9fb0c6}.tb .tp header .cmp .en{color:#7fe3d8}.tb .tp h2{font-size:26px;margin-top:4px}.tb .tp header>.en{color:#7fe3d8;font-size:14px}
+.tb .tp .meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}.tb .tp .meta span{font-size:12px;background:#ffffff14;border-radius:999px;padding:3px 10px}
+.tb .why{font-size:15px;line-height:1.8;background:#fff;border:1px solid var(--ln);border-radius:16px;padding:14px 16px}
+.tb .cols2{display:grid;grid-template-columns:1fr 1.1fr;gap:14px;align-items:start}
+.tb .cols2>section{background:#fff;border:1px solid var(--ln);border-radius:18px;padding:18px;display:grid;gap:8px}
+.tb h4{font-size:15px;margin-top:6px}.tb h4 .en{font-size:11.5px}
+.tb ul,.tb ol{padding-inline-start:20px;display:grid;gap:5px;font-size:14px;line-height:1.7}.tb section>p{font-size:14px;line-height:1.7}
+.tb .safe{background:#fff6e5;border:1px solid #f3d48f;border-radius:12px;padding:10px 12px;font-size:13.5px;line-height:1.7}
+.tb .calc{position:sticky;top:16px}
+.tb .ins{display:flex;flex-wrap:wrap;gap:8px;align-items:end}
+.tb .ins label{display:grid;gap:3px;font-size:12px;color:var(--mu)}.tb .ins input{height:40px;width:110px;border:1px solid var(--ln);border-radius:10px;padding:0 10px;font:600 15px Outfit;color:var(--ink)}
+.tb .sx{display:flex;border:1px solid var(--ln);border-radius:10px;overflow:hidden;height:40px}.tb .sx button{padding:0 14px;font-weight:600}.tb .sx button.on{background:var(--navy);color:#fff}
+.tb .res{display:grid;gap:8px;animation:tbIn .3s ease-out}
+.tb .chip{color:#fff;border-radius:14px;padding:12px 14px;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline}.tb .chip b{font-size:18px}.tb .chip span{font:600 14px Outfit}.tb .chip small{width:100%;opacity:.9;color:#fff}.tb .chip.refc{background:var(--navy)}
+.tb .chip.none{background:var(--soft);color:var(--ink)}.tb .chip.none small{color:var(--mu)}
+.tb .dv{background:var(--soft);border-radius:12px;padding:10px 12px;font-size:14px}.tb .dv b{font:700 18px Outfit}.tb .dv small{display:block;color:var(--mu);font-size:11.5px}
+.tb .norm{border-top:1px dashed var(--ln);padding-top:10px;display:grid;gap:8px}
+.tb .src{font-size:11.5px;color:var(--mu);line-height:1.6}
+.tb .gsel{display:grid;gap:4px;font-size:12px;color:var(--mu)}.tb .gsel select{height:38px;border:1px solid var(--ln);border-radius:10px;padding:0 8px;font-family:inherit;font-size:13.5px;color:var(--ink);background:#fff}
+.tb .pscale{position:relative;height:74px;margin:8px 18px 0;border-radius:8px;background:linear-gradient(to right,#d9483b26,#1FB5A833)}
+[dir=rtl] .tb .pscale{background:linear-gradient(to right,#1FB5A833,#d9483b26)}
+.tb .pscale span{position:absolute;top:8px;transform:translateX(50%);display:grid;justify-items:center;font-size:11px}
+.tb .pscale span b{font:600 12px Outfit}.tb .pscale span i{font-style:normal;color:var(--mu);font-size:10px}
+.tb .pscale .me{position:absolute;bottom:-6px;transform:translateX(50%);color:#fff;font:700 12px Outfit;font-style:normal;padding:3px 8px;border-radius:999px;box-shadow:0 4px 10px #0003;transition:inset-inline-start .4s}
+.tb .cbands{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:4px}
+.tb .cbands span{border-radius:10px;padding:8px 4px;text-align:center;background:color-mix(in srgb,var(--c) 14%,#fff);border:2px solid transparent;display:grid;gap:2px;transition:all .25s}
+.tb .cbands b{font-size:12px}.tb .cbands i{font:500 11px Outfit;font-style:normal;color:var(--mu)}
+.tb .cbands span.on{background:var(--c);color:#fff;transform:translateY(-3px)}.tb .cbands span.on i{color:#fff}
+.tb .refs{gap:6px}.tb .rrow{display:grid;grid-template-columns:minmax(120px,1.2fr) 1fr auto;gap:10px;align-items:center;font-size:13px}
+.tb .rrow small{display:block;color:var(--mu);font-size:11px}.tb .rrow>b{font:600 13px Outfit}
+.tb .rbar{position:relative;height:8px;background:var(--soft);border-radius:999px}
+.tb .rbar i,.tb .rbar em{position:absolute;top:-3px;width:14px;height:14px;border-radius:50%;transform:translateX(50%)}
+.tb .rbar i{background:var(--navy)}.tb .rbar em{background:var(--teal);box-shadow:0 0 0 3px #1fb5a855}
+@keyframes tbIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (max-width:1180px){.tb.as main{padding:16px 16px 96px}}
+@media (max-width:900px){.tb .cols2{grid-template-columns:1fr}.tb .calc{position:static}.tb .cmps .q{min-width:0;width:100%}}

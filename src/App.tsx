@@ -16,6 +16,7 @@ const LearningScreen = lazy(async () => ({ default: (await import("@/features/le
 const AssessmentScreen = lazy(async () => ({ default: (await import("@/features/assessment/AssessmentScreen")).AssessmentScreen }))
 const ProgramScreen = lazy(async () => ({ default: (await import("@/features/program/ProgramScreen")).ProgramScreen }))
 const BoardScreen = lazy(async () => ({ default: (await import("@/features/board/BoardScreen")).BoardScreen }))
+const TestsScreen = lazy(async () => ({ default: (await import("@/features/tests/TestsBank")).TestsBank }))
 const SquadScreen = lazy(async () => ({ default: (await import("@/features/squad/SquadScreen")).SquadScreen }))
 
 /** Simple hash routes: "#/" = home (لوحة المدير for the owner), "#/squad" = الفرق واللاعبين, "#/library" = المكتبة, "#/roles" = المراكز والأدوار. */
@@ -33,7 +34,7 @@ function useRoute(): string {
  *  What each person may change is enforced by the database (row-level security), per role and organisation. */
 const MEMBER_SCREENS: Record<string, () => React.JSX.Element> = {
   program: () => <ProgramScreen />, assessment: () => <AssessmentScreen />, tournaments: () => <TournamentsScreen />, squad: () => <SquadScreen />,
-  library: () => <LibraryScreen />, board: () => <BoardScreen />, roles: () => <RolesScreen />, learning: () => <LearningScreen />, tour: () => <TourScreen />,
+  library: () => <LibraryScreen />, board: () => <BoardScreen />, tests: () => <TestsScreen />, roles: () => <RolesScreen />, learning: () => <LearningScreen />, tour: () => <TourScreen />,
 }
 /** A section left out of this member's invite. */
 function NotGranted(): React.JSX.Element {
@@ -61,7 +62,7 @@ function Home({ access }: { access: AccessApi }): React.JSX.Element {
   if (owner === null) return wait
   if (owner) setGrant("all")
   if (!owner) return <MemberArea route={route} access={access} />
-  return <Suspense fallback={wait}>{route === "squad" ? <SquadScreen /> : route === "library" ? <LibraryScreen /> : route === "roles" ? <RolesScreen /> : route === "tournaments" ? <TournamentsScreen /> : route === "learning" ? <LearningScreen /> : route === "assessment" ? <AssessmentScreen /> : route === "program" ? <ProgramScreen /> : baseRoute(route) === "tour" ? <TourScreen /> : baseRoute(route) === "board" ? <BoardScreen /> : <AdminDashboard />}</Suspense>
+  return <Suspense fallback={wait}>{route === "squad" ? <SquadScreen /> : route === "library" ? <LibraryScreen /> : route === "roles" ? <RolesScreen /> : route === "tournaments" ? <TournamentsScreen /> : route === "learning" ? <LearningScreen /> : route === "assessment" ? <AssessmentScreen /> : route === "program" ? <ProgramScreen /> : baseRoute(route) === "tour" ? <TourScreen /> : baseRoute(route) === "board" ? <BoardScreen /> : baseRoute(route) === "tests" ? <TestsScreen /> : <AdminDashboard />}</Suspense>
 }
 
 /** Open sections for anyone with the link (visitor strip on top); everything else goes through sign-in. */
@@ -69,7 +70,7 @@ function OpenSection({ route, visitor }: { route: string; visitor: boolean }): R
   useVisitorFlag(visitor)
   setGrant(visitor ? "none" : "all")
   const wait = <main className="min-h-dvh grid place-items-center opacity-60">…</main>
-  const screen: Record<string, React.JSX.Element> = { tour: <TourScreen />, library: <LibraryScreen />, board: <BoardScreen />, roles: <RolesScreen />, learning: <LearningScreen /> }
+  const screen: Record<string, React.JSX.Element> = { tour: <TourScreen />, library: <LibraryScreen />, board: <BoardScreen />, tests: <TestsScreen />, roles: <RolesScreen />, learning: <LearningScreen /> }
   const key = baseRoute(route)
   return <>{visitor && key !== "tour" && <VisitorBar />}<Suspense fallback={wait}>{screen[key] ?? <TourScreen />}</Suspense></>
 }
