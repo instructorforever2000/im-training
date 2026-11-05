@@ -1,0 +1,11 @@
+/* لوحة عائمة — draggable, minimisable glass panel over a 3D stage */
+.fpanel{display:flex;flex-direction:column;overflow:hidden;background:color-mix(in srgb,var(--glass,#ffffffd9) 82%,transparent)!important;backdrop-filter:blur(16px) saturate(1.4)}
+.fpanel .fhead{display:flex;align-items:center;gap:8px;padding:6px 6px 6px 10px;cursor:grab;user-select:none;touch-action:none;border-bottom:1px solid var(--ln,#dfe6ee)}
+.fpanel .fhead:active{cursor:grabbing}
+.fpanel .grip{color:var(--mu,#66768a);font-size:12px;letter-spacing:-2px}
+.fpanel .ft{flex:1;min-width:0;font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fpanel .fhead button{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;font-size:13px;color:var(--mu,#66768a);background:var(--soft,#f4f7fa)}
+.fpanel .fhead button:hover{color:var(--ink,#0b1726)}
+.fpanel .fbody{overflow:auto;min-height:0;flex:1;display:flex;flex-direction:column;gap:12px;padding:12px 14px}
+.fpanel.min{bottom:auto!important;height:auto!important;width:auto!important;min-width:200px}
+.fpanel.min .fhead{border-bottom:0}

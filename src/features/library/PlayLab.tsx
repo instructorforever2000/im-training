@@ -5,6 +5,7 @@ import * as THREE from "three"
 import cfg from "./library-config.json"
 import { PLAYS, PLAY_CAT, SPORTS, playSport, skillsForPlay, type Play } from "./content"
 import type { View } from "./LibraryScreen"
+import { FloatPanel } from "@/components/ui/FloatPanel"
 
 const L = cfg.lab
 const C = L.colors
@@ -158,23 +159,23 @@ export function PlayLab({ id, open, flip, theme }: { id: string; open: (v: View)
     <div className="lab">
       <canvas ref={cv} id="gl" />
       <div className="hud glass title"><h1>المكتبة <span className="en">3D play lab</span></h1>
-        <button className="chip" onClick={() => open({ v: "cmd" })}>← العودة إلى الطلب</button><span className="live">LIVE 3D</span></div>
+        <button className="chip" onClick={() => open({ v: "cmd" })}>→ العودة إلى المكتبة</button><span className="live">LIVE 3D</span></div>
       <div className="hud glass modes"><button className="on">ملعب</button><button onClick={flip}>◐</button></div>
-      <div className="hud glass shelf"><h3>الخطط المتحركة <span className="en">Plays · {PLAYS.length}</span></h3>
+      <FloatPanel id="lab-shelf" className="shelf" title={<>الخطط المتحركة <span className="en">Plays · {PLAYS.length}</span></>}>
         <div className="chips">{[...Object.keys(SPORTS), "general"].map((s) => counts(s) ? (
           <button key={s} className={`chip${sportFilter === s ? " on" : ""}`} onClick={() => setSportFilter(s)}>{s === "general" ? "أنشطة عامة" : SPORTS[s as keyof typeof SPORTS].ar} {counts(s)}</button>) : null)}</div>
         <div className="list">{list.map((p) => (
           <button key={p.id} className={`row${p.id === play.id ? " on" : ""}`} style={{ "--c": PLAY_CAT[p.cat]?.color } as React.CSSProperties} onClick={() => open({ v: "play", id: p.id })}>
-            <span className="ic">{p.tokens.length}</span><span><b>{p.name.ar}</b><small>{p.name.en}</small></span></button>))}</div></div>
-      <div className="hud glass insp">
+            <span className="ic">{p.tokens.length}</span><span><b>{p.name.ar}</b><small>{p.name.en}</small></span></button>))}</div></FloatPanel>
+      <FloatPanel id="lab-insp" className="insp" title={play.name.ar}>
         <span className="tag">● {cat?.ar} · {sport ? SPORTS[sport].ar : "أنشطة عامة"} · <span className="en">{cat?.en}</span></span>
         <h2>{play.name.ar}</h2><div className="e2">{play.name.en}</div>
         <p className="desc">{play.desc.ar}</p>
         <div className="load"><div><b>{play.steps.length}</b><span>خطوات</span></div><div><b dir="ltr">{a}v{b}</b><span>اللاعبين</span></div><div><b>{sport ? SPORTS[sport].short : "—"}</b><span>اللعبة</span></div></div>
         <div><h3 className="lk">مرتبطة بـ <span className="en">Linked skills</span></h3>
           <div className="lkc">{sk.length ? sk.map((s) => <button key={s.id} className="chip" onClick={() => open({ v: "map", key: `s:${s.id}` })}>مهارة · {s.ar.n}</button>) : <span className="chip">—</span>}</div></div>
-        <div className="act"><button className="p" onClick={() => open({ v: "map", key: `p:${play.id}` })}>خريطة المعرفة</button><button disabled title="بعد بناء السبورة التكتيكية">السبورة · قريبًا</button></div>
-      </div>
+        <div className="act"><button className="p" onClick={() => open({ v: "map", key: `p:${play.id}` })}>خريطة المعرفة</button><a className="bbtn" href={`#/board?play=${play.id}`}>افتح في السبورة التكتيكية</a></div>
+      </FloatPanel>
       <div className="hud glass tl"><div className="top">
         <button className="pp" onClick={toggle} aria-label={running ? "إيقاف" : "تشغيل"}><svg viewBox="0 0 24 24">{running ? <path d="M6 4h4v16H6zM14 4h4v16h-4z" /> : <path d="M7 4l13 8-13 8z" />}</svg></button>
         <div className="cap">{cur ? play.steps[cur - 1].c.ar : "اضغط ▶ لتتحرك الخطة على الملعب خطوة بخطوة، واسحب بالفأرة لتدوير الكاميرا"}</div><span className="sig" dir="ltr">{cur} / {play.steps.length}</span></div>

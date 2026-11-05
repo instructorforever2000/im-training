@@ -86,7 +86,14 @@ export const FOCUS: Record<string, string[]> = {
   "سرعة": ["سرع", "sprint", "speed", "انطلاق"], "رشاقة": ["رشاق", "agil", "اتجاه", "direction"], "تحمل": ["تحمل", "endur", "aerobic"],
   "قوة": ["قوة", "strength", "power"], "تمرير": ["تمرير", "pass"], "تسديد": ["تسديد", "shoot", "finish"], "مراوغة": ["مراوغ", "dribbl"],
   "ضغط": ["ضغط", "press"], "دفاع": ["دفاع", "defen"], "استلام": ["استلام", "receiv", "first touch"], "مرونة": ["مرون", "stretch", "mobility"],
+  "قدرة انفجارية": ["انفجار", "plyo", "jump", "وثب", "قفز"], "توازن": ["توازن", "balance"], "توافق": ["توافق", "coordinat"],
 }
+/** Fitness components → the physical quality recorded on each conditioning exercise. */
+export const FOCUS_QUALITY: Record<string, readonly string[]> = {
+  "سرعة": ["spd"], "قوة": ["str"], "تحمل": ["end"], "مرونة": ["flex", "mob"], "توازن": ["bal"], "توافق": ["coord"], "قدرة انفجارية": ["pow"],
+}
+export const FITNESS_FOCUS = ["سرعة", "رشاقة", "تحمل", "قوة", "قدرة انفجارية", "مرونة", "توازن", "توافق"] as const
+export const GAME_FOCUS = ["تمرير", "استلام", "مراوغة", "تسديد", "ضغط", "دفاع"] as const
 const DEFAULT_MINUTES = 60
 const SCORE = { base: 40, focusHit: 26, fewEqHit: 12, fewEqMiss: -10, ageNear: 8, ageWindow: 4, max: 99, shortEq: 14 } as const
 const MIN_WORD = 3
@@ -111,12 +118,13 @@ export function scoreDrill(x: Drill, f: Ask): number {
   if (f.age && x.age > f.age) return 0
   const txt = `${x.ar.name} ${x.en.name} ${x.ar.obj}`.toLowerCase()
   let s: number = SCORE.base
-  f.focus.forEach((w) => { if (FOCUS[w].some((k) => txt.includes(k))) s += SCORE.focusHit })
+  f.focus.forEach((w) => { if (FOCUS[w].some((k) => txt.includes(k)) || (x.px && FOCUS_QUALITY[w]?.includes(x.px.q))) s += SCORE.focusHit })
   if (f.few) s += FEW_EQ_RE.test(x.ar.eq.trim()) || x.ar.eq.length < SCORE.shortEq ? SCORE.fewEqHit : SCORE.fewEqMiss
   if (f.age && x.age >= f.age - SCORE.ageWindow) s += SCORE.ageNear
   return Math.max(0, Math.min(SCORE.max, s))
 }
 export function textMatch(q: string, ...parts: string[]): boolean {
   const t = parts.join(" ").toLowerCase()
-  return q.toLowerCase().split(SPLIT_RE).filter((w) => w.length >= MIN_WORD).some((w) => t.includes(w))
+  const words = q.toLowerCase().split(SPLIT_RE).filter((w) => w.length >= MIN_WORD)
+  return !words.length || words.some((w) => t.includes(w))
 }
