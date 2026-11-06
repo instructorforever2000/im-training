@@ -1,0 +1,39 @@
+<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;background:#fff}canvas{display:block}</style>
+<script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js","three/addons/":"/node_modules/three/examples/jsm/"}}</script></head>
+<body><script type="module">
+import * as THREE from "three"
+const q = new URLSearchParams(location.search), yaw = Number(q.get("yaw") ?? 180) * Math.PI / 180
+const d = await (await fetch("figure.json")).json()
+const dec = (s, T) => { const b = Uint8Array.from(atob(s), (c) => c.charCodeAt(0)); return new T(b.buffer) }
+const bones = d.bones.map((b) => Object.assign(new THREE.Bone(), { name: b.name }))
+const by = Object.fromEntries(bones.map((b, i) => [b.name, i]))
+d.bones.forEach((b, i) => { const p = b.parent ? d.bones[by[b.parent]].head : [0, 0, 0]; bones[i].position.set(b.head[0] - p[0], b.head[1] - p[1], b.head[2] - p[2]); if (b.parent) bones[by[b.parent]].add(bones[i]) })
+const skel = new THREE.Skeleton(bones)
+function part(p, mat) {
+  const g = new THREE.BufferGeometry()
+  g.setAttribute("position", new THREE.BufferAttribute(dec(p.pos, Float32Array), 3))
+  g.setIndex(new THREE.BufferAttribute(dec(p.idx, Uint32Array), 1))
+  g.setAttribute("skinIndex", new THREE.Uint16BufferAttribute(dec(p.si, Uint16Array), 4))
+  g.setAttribute("skinWeight", new THREE.BufferAttribute(dec(p.sw, Float32Array), 4))
+  g.computeVertexNormals()
+  const m = new THREE.SkinnedMesh(g, mat); m.castShadow = true
+  return m
+}
+const body = part(d.parts.body, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.55 }))
+const n = d.parts.body.n, col = new Float32Array(n * 3).fill(0.77)
+const keys = Object.keys(d.masks)
+keys.forEach((k, j) => { const c = new THREE.Color().setHSL((j * 0.37) % 1, 0.65, 0.5); const ids = dec(d.masks[k][0], Uint32Array), w = dec(d.masks[k][1], Uint8Array)
+  ids.forEach((i, q) => { const a = w[q] / 255; col[i*3] = col[i*3] * (1 - a) + c.r * a; col[i*3+1] = col[i*3+1] * (1 - a) + c.g * a; col[i*3+2] = col[i*3+2] * (1 - a) + c.b * a }) })
+dec(d.parts.body.hair, Uint32Array).forEach((i) => { col[i*3] = col[i*3+1] = col[i*3+2] = 0.12 })
+body.geometry.setAttribute("color", new THREE.BufferAttribute(col, 3))
+dec(d.parts.body.shorts, Uint8Array).forEach((w, i) => { const a = w / 255; for (let c = 0; c < 3; c++) col[i*3+c] = col[i*3+c] * (1 - a) + 0.12 * a })
+body.add(bones[0]); body.bind(skel)
+const scene = new THREE.Scene(); scene.background = new THREE.Color(0xffffff); scene.add(body)
+scene.add(new THREE.HemisphereLight(0xffffff, 0x9aa1ab, 1.2))
+const k = new THREE.DirectionalLight(0xffffff, 2.2); k.position.set(2, 4, 3); scene.add(k)
+const k2 = new THREE.DirectionalLight(0xffffff, 1.2); k2.position.set(-2, 3, -3); scene.add(k2)
+const cam = new THREE.PerspectiveCamera(26, innerWidth / innerHeight, 0.1, 50)
+cam.position.set(Math.sin(yaw) * 5, 1.0, Math.cos(yaw) * 5); cam.lookAt(0, 0.9, 0)
+const r = new THREE.WebGLRenderer({ antialias: true }); r.setSize(innerWidth, innerHeight); r.outputColorSpace = THREE.SRGBColorSpace; r.toneMapping = THREE.ACESFilmicToneMapping
+document.body.appendChild(r.domElement); r.render(scene, cam); window.READY = true
+</script></body></html>

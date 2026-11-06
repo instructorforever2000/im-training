@@ -1,0 +1,43 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><style>html,body{margin:0;background:#fff;font-family:system-ui}canvas{display:block}#ov{position:absolute;inset:0;pointer-events:none;direction:ltr}</style>
+<script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js","three/addons/":"/node_modules/three/examples/jsm/"}}</script></head>
+<body><svg id="ov" width="100%" height="100%"></svg><script type="module">
+import * as THREE from "three"
+import { loadFigureData, createFigure } from "./anatomy.js"
+const q = new URLSearchParams(location.search), yaw = Number(q.get("yaw") ?? 140) * Math.PI / 180, which = q.get("p") ?? "finish"
+const d = await loadFigureData("figure.json")
+const HI = { lat: "red", rhomboid: "red", trapMid: "red", trapLower: "red", deltPost: "red", teres: "red", infra: "red", biceps: "blue", erector: "blue", forearm: "blue" }
+const fig = createFigure(d, { hi: HI })
+const ghost = createFigure(d, { hi: {}, ghost: true })
+const hand = (curl) => Object.fromEntries(["L", "R"].flatMap((s) => [2, 3, 4, 5].flatMap((f) => [[`finger${f}-1.${s}`, { curl: curl[0] }], [`finger${f}-2.${s}`, { curl: curl[1] }], [`finger${f}-3.${s}`, { curl: curl[2] }]]).concat([[`finger1-2.${s}`, { curl: 25 }], [`finger1-3.${s}`, { curl: 25 }]])))
+const mir = (v, s) => [v[0] * s, v[1], v[2]]
+function pose(arm) {
+  const p = { root: { rot: [12, 0, 0] }, head: { rot: [2, 0, 0] }, neck01: { rot: [6, 0, 0] }, ...hand([60, 75, 50]) }
+  for (const [s, x] of [["L", 1], ["R", -1]]) {
+    p[`upperleg02.${s}`] = { aim: mir([0.15, -0.9, 0.36], x) }
+    p[`lowerleg01.${s}`] = { aim: mir([0.05, -0.95, -0.28], x) }
+    p[`foot.${s}`] = { aim: mir([0.03, -0.45, 0.89], x) }
+    p[`shoulder01.${s}`] = { aim: mir(arm.sh, x) }
+    p[`upperarm01.${s}`] = { aim: mir(arm.up, x), roll: arm.roll * x }
+    p[`lowerarm01.${s}`] = { aim: mir(arm.fo, x), roll: arm.froll * x }
+    p[`wrist.${s}`] = { aim: mir(arm.fo, x), roll: arm.froll * x }
+  }
+  return p
+}
+const START = { sh: [0.085, -0.04, 0.03], up: [0.12, -0.22, 1], fo: [0.08, -0.18, 1], roll: 0, froll: Number(q.get("fr") ?? 0) }
+const FINISH = { sh: [0.08, -0.035, -0.05], up: [0.2, -0.78, -0.6], fo: [0.02, 0.22, 1], roll: 0, froll: Number(q.get("fr") ?? 0) }
+fig.pose(pose(which === "start" ? START : FINISH)); ghost.pose(pose(START))
+const scene = new THREE.Scene(); scene.background = new THREE.Color(0xffffff)
+scene.add(fig.root); if (which === "finish") scene.add(ghost.root)
+// seat on floor
+fig.root.updateMatrixWorld(true)
+let minY = 9; const v = new THREE.Vector3(); for (let i = 0; i < d.parts.body.n; i += 7) { fig.mesh.getVertexPosition(i, v); minY = Math.min(minY, v.y) }
+fig.root.position.y = -minY; ghost.root.position.y = -minY
+scene.add(new THREE.HemisphereLight(0xffffff, 0x8f97a3, 1.25))
+const k = new THREE.DirectionalLight(0xffffff, 2.4); k.position.set(2.5, 4.5, -2.5); k.castShadow = true; k.shadow.mapSize.set(2048, 2048); k.shadow.bias = -0.0005; Object.assign(k.shadow.camera, { left: -1.5, right: 1.5, top: 2.2, bottom: -0.5 }); scene.add(k)
+const f = new THREE.DirectionalLight(0xe6eeff, 0.8); f.position.set(-3, 2, 2); scene.add(f)
+const fl = new THREE.Mesh(new THREE.CircleGeometry(2, 64), new THREE.ShadowMaterial({ opacity: 0.13 })); fl.rotation.x = -Math.PI / 2; fl.receiveShadow = true; scene.add(fl)
+const cam = new THREE.PerspectiveCamera(24, innerWidth / innerHeight, 0.1, 50), T = new THREE.Vector3(0, 0.98, 0.1)
+cam.position.set(T.x + Math.sin(yaw) * 5.4, T.y + 0.9, T.z + Math.cos(yaw) * 5.4); cam.lookAt(T)
+const r = new THREE.WebGLRenderer({ antialias: true }); r.setPixelRatio(devicePixelRatio); r.setSize(innerWidth, innerHeight); r.outputColorSpace = THREE.SRGBColorSpace; r.toneMapping = THREE.ACESFilmicToneMapping; r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap
+document.body.appendChild(r.domElement); r.render(scene, cam); window.READY = true
+</script></body></html>
