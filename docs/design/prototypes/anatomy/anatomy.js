@@ -1,7 +1,6 @@
 // IM Training anatomy figure — loads the CC0 MakeHuman-based body (figure.json), poses it, and paints target muscles.
 // Pose = world rotations per bone (degrees) or aim directions; unspecified bones follow their parent.
 import * as THREE from "three"
-import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js"
 
 const DEG = Math.PI / 180
 const dec = (s, T) => { const b = Uint8Array.from(atob(s), (c) => c.charCodeAt(0)); return new T(b.buffer) }
@@ -24,7 +23,10 @@ export function createFigure(d, { hi = {}, ghost = false } = {}) {
   g.setAttribute("skinIndex", new THREE.Uint16BufferAttribute(si, 4))
   g.setAttribute("skinWeight", new THREE.BufferAttribute(sw, 4))
   g.setAttribute("fib", new THREE.BufferAttribute(dec(P.fib, Float32Array), 1))
+  relaxToes(d, g)
   g.computeVertexNormals()
+  // outline thickness per vertex: off over the toes (the gaps between toes would otherwise fill with outline)
+  g.setAttribute("olw", new THREE.BufferAttribute(toeOutline(d, g), 1))
   // paint: skin, shorts, hair, then highlighted muscles (red primary / blue secondary)
   const col = new Float32Array(n * 3), hl = new Float32Array(n), edgeA = new Float32Array(n)
   for (let i = 0; i < n; i++) col.set(PAINT.skin, i * 3)
@@ -53,7 +55,6 @@ export function createFigure(d, { hi = {}, ghost = false } = {}) {
   const edge = new THREE.SkinnedMesh(g, outlineMat(ghost ? 0x5f666f : 0x2a2f36, ghost ? 0.0042 : 0.0026, ghost))
   edge.bind(skeleton); edge.frustumCulled = false
   const root = new THREE.Group(); root.add(mesh, edge)
-  if (!ghost) for (const side of ["L", "R"]) addShoe(d, si, g.getAttribute("position"), bones[by["foot." + side]], by["foot." + side])
   if (ghost) { mesh.renderOrder = 3; edge.renderOrder = 2 }
   const rest = Object.fromEntries(d.bones.map((b) => [b.name, new THREE.Vector3(...b.tail).sub(new THREE.Vector3(...b.head)).normalize()]))
   const bone = (name) => bones[by[name]]
@@ -96,8 +97,8 @@ function skinMat() {
 function outlineMat(color, push, ghost) {
   const m = new THREE.MeshBasicMaterial({ color, side: THREE.BackSide, transparent: ghost, opacity: ghost ? 0.9 : 1, depthWrite: !ghost })
   m.onBeforeCompile = (s) => {
-    s.vertexShader = s.vertexShader.replace("#include <common>", "#include <common>\n" + (ghost ? "attribute float arm; varying float vArm;" : ""))
-      .replace("#include <skinning_vertex>", `#include <skinning_vertex>\n transformed += normalize(objectNormal) * ${push.toFixed(4)};` + (ghost ? "\nvArm = arm;" : ""))
+    s.vertexShader = s.vertexShader.replace("#include <common>", "#include <common>\nattribute float olw;" + (ghost ? "attribute float arm; varying float vArm;" : ""))
+      .replace("#include <skinning_vertex>", `#include <skinning_vertex>\n transformed += normalize(objectNormal) * ${push.toFixed(4)} * olw;` + (ghost ? "\nvArm = arm;" : ""))
     if (ghost) s.fragmentShader = s.fragmentShader.replace("#include <common>", "#include <common>\nvarying float vArm;").replace("void main() {", "void main() {\n if (vArm < 0.55) discard;")
   }
   return m
@@ -111,24 +112,49 @@ function ghostMat() {
   return m
 }
 
-const SHOE = new THREE.MeshStandardMaterial({ color: 0xf1f3f6, roughness: 0.5 }), SOLE = new THREE.MeshStandardMaterial({ color: 0x8e959e, roughness: 0.7 }), LACE = new THREE.MeshStandardMaterial({ color: 0x3a4049, roughness: 0.6 })
-/** Athletic shoe sized from the foot's own vertices, carried by the foot bone. */
-function addShoe(d, si, pos, footBone, fi) {
-  const box = new THREE.Box3(), v = new THREE.Vector3()
-  for (let i = 0; i < pos.count; i++) if (si[i * 4] === fi && pos.getY(i) < 0.075) box.expandByPoint(v.fromBufferAttribute(pos, i))
-  const size = box.getSize(new THREE.Vector3()), c = box.getCenter(new THREE.Vector3())
-  const head = new THREE.Vector3(...d.bones[fi].head)
-  const g = new THREE.Group(); g.position.copy(c).sub(head); footBone.add(g)
-  // sneaker: a rounded body (capsule along the foot), a toe cap, a heel counter, a flat sole and laces
-  const w = size.x + 0.02, L = size.z + 0.028, h = size.y + 0.012
-  const body = new THREE.Mesh(new THREE.CapsuleGeometry(w / 2, L - w, 8, 24), SHOE)
-  body.rotation.x = Math.PI / 2; body.scale.set(1, 1, h / w); body.position.y = 0.004; body.castShadow = true
-  const collar = new THREE.Mesh(new THREE.CapsuleGeometry(w * 0.36, L * 0.28, 6, 18), SHOE)
-  collar.rotation.x = Math.PI / 2; collar.position.set(0, h * 0.42, -L * 0.18); collar.scale.set(1, 1, 0.9); collar.castShadow = true
-  const sole = new THREE.Mesh(new RoundedBoxGeometry(w + 0.008, 0.024, L + 0.008, 4, 0.011), SOLE)
-  sole.position.y = -h / 2 - 0.004; sole.castShadow = true
-  const lace = new THREE.Mesh(new RoundedBoxGeometry(w * 0.4, 0.01, L * 0.3, 2, 0.004), LACE)
-  lace.position.set(0, h * 0.44, L * 0.1); lace.rotation.x = -0.22
-  const upper = body
-  g.add(upper, sole, lace)
+/** 1 everywhere, fading to 0 over the toes (in front of the ball of each foot, near the floor). */
+function toeOutline(d, g) {
+  const pos = g.getAttribute("position"), out = new Float32Array(pos.count).fill(1)
+  const ankles = ["L", "R"].map((s) => d.bones.find((b) => b.name === "foot." + s).head)
+  const sstep = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t) }
+  for (let i = 0; i < pos.count; i++) {
+    const x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i)
+    if (y > 0.06) continue
+    const a = Math.abs(x - ankles[0][0]) < Math.abs(x - ankles[1][0]) ? ankles[0] : ankles[1]
+    out[i] = 1 - sstep(a[2] + 0.115, a[2] + 0.135, z) * sstep(0.045, 0.03, y)
+  }
+  return out
+}
+
+/** Natural toes: the source mesh has deep slits and folded faces between the toes. Relax the toe region
+ *  (Taubin smoothing — keeps volume) and close the slits a little, so the foot reads clean at any zoom. */
+function relaxToes(d, g) {
+  const pos = g.getAttribute("position"), P = pos.array, n = pos.count, I = g.getIndex().array
+  const ankles = ["L", "R"].map((s) => d.bones.find((b) => b.name === "foot." + s).head)
+  const sstep = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t) }
+  const w = new Float32Array(n)
+  for (let i = 0; i < n; i++) {
+    const x = P[i * 3], y = P[i * 3 + 1], z = P[i * 3 + 2]
+    if (y > 0.06) continue
+    const a = Math.abs(x - ankles[0][0]) < Math.abs(x - ankles[1][0]) ? ankles[0] : ankles[1]
+    w[i] = sstep(a[2] + 0.085, a[2] + 0.115, z) * sstep(0.055, 0.04, y)
+  }
+  const nb = new Map()
+  for (let t = 0; t < I.length; t += 3) for (let e = 0; e < 3; e++) {
+    const p = I[t + e], q = I[t + (e + 1) % 3]
+    if (!w[p] && !w[q]) continue
+    for (const [u, v] of [[p, q], [q, p]]) { if (!nb.has(u)) nb.set(u, new Set()); nb.get(u).add(v) }
+  }
+  const floor = new Float32Array(n); for (let i = 0; i < n; i++) floor[i] = P[i * 3 + 1]
+  for (let it = 0; it < 30; it++) for (const lam of [0.6, -0.62]) {
+    const nx = []
+    for (const [i, set] of nb) {
+      if (!w[i]) continue
+      let sx = 0, sy = 0, sz = 0
+      for (const j of set) { sx += P[j * 3]; sy += P[j * 3 + 1]; sz += P[j * 3 + 2] }
+      const c = set.size, k = lam * w[i]
+      nx.push(i, P[i * 3] + (sx / c - P[i * 3]) * k, P[i * 3 + 1] + (sy / c - P[i * 3 + 1]) * k, P[i * 3 + 2] + (sz / c - P[i * 3 + 2]) * k)
+    }
+    for (let q = 0; q < nx.length; q += 4) { const i = nx[q]; P[i * 3] = nx[q + 1]; P[i * 3 + 1] = Math.max(Math.min(floor[i], 0.005), nx[q + 2]); P[i * 3 + 2] = nx[q + 3] }
+  }
 }
