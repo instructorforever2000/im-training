@@ -222,7 +222,6 @@ function PlayerReport({ p, team, tests, rows, rateIt, close }: {
           })}</tbody>
         </table>
         <p className="mut">المعايير من مصادرها المنشورة المذكورة في بنك الاختبارات (NSCA's Guide to Tests and Assessments وغيره). التقييم يعتمد على العمر من تاريخ الميلاد.</p>
-        <p className="sig">Instructor: Mohamed Ayad</p>
       </div>
     </div>
   )
@@ -306,7 +305,6 @@ export function AssessmentScreen(): React.JSX.Element {
         {teams.length > 0 && <div className="teams">{teams.map((t) => <button key={t.id} className={t.id === team?.id ? "on" : ""} onClick={() => setTeamId(t.id)} style={{ "--c": t.color } as React.CSSProperties}><b>{t.name}</b><span>{orgName(t.org_id)}</span></button>)}</div>}
         <div className="tabs">{(Object.keys(TABS) as Tab[]).map((k) => <button key={k} className={k === tab ? "on" : ""} onClick={() => setTab(k)}>{TABS[k].ar} <span className="en">{TABS[k].en}</span></button>)}</div>
         {body()}
-        <p className="sig">Instructor: Mohamed Ayad</p>
       </main>
     </div>
   )

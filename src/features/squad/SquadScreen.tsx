@@ -289,7 +289,7 @@ export function Squad({ data, reload }: { data: SquadData; reload: () => void })
             : <section className="card"><div className="empty">لا توجد فرق لهذه الجهة بعد.<br />اضغط «+ فريق جديد» واختر اللعبة والفئة.</div></section>}
           {team && pick && <PlayerFile key={pick === "new" ? "new" : pick.id} team={team} player={pick} close={() => { setPick(null); reload() }} />}
         </div>
-        <div className="foot"><span>IM Training · الفرق واللاعبون — كل البيانات حقيقية من قاعدة البيانات</span><span className="en">Instructor: Mohamed Ayad</span></div>
+        <div className="foot"><span>IM Training · الفرق واللاعبون — كل البيانات حقيقية من قاعدة البيانات</span></div>
       </main>
       {modal && <div className="modal" onClick={(e) => { if (e.target === e.currentTarget) setModal(null) }}>
         {modal.k === "team" ? <TeamForm orgId={orgId} team={modal.team} close={() => { setModal(null); reload() }} /> : team && <BulkForm team={team} close={() => { setModal(null); reload() }} />}</div>}

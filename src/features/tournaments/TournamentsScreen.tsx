@@ -474,7 +474,6 @@ export function TournamentsScreen(): React.JSX.Element {
             <Pulse t={t} es={es} ms={ms} names={names} after={after} />
           </div>
         )}
-        <p className="sig">Instructor: Mohamed Ayad</p>
       </main>
       {wizard && <Wizard data={data} close={() => setWizard(false)} done={(id) => { setWizard(false); setSel(id); setArchived(false); setTab("fixtures"); reload() }} />}
     </div>

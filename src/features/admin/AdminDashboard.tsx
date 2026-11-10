@@ -285,7 +285,7 @@ export function Board({ data }: { data: AdminData }): React.JSX.Element {
           {view === "activity" && <div className="tbar"><span>⟲ آلة الزمن <span className="en">Time machine</span></span>
             <input type="range" min="0" max={days.length - 1} step="1" value={idx} onChange={(e) => setDayIdx(Number(e.target.value))} />
             <b>{days[idx]}</b><span className="tag">{live ? "الآن · Live" : "لقطة من الماضي"}</span></div>}
-          <div className="note"><span>IM Training · لوحة المدير — كل الأرقام حقيقية: قاعدة البيانات + محتوى المنصة.</span><span className="en">Instructor: Mohamed Ayad</span></div>
+          <div className="note"><span>IM Training · لوحة المدير — كل الأرقام حقيقية: قاعدة البيانات + محتوى المنصة.</span></div>
           <button className="btn exitp" onClick={() => setPresent(false)}>✕ خروج من العرض (Esc)</button>
         </main>
       </div>

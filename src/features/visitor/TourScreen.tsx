@@ -65,7 +65,7 @@ export function TourScreen(): React.JSX.Element {
           <div><i>★</i><b>الاشتراك السنوي</b><p>اشتراك سنوي بسعر مناسب للأفراد والجهات. وإلى حين تفعيل الدفع الإلكتروني، يتم الاشتراك عبر إدارة المنصة.</p><span className="soon">الدفع الإلكتروني قريبًا <i>Coming soon</i></span></div>
         </div>
       </section>
-      <footer className="vt-foot">Instructor: Mohamed Ayad · مشرف التربية البدنية</footer>
+      <footer className="vt-foot">Instructor Motion · منصة التدريب الرياضي</footer>
     </div>
   )
 }

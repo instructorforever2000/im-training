@@ -216,7 +216,6 @@ export function ProgramScreen(): React.JSX.Element {
           <button className="todayb" onClick={() => setDay(iso(new Date()))}>اليوم</button>
         </div>
         {body()}
-        <p className="sig">Instructor: Mohamed Ayad</p>
       </main>
       {edit && <Builder teams={teams} orgOf={orgOf} init={edit} close={() => setEdit(null)} saved={() => { setEdit(null); reload() }} />}
     </div>

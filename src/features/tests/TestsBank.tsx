@@ -173,7 +173,6 @@ export function TestsBank({ embedded }: { embedded?: boolean }): React.JSX.Eleme
         <div className="head"><div><h1>بنك الاختبارات البدنية <span className="en">Tests & Norms</span></h1>
           <p>{TESTS.length} اختبارًا ميدانيًا · {COMPS.length} عناصر لياقة · {normed} جدول معايير ومراجع منشورة · بروتوكول موحّد لكل اختبار</p></div></div>
         {body}
-        <p className="sig">Instructor: Mohamed Ayad</p>
       </main>
     </div>
   )
