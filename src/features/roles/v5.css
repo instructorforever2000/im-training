@@ -83,3 +83,13 @@
 .rs.v5 #tl>.ph-h{display:none}
 .rs.v5 .stabs{top:min(48dvh,68vw)}
 }
+/* إخفاء اللوحة + سحب الحافة */
+.rs.v5 .shide{flex:none!important;width:34px;font-size:15px;color:var(--mu)}
+.rs.v5 .sgrip{position:absolute;top:0;bottom:0;left:0;width:8px;cursor:ew-resize;z-index:5}
+.rs.v5 .sgrip:hover{background:linear-gradient(90deg,var(--teal),transparent);opacity:.5}
+.rs.v5.shut{--sw:0px!important}
+.rs.v5.shut #sheet{width:auto;bottom:auto;right:var(--rx);background:none;border:0;box-shadow:none;backdrop-filter:none}
+.rs.v5.shut #sheet .pnl,.rs.v5.shut .stabs [data-tab],.rs.v5.shut .sgrip{display:none!important}
+.rs.v5.shut .stabs{border:0;padding:0}
+.rs.v5.shut .shide{width:auto;padding:8px 14px;border-radius:999px;background:var(--navy);color:#fff;font-size:12.5px}
+@media(max-width:900px){.rs.v5 .sgrip{display:none}.rs.v5 .shide{display:none}}

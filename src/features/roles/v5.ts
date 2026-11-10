@@ -33,6 +33,34 @@ export function mountV5(host: HTMLElement): () => void {
   tabs.innerHTML = TABS.map(([id, ar, en]) => `<button data-tab="${id}">${ar} <span class="en">${en}</span></button>`).join("")
   sheet.append(tabs, role, vars, steps)
   main.append(sheet)
+  /* إخفاء اللوحة وتغيير عرضها — hide the panel / drag its edge to resize (saved per device) */
+  const hideB = document.createElement("button")
+  hideB.className = "shide"
+  hideB.title = "إخفاء / إظهار اللوحة"
+  tabs.append(hideB)
+  const grip = document.createElement("div")
+  grip.className = "sgrip"
+  grip.title = "اسحب لتغيير عرض اللوحة"
+  sheet.append(grip)
+  const setHidden = (h: boolean): void => {
+    host.classList.toggle("shut", h)
+    hideB.innerHTML = h ? "◧ إظهار اللوحة" : "⇥"
+    write("im-v5-shut", h ? "1" : "")
+    refit()
+  }
+  hideB.addEventListener("click", () => setHidden(!host.classList.contains("shut")))
+  const sw0 = Number(read("im-v5-sw", "0"))
+  if (sw0) host.style.setProperty("--sw", sw0 + "px")
+  let drag: number | null = null
+  grip.addEventListener("pointerdown", e => { drag = e.clientX; grip.setPointerCapture(e.pointerId) })
+  grip.addEventListener("pointermove", e => {
+    if (drag == null) return
+    const r = sheet.getBoundingClientRect()
+    const w = Math.round(Math.max(280, Math.min(620, r.right - e.clientX)))
+    host.style.setProperty("--sw", w + "px")
+  })
+  grip.addEventListener("pointerup", () => { if (drag == null) return; drag = null; write("im-v5-sw", String(Math.round(sheet.getBoundingClientRect().width))); refit() })
+  setHidden(read("im-v5-shut", "") === "1")
 
   let tab = read("im-v5-tab", "role")
   const setTab = (t: string): void => {

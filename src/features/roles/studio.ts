@@ -163,7 +163,11 @@ function place(instant) {
   const lay = layout(), op = C.opp ? E.stOpp(C.mode, C.phase) : null;
   const set = (arr, pl) => arr.forEach(a => { const p = pl && pl.find(q => String(q.id) === String(a.userData.id)) || pl && pl[arr.indexOf(a)]; if (!p) return; a.userData.from.copy(a.position); a.userData.to.copy(W3(p.x, p.y)); if (instant) { a.position.copy(a.userData.to); a.userData.from.copy(a.userData.to) } });
   set(us, lay.players); oppG.visible = !!op; if (op) { if (them.length !== op.length) { buildTeams(); return } set(them, op) }
-  ballM.userData.from.copy(ballM.position); ballM.userData.to.copy(W3(lay.ball[0], lay.ball[1])).setY(ballM.userData.r); if (instant) ballM.position.copy(ballM.userData.to);
+  /* الكرة تذهب لأقرب لاعب لموضعها في الخطة فيستلمها فعلًا — ball is received by the nearest player to its planned spot */
+  const bT = W3(lay.ball[0], lay.ball[1]); let hold = null, hd = Infinity;
+  for (const a of [...us, ...(op ? them : [])]) { const d = a.userData.to.distanceTo(bT); if (d < hd) { hd = d; hold = a } }
+  if (hold && hd < dims.L * .15) { const fw = hold.userData.opp ? -1 : 1; bT.copy(hold.userData.to).add(new THREE.Vector3(.55 * fw, 0, .15)) }
+  ballM.userData.from.copy(ballM.position); ballM.userData.to.copy(bT).setY(ballM.userData.r); if (instant) ballM.position.copy(ballM.userData.to);
   tw.t0 = performance.now(); if (!instant) trails(); else trailG.clear(); zones();
 }
 function highlight() { us.forEach(a => { const on = String(a.userData.id) === String(C.sel); a.userData.shirt.color.set(on ? KIT.on : a.userData.base); a.userData.ring.material.opacity = on ? .9 : 0 }) }
