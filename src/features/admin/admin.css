@@ -256,3 +256,9 @@
 .adm .grant .gcap.fixed{opacity:.75;cursor:default}
 .adm .mgrant{margin-top:8px;padding:10px;border:1px dashed var(--ln2);border-radius:12px}
 .adm .capsum{display:block;opacity:.75;font-size:12px;margin-top:2px}
+/* كل قسم مستقل: القائمة والشريط العلوي ثابتان، والمحتوى وحده يتحرك — independent sections, app shell */
+@media(min-width:761px){
+.adm .app{height:100vh;min-height:0;overflow:hidden}
+.adm .app>main{height:100vh;overflow:auto;overscroll-behavior:contain}
+.adm .app>main>.top{position:sticky;top:0;z-index:40;margin:-18px -26px 20px;padding:18px 26px 14px;background:color-mix(in srgb,#050d18 86%,transparent);backdrop-filter:blur(14px)}
+}

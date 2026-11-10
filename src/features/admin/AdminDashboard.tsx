@@ -118,6 +118,8 @@ export function Board({ data }: { data: AdminData }): React.JSX.Element {
   const [speaking, setSpeaking] = useState(false)
   const [aiNote, setAiNote] = useState(false)
   const [view, setView] = useState<View>("overview")
+  const mainRef = useRef<HTMLElement>(null)
+  useEffect(() => { mainRef.current?.scrollTo({ top: 0 }); window.scrollTo({ top: 0 }) }, [view])
   const days = useMemo(() => timeline(data), [data])
   const [dayIdx, setDayIdx] = useState<number | null>(null)
   const idx = dayIdx ?? days.length - 1
@@ -178,7 +180,7 @@ export function Board({ data }: { data: AdminData }): React.JSX.Element {
       <Icons />
       <div className={`app ${nav}${live ? "" : " past"}`}>
         <Sidebar view={view} setView={(v) => { setView(v); setNav(nav === "mob" ? "" : nav) }} />
-        <main>
+        <main ref={mainRef}>
           <div className="top">
             <button className="ib" onClick={() => { const want = window.innerWidth < MOBILE_PX ? "mob" : "mini"; setNav(nav === want ? "" : want) }} title="طيّ القائمة"><Icon id="menu" /></button>
             <Search data={data} open={open} />
