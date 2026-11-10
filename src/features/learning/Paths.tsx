@@ -229,7 +229,7 @@ function Certificate({ path, level, prog, rename, back }: { path: Path; level: n
         <p>أتمّ بنجاح <b>{l.ar}</b> في مسار <b>{path.ar}</b> بمنصة IM Training، بمتوسط {avg}%.</p>
         <p className="en">has successfully completed {l.en} of the {path.en} pathway on IM Training.</p>
         <ul>{l.units.map((id) => <li key={id}>{UNITS[id].ar} <span className="en">{UNITS[id].en}</span> · {prog.units[id]?.best ?? 0}%</li>)}</ul>
-        <footer><div><b>Instructor: Mohamed Ayad</b><span>مشرف التربية البدنية</span></div><div><b>{date}</b><span>رمز التحقق {code}</span></div></footer>
+        <footer><div><b>Instructor Motion</b><span>منصة التدريب الرياضي</span></div><div><b>{date}</b><span>رمز التحقق {code}</span></div></footer>
       </article>
     </div>
   )
