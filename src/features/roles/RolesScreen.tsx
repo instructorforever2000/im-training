@@ -5,6 +5,8 @@ import { MARKUP } from "./markup"
 import { mountStudio } from "./studio"
 import "@fontsource/outfit/500.css"
 import "./roles.css"
+import "./v5.css"
+import { mountV5 } from "./v5"
 
 export function RolesScreen(): React.JSX.Element {
   const host = useRef<HTMLDivElement>(null)
@@ -13,7 +15,8 @@ export function RolesScreen(): React.JSX.Element {
     if (!el) return
     el.insertAdjacentHTML("beforeend", MARKUP)
     const stop = mountStudio(el)
-    return () => { stop(); el.querySelector(":scope > main")?.remove() }
+    const stopV5 = mountV5(el)
+    return () => { stopV5(); stop(); el.querySelector(":scope > main")?.remove() }
   }, [])
   return (
     <div ref={host} className="rs" data-theme="light" dir="rtl" lang="ar">

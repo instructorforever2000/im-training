@@ -1,0 +1,85 @@
+/* ===== Layout v5 — الملعب هو المسرح ===== */
+.rs.v5{--sw:360px;--top:76px;--bar:76px}
+/* الشريط العلوي ثابت ودائم — always-visible compact top bar */
+.rs.v5 #hudtab,.rs.v5 #pin,.rs.v5 #dockb,.rs.v5 .pm,.rs.v5 .hint{display:none!important}
+.rs.v5 .hud{transform:none!important;opacity:1!important;pointer-events:auto!important;top:12px!important;left:12px!important;right:var(--rx)!important;height:54px;padding:6px 12px;gap:10px;z-index:35}
+.rs.v5 .hud h1{font-size:16px}
+.rs.v5 .lens button{font-size:12.5px;padding:6px 14px}
+.rs.v5 .lens .en,.rs.v5 .setb .en{font-size:10px;margin-inline-start:3px}
+.rs.v5 .setb{font-size:12.5px;padding:7px 14px;background:var(--navy);color:#fff}
+/* الملعب: كل المساحة المتبقية بدون أي لوحة فوقه */
+.rs.v5 #stage{inset:auto!important;top:var(--top)!important;left:12px!important;right:calc(var(--rx) + var(--sw) + 12px)!important;bottom:var(--bar)!important;position:fixed}
+/* شريط المراحل تحت الملعب مباشرة */
+.rs.v5 #tl{display:flex!important;position:fixed!important;top:auto!important;bottom:12px!important;left:12px!important;right:calc(var(--rx) + var(--sw) + 12px)!important;width:auto!important;height:56px;border-radius:16px}
+.rs.v5 #tl .tlk{display:none}
+/* اللوحة الواحدة */
+.rs.v5 #sheet{position:fixed;top:var(--top);bottom:12px;right:var(--rx);width:var(--sw);display:flex;flex-direction:column;overflow:hidden;z-index:25;border-radius:18px}
+.rs.v5 .stabs{display:flex;gap:4px;padding:8px;border-bottom:1px solid var(--ln);flex:none}
+.rs.v5 .stabs button{flex:1;font-size:12.5px;padding:8px 6px;border-radius:11px;color:var(--mu);display:flex;flex-direction:column;align-items:center;gap:1px;line-height:1.2}
+.rs.v5 .stabs button .en{font-size:9.5px}
+.rs.v5 .stabs button.on{background:var(--tealbg);color:var(--teal2);font-weight:700;box-shadow:inset 0 0 0 1px var(--teal)}
+.rs.v5 #sheet .pnl{position:static!important;inset:auto!important;width:auto!important;max-width:none!important;max-height:none!important;min-width:0!important;resize:none!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:none!important;backdrop-filter:none!important;display:none!important;flex:1;min-height:0}
+.rs.v5 #sheet .pnl.act{display:flex!important}
+.rs.v5 #sheet .ph-h{display:none}
+.rs.v5 #sheet .pb{display:flex!important;flex:1;overflow:auto;padding:14px 16px;font-size:14px}
+.rs.v5.stepping #sheet #steps.act{display:flex!important}
+/* شريط الخطوات (التعليق) فوق الملعب في مكان ثابت */
+.rs.v5 #capbar{left:24px!important;right:calc(var(--rx) + var(--sw) + 24px)!important;top:calc(var(--top) + 12px)!important;transform:none!important;max-width:none!important;margin:0 auto;width:fit-content}
+.rs.v5 #capbar:not(.on){opacity:0;pointer-events:none}
+/* الإعدادات */
+.rs.v5 #setd{position:fixed;top:72px;left:12px;width:min(560px,calc(100vw - 24px));max-height:calc(100dvh - 96px);overflow:auto;z-index:40;padding:14px;display:none;flex-direction:column;gap:14px;border-radius:18px;box-shadow:0 30px 70px -24px #0007}
+.rs.v5 #setd.open{display:flex}
+.rs.v5 #setd .sg{display:flex;flex-direction:column;gap:8px}
+.rs.v5 #setd h4{font-size:13px}
+.rs.v5 #setd .sg>*:not(h4){flex-wrap:wrap}
+.rs.v5 #setd .hud2{position:static!important;inset:auto!important;display:flex;flex-direction:column;align-items:stretch;gap:10px;padding:0;background:none;border:0;backdrop-filter:none;transform:none!important;opacity:1!important;pointer-events:auto!important}
+.rs.v5 #setd #ctl{gap:8px}
+.rs.v5 #setd .legend{display:flex!important;flex-wrap:wrap;gap:8px 12px}
+.rs.v5 #setd .seg2{align-self:flex-start}
+.rs.v5 #setd .sg:last-child{flex-direction:row;flex-wrap:wrap;align-items:center}
+.rs.v5 #setd .sg:last-child h4{width:100%}
+/* تلميح أول مرة */
+.rs.v5 .hint.once{display:block!important;bottom:calc(var(--bar) + 12px);left:calc((100vw - var(--rx) - var(--sw)) / 2);z-index:30}
+/* العدسات */
+.rs.v5[data-lens="player"] .stabs [data-tab="vars"]{display:none}
+.rs.v5[data-lens="player"] #setd .sg:first-child{display:none}
+.rs.v5[data-lens="lect"]{--sw:0px}
+.rs.v5[data-lens="lect"] #sheet{display:none}
+.rs.v5[data-lens="lect"] #capbar span{font-size:20px}
+.rs.v5[data-lens="lect"] #capbar b{font-size:30px}
+/* آيباد — Tablet */
+@media(max-width:1200px) and (min-width:901px){.rs.v5{--sw:320px}.rs.v5 .hud h1 .en{display:none}.rs.v5 #sports{display:none}}
+/* جوال — Mobile: الملعب فوق، اللوحة تحته، والشريط السفلي للتنقل */
+@media(max-width:900px){
+.rs.v5{--sw:0px}
+.rs.v5 main{display:flex;flex-direction:column}
+.rs.v5 .hud{position:sticky!important;top:0!important;left:auto!important;right:auto!important;margin:0;height:auto;border-radius:0 0 16px 16px;flex-wrap:wrap;order:1}
+.rs.v5 .hud h1{font-size:14px}
+.rs.v5 #sports{order:5;width:100%;overflow-x:auto;flex-wrap:nowrap}
+.rs.v5 .lens{order:4}
+.rs.v5 .setb{order:3;margin-inline-start:auto}
+.rs.v5 #stage{position:sticky!important;top:0!important;left:auto!important;right:auto!important;bottom:auto!important;height:48dvh;margin:8px;order:2;z-index:30}
+.rs.v5 #capbar{position:relative!important;left:auto!important;right:auto!important;top:auto!important;margin:0 8px;width:auto;order:3}
+.rs.v5 #capbar:not(.on){display:none}
+.rs.v5 #tl{position:relative!important;left:auto!important;right:auto!important;bottom:auto!important;height:auto;margin:0 8px;order:4}
+.rs.v5 #sheet{position:relative;top:auto;bottom:auto;right:auto;width:auto;margin:8px;order:5;max-height:none;overflow:visible}
+.rs.v5 .stabs{position:sticky;top:48dvh;background:var(--glass);z-index:3;border-radius:18px 18px 0 0}
+.rs.v5 #sheet .pb{overflow:visible}
+.rs.v5[data-lens="lect"] #sheet{display:none}
+.rs.v5 #setd{top:auto;bottom:84px;left:8px;right:8px;width:auto;max-height:70dvh}
+}
+/* شريط المراحل بصفّين: المراحل فوق، والتحكم تحت — phases row + controls row */
+.rs.v5{--bar:124px}
+.rs.v5 #tl{height:auto!important}
+.rs.v5 #tl .tlb{flex-wrap:wrap;gap:8px;padding:8px 10px!important}
+.rs.v5 #tl #track{order:-1;flex:1 1 100%;min-width:0}
+.rs.v5 #tl #segs{display:flex!important;gap:4px}
+.rs.v5 #tl .seg{flex:1;min-width:0}
+.rs.v5 #tl .ctrls{flex:1;flex-wrap:wrap}
+.rs.v5 #setd #sports{display:flex!important;flex-wrap:wrap;gap:6px}
+@media(max-width:900px){.rs.v5 #tl #segs{display:grid!important;grid-template-columns:repeat(3,1fr)}}
+@media(max-width:900px){
+.rs.v5 #stage{height:min(48dvh,68vw)!important}
+.rs.v5 #tl>.ph-h{display:none}
+.rs.v5 .stabs{top:min(48dvh,68vw)}
+}
