@@ -13,15 +13,17 @@ import "./browse.css"
 import { PlayBrowser, SkillBrowser, SkillPage } from "./Browse"
 import { SessionPlanner } from "./Session"
 import { LoadLab } from "./LoadLab"
+import { Atlas } from "./Atlas"
 
 const PlayLab = lazy(async () => ({ default: (await import("./PlayLab")).PlayLab }))
 
 export type View = { v: "cmd" } | { v: "play"; id: string } | { v: "map"; key: NodeKey }
-type Tab = "drills" | "session" | "load" | "plays" | "skills"
+type Tab = "atlas" | "drills" | "session" | "load" | "plays" | "skills"
 type Theme = "light" | "dark"
 const THEME_KEY = "im-theme"
 const TABS: readonly { key: Tab; ar: string; en: string }[] = [
   { key: "drills", ar: "التمارين", en: "Drills" },
+  { key: "atlas", ar: "أطلس الحركة", en: "Movement atlas" },
   { key: "session", ar: "بناء وحدة تدريبية", en: "Session builder" },
   { key: "load", ar: "الأحمال ومراحل الإعداد", en: "Loads & phases" },
   { key: "plays", ar: "الخطط المتحركة", en: "Animated plays" },
@@ -62,6 +64,7 @@ export function LibraryScreen(): React.JSX.Element {
             </nav>
             <button className="chip" onClick={flip} title="الوضع الفاتح / الغامق">◐</button>
           </header>
+          {tab === "atlas" && <Atlas dark={dark} />}
           {tab === "drills" && <Catalog dark={dark} filters={filters} setFilters={setFilters} open={(id, list) => setDrill({ id, list })} />}
           {tab === "session" && <SessionPlanner key={extra.join()} extra={extra} openDrill={(id, list) => setDrill({ id, list })} />}
           {tab === "load" && <LoadLab />}
