@@ -1,0 +1,27 @@
+/* السبورة 3D — the pitch fills the screen; tools, header and frames float above it */
+.b3{position:relative;height:calc(100vh - 0px);min-height:560px;--teal:#1FB5A8;--ink:#0b1726;--mu:#66768a;--glass:#ffffffdb;--ln:#dfe6ee}
+.bd[data-theme=dark] .b3,.b3.dark{--ink:#e8eef5;--mu:#8495a9;--glass:#0d1522db;--ln:#1e2b3d}
+.b3gl{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
+.b3 .glass{background:var(--glass);backdrop-filter:blur(16px) saturate(1.4);border:1px solid var(--ln);border-radius:18px;box-shadow:0 18px 44px -24px #0b1b3366;color:var(--ink)}
+.b3 .en{font-family:Outfit,sans-serif;color:#0f8f84;font-weight:500;font-size:.78em;margin-inline-start:4px}
+.b3top{position:absolute;top:14px;right:96px;left:130px;display:flex;gap:12px;align-items:center;padding:10px 14px;flex-wrap:wrap}
+.b3top .ttl{flex:1;min-width:200px;display:flex;align-items:center;gap:10px}.b3top h1{font-size:18px}
+.b3 .live{display:inline-flex;align-items:center;gap:6px;font:600 11px Outfit;color:#0f8f84}.b3 .live:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--teal);animation:b3pu 1.8s infinite}
+@keyframes b3pu{50%{opacity:.3}}
+.b3 .seg{display:flex;gap:2px;padding:3px;border-radius:12px;background:#0b1b330d}
+.b3 .seg button{padding:6px 11px;border-radius:9px;font-size:12.5px;font-weight:600;color:var(--mu)}.b3 .seg button.on{background:#fff;color:#0b1726;box-shadow:0 2px 8px -4px #0b1b3355}
+.b3 .frm{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600}.b3 .frm i{width:10px;height:10px;border-radius:50%}
+.b3 .frm select{font:600 12.5px Outfit;padding:5px 8px;border-radius:9px;border:1px solid var(--ln);background:transparent;color:var(--ink)}
+.b3tools{position:absolute;top:50%;transform:translateY(-50%);left:14px;display:flex;flex-direction:column;gap:4px;padding:8px;width:86px}
+.b3tools button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px;border-radius:12px;font-size:11px;font-weight:600;color:var(--mu);transition:.15s}
+.b3tools svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.b3tools button:hover{background:#0b1b330d}.b3tools button.on{background:#0b1726;color:var(--c,#fff)}
+.b3tools hr{border:0;border-top:1px solid var(--ln);margin:4px 0}
+.b3tl{position:absolute;bottom:14px;right:96px;left:14px;display:flex;gap:12px;align-items:center;padding:10px 14px;flex-wrap:wrap}
+.b3tl .pp{width:42px;height:42px;border-radius:13px;background:var(--teal);display:grid;place-items:center;flex:none}.b3tl .pp:disabled{opacity:.4}
+.b3tl .pp svg{width:16px;fill:#fff}
+.b3tl .frames{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.b3tl .frames b{font-size:13px;margin-inline-end:4px}
+.b3tl .frames button{min-width:34px;height:32px;border-radius:9px;border:1px solid var(--ln);font:700 13px Outfit;color:var(--ink)}
+.b3tl .frames button.on{background:var(--teal);border-color:var(--teal);color:#fff}.b3tl .frames .add{padding:0 12px;font:600 12.5px "IBM Plex Sans Arabic";color:#0f8f84;border-style:dashed}
+.b3tl .hint{margin-inline-start:auto;font-size:11.5px;color:var(--mu)}
+@media (max-width:860px){.b3top,.b3tl{right:10px;left:10px}.b3top{top:10px}.b3tl{bottom:84px;padding:8px}.b3tools{top:auto;bottom:150px;transform:none;flex-direction:row;width:auto;left:10px;right:10px;overflow-x:auto}.b3tools hr{display:none}.b3tl .hint{display:none}}

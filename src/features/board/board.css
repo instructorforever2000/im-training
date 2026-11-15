@@ -276,3 +276,5 @@ body.org-swapping .content{animation:orgSwap .38s cubic-bezier(.2,.8,.2,1)}
 }
 .bd .toolrail{overflow-y:auto;max-height:100%;scrollbar-width:thin}
 html[data-visitor] .bd .bdtop{padding-top:54px}
+
+.bd3sw{position:fixed;top:24px;left:24px;z-index:40;padding:8px 14px;border-radius:12px;background:#0b1726;color:#fff;font-weight:600;font-size:12.5px;box-shadow:0 10px 24px -12px #0b1b3399}
