@@ -4,20 +4,20 @@ import * as THREE from "three"
 import { ENG } from "@/features/roles/engine/engine"
 
 export type Mode = "fb11" | "fb7" | "futsal"
-export type Tool = "move" | "pass" | "run" | "dribble" | "zone" | "erase"
+export type Tool = "move" | "pass" | "run" | "dribble" | "zone" | "text" | "erase"
 export type Side = "A" | "B"
 export type Cam = "broadcast" | "top" | "goal"
 type XZ = [number, number]
 export interface Token { id: string; kind: "p" | "ball"; team?: Side; num?: number; code?: string; x: number; z: number }
-export interface Mark { id: string; kind: Exclude<Tool, "move" | "erase">; pts: XZ[] }
-export interface BoardState { mode: Mode; form: Record<Side, string>; tokens: Token[]; marks: Mark[]; frames: Record<string, XZ>[] }
+export interface Mark { id: string; kind: Exclude<Tool, "move" | "erase">; pts: XZ[]; text?: string }
+export interface BoardState { mode: Mode; form: Record<Side, string>; tokens: Token[]; marks: Mark[]; frames: Record<string, XZ>[]; caps?: string[] }
 
 interface ModeDef { L: number; W: number }
 const MODES = ENG.MODES as unknown as Record<string, ModeDef>
 const FORM = ENG.FORM as unknown as Record<string, Record<string, [string, number, number, number][]>>
 export const formsOf = (m: Mode): string[] => Object.keys(FORM[m])
 export const TEAM_COLOR: Record<Side, string> = { A: "#E6BE3A", B: "#E0564F" }
-export const MARK_COLOR: Record<Mark["kind"], string> = { pass: "#ffffff", run: "#f2c14e", dribble: "#1FB5A8", zone: "#5b6fe0" }
+export const MARK_COLOR: Record<Mark["kind"], string> = { pass: "#ffffff", run: "#f2c14e", dribble: "#1FB5A8", zone: "#5b6fe0", text: "#ffffff" }
 
 const Y_LINE = 0.04, Y_MARK = 0.08, HALF = 2, TAU = Math.PI * 2
 const STRIPES = 12, MIN_STEP = 0.6, ARROW_HEAD = 1.4, TUBE_R = 0.18, WAVE_A = 0.45, WAVE_L = 1.6
@@ -105,7 +105,23 @@ function playerObj(t: Token): THREE.Group {
   return g
 }
 
+function textSprite(t: string): THREE.Sprite {
+  const fs = 56, c = document.createElement("canvas"), x0 = c.getContext("2d")
+  if (x0) x0.font = `700 ${fs}px "IBM Plex Sans Arabic", sans-serif`
+  const w = Math.ceil((x0?.measureText(t).width ?? fs * t.length) + fs), h = fs * 1.6
+  c.width = w; c.height = h
+  const x = c.getContext("2d")
+  if (x) {
+    x.fillStyle = "#0b1b33d9"; x.beginPath(); x.roundRect(0, 0, w, h, h / 3); x.fill()
+    x.fillStyle = "#ffffff"; x.font = `700 ${fs}px "IBM Plex Sans Arabic", sans-serif`; x.textAlign = "center"; x.textBaseline = "middle"; x.direction = "rtl"; x.fillText(t, w / HALF, h / HALF + 3)
+  }
+  const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(c), depthTest: false }))
+  const k = 1.6 / h * 1.6; s.scale.set(w * k, h * k, 1); s.renderOrder = 6
+  return s
+}
+
 function markObj(m: Mark): THREE.Object3D {
+  if (m.kind === "text") { const s = textSprite(m.text ?? ""); s.position.set(m.pts[0][0], 1.4, m.pts[0][1]); return s }
   const col = MARK_COLOR[m.kind], mat = new THREE.MeshStandardMaterial({ color: col, emissive: col, emissiveIntensity: 0.35, transparent: m.kind === "zone", opacity: m.kind === "zone" ? 0.28 : 1 })
   if (m.kind === "zone") {
     const [a, b] = [m.pts[0], m.pts[m.pts.length - 1]], r = Math.max(1, Math.hypot(b[0] - a[0], b[1] - a[1]))
@@ -140,6 +156,12 @@ function markObj(m: Mark): THREE.Object3D {
 }
 
 export interface Board3D {
+  undo: () => void
+  redo: () => void
+  readonly canUndo: () => boolean
+  readonly canRedo: () => boolean
+  setText: (t: string) => void
+  setCaption: (i: number, t: string) => void
   readonly state: () => BoardState
   load: (b: BoardState) => void
   setTool: (t: Tool) => void
@@ -153,7 +175,9 @@ export interface Board3D {
 }
 
 export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChange: (b: BoardState) => void): Board3D {
-  let st: BoardState = init, tool: Tool = "move", fi = 0
+  let st: BoardState = init, tool: Tool = "move", fi = 0, text = ""
+  const hist: string[] = [], fut: string[] = [], HIST_MAX = 80
+  const remember = (): void => { hist.push(JSON.stringify(st)); if (hist.length > HIST_MAX) hist.shift(); fut.length = 0 }
   const rn = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true })
   rn.setPixelRatio(Math.min(window.devicePixelRatio, HALF)); rn.shadowMap.enabled = true
   const sc = new THREE.Scene(), cam = new THREE.PerspectiveCamera(38, 1, 0.5, 900)
@@ -206,10 +230,11 @@ export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChan
     canvas.setPointerCapture(e.pointerId)
     const p = onGround(e)
     if (e.button === HALF || e.button === 1 || !p) { drag = { k: "orbit", x: e.clientX, y: e.clientY, az: goal.az, el: goal.el }; return }
-    if (tool === "move") { const t = nearest(p); drag = t ? { k: "tok", t } : { k: "orbit", x: e.clientX, y: e.clientY, az: goal.az, el: goal.el }; return }
+    if (tool === "text") { if (!text.trim()) return; remember(); const m: Mark = { id: uid("m"), kind: "text", pts: [p], text: text.trim() }; st.marks.push(m); marks.add(Object.assign(markObj(m), { name: m.id })); onChange(st); return }
+    if (tool === "move") { const t = nearest(p); if (t) remember(); drag = t ? { k: "tok", t } : { k: "orbit", x: e.clientX, y: e.clientY, az: goal.az, el: goal.el }; return }
     if (tool === "erase") {
       const hit = st.marks.findIndex((m) => m.pts.some(([x, z]) => Math.hypot(x - p[0], z - p[1]) < PICK_R))
-      if (hit >= 0) { const [m] = st.marks.splice(hit, 1); const o = marks.getObjectByName(m.id); if (o) marks.remove(o); onChange(st) }
+      if (hit >= 0) { remember(); const [m] = st.marks.splice(hit, 1); const o = marks.getObjectByName(m.id); if (o) marks.remove(o); onChange(st) }
       return
     }
     const m: Mark = { id: uid("m"), kind: tool, pts: [p, p] }; const o = new THREE.Group(); marks.add(o); drag = { k: "draw", m, o }
@@ -226,7 +251,7 @@ export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChan
   }
   const up = (): void => {
     if (drag?.k === "tok") commit()
-    if (drag?.k === "draw") { const [a, b] = [drag.m.pts[0], drag.m.pts[drag.m.pts.length - 1]]; if (Math.hypot(b[0] - a[0], b[1] - a[1]) > 1) { st.marks.push(drag.m); onChange(st) } else marks.remove(drag.o) }
+    if (drag?.k === "draw") { const [a, b] = [drag.m.pts[0], drag.m.pts[drag.m.pts.length - 1]]; if (Math.hypot(b[0] - a[0], b[1] - a[1]) > 1) { remember(); st.marks.push(drag.m); onChange(st) } else marks.remove(drag.o) }
     drag = null
   }
   const wheel = (e: WheelEvent): void => { e.preventDefault(); const L = M0().L; goal.dist = Math.max(L * 0.25, Math.min(L * 1.6, goal.dist * (1 + e.deltaY * 0.0012))) }
@@ -248,13 +273,20 @@ export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChan
     fi = Math.max(0, Math.min(st.frames.length - 1, i)); const f = st.frames[fi]
     st.tokens.forEach((t) => { const p = f[t.id]; if (!p) return; t.x = p[0]; t.z = p[1]; const ob = objs.get(t.id); if (ob) { ob.to.set(p[0], 0, p[1]); if (!animate) ob.o.position.copy(ob.to) } })
   }
+  const restore = (from: string[], to: string[]): void => { const s = from.pop(); if (!s) return; to.push(JSON.stringify(st)); st = JSON.parse(s) as BoardState; fi = Math.min(fi, st.frames.length - 1); build(); frame(fi, false); onChange(st) }
   return {
+    undo: () => restore(hist, fut),
+    redo: () => restore(fut, hist),
+    canUndo: () => hist.length > 0,
+    canRedo: () => fut.length > 0,
+    setText: (t) => { text = t },
+    setCaption: (i, t) => { st.caps = st.caps ?? []; st.caps[i] = t; onChange(st) },
     state: () => st,
-    load: (b) => { st = b; fi = 0; build(); Object.assign(goal, presets("broadcast")); onChange(st) },
+    load: (b) => { remember(); st = b; fi = 0; build(); Object.assign(goal, presets("broadcast")); onChange(st) },
     setTool: (t) => { tool = t; canvas.style.cursor = t === "move" ? "grab" : "crosshair" },
     setCam,
     frame,
-    addFrame: () => { st.frames.splice(fi + 1, 0, snap(st)); fi += 1; onChange(st); return fi },
+    addFrame: () => { remember(); st.caps?.splice(fi + 1, 0, ""); st.frames.splice(fi + 1, 0, snap(st)); fi += 1; onChange(st); return fi },
     play: (onStep, onEnd) => {
       let i = 0; frame(0, false); onStep(0)
       const t = window.setInterval(() => { i += 1; if (i >= st.frames.length) { window.clearInterval(t); onEnd(); return } frame(i, true); onStep(i) }, FRAME_MS)

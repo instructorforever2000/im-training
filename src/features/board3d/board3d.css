@@ -12,8 +12,8 @@
 .b3 .seg button{padding:6px 11px;border-radius:9px;font-size:12.5px;font-weight:600;color:var(--mu)}.b3 .seg button.on{background:#fff;color:#0b1726;box-shadow:0 2px 8px -4px #0b1b3355}
 .b3 .frm{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600}.b3 .frm i{width:10px;height:10px;border-radius:50%}
 .b3 .frm select{font:600 12.5px Outfit;padding:5px 8px;border-radius:9px;border:1px solid var(--ln);background:transparent;color:var(--ink)}
-.b3tools{position:absolute;top:50%;transform:translateY(-50%);left:14px;display:flex;flex-direction:column;gap:4px;padding:8px;width:86px}
-.b3tools button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px;border-radius:12px;font-size:11px;font-weight:600;color:var(--mu);transition:.15s}
+.b3tools{position:absolute;top:76px;bottom:96px;overflow-y:auto;left:14px;display:flex;flex-direction:column;gap:4px;padding:8px;width:86px}
+.b3tools button{flex:none;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px;border-radius:12px;font-size:11px;font-weight:600;color:var(--mu);transition:.15s}
 .b3tools svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .b3tools button:hover{background:#0b1b330d}.b3tools button.on{background:#0b1726;color:var(--c,#fff)}
 .b3tools hr{border:0;border-top:1px solid var(--ln);margin:4px 0}
@@ -25,3 +25,12 @@
 .b3tl .frames button.on{background:var(--teal);border-color:var(--teal);color:#fff}.b3tl .frames .add{padding:0 12px;font:600 12.5px "IBM Plex Sans Arabic";color:#0f8f84;border-style:dashed}
 .b3tl .hint{margin-inline-start:auto;font-size:11.5px;color:var(--mu)}
 @media (max-width:860px){.b3top,.b3tl{right:10px;left:10px}.b3top{top:10px}.b3tl{bottom:84px;padding:8px}.b3tools{top:auto;bottom:150px;transform:none;flex-direction:row;width:auto;left:10px;right:10px;overflow-x:auto}.b3tools hr{display:none}.b3tl .hint{display:none}}
+
+.b3tools button:disabled{opacity:.35}
+.b3txt{position:absolute;top:84px;left:116px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;width:280px}
+.b3txt b{font-size:12px}.b3txt input,.b3tl .cap{font:inherit;font-size:13px;padding:8px 10px;border-radius:10px;border:1px solid var(--ln);background:transparent;color:var(--ink);outline:0}
+.b3txt input:focus,.b3tl .cap:focus{border-color:var(--teal)}
+.b3tl .cap{flex:1;min-width:200px}
+.b3cap{position:absolute;bottom:96px;left:50%;transform:translateX(-50%);padding:10px 18px;border-radius:14px;background:#0b1b33e6;color:#fff;font-size:15px;font-weight:600;max-width:70%;text-align:center;animation:b3in .3s both}
+@keyframes b3in{from{opacity:0;transform:translate(-50%,8px)}}
+@media (max-width:860px){.b3txt{left:10px;right:10px;width:auto;top:auto;bottom:230px}.b3cap{bottom:220px;max-width:92%}}
