@@ -4,12 +4,13 @@ import * as THREE from "three"
 import { ENG } from "@/features/roles/engine/engine"
 
 export type Mode = "fb11" | "fb7" | "futsal"
-export type Tool = "move" | "pass" | "run" | "dribble" | "zone" | "text" | "erase"
+export type Tool = "move" | "pass" | "run" | "dribble" | "zone" | "text" | "equip" | "erase"
+export type Equip = "cone" | "ladder" | "hurdle" | "pole" | "flag" | "minigoal" | "mannequin"
 export type Side = "A" | "B"
 export type Cam = "broadcast" | "top" | "goal"
 type XZ = [number, number]
-export interface Token { id: string; kind: "p" | "ball"; team?: Side; num?: number; code?: string; x: number; z: number }
-export interface Mark { id: string; kind: Exclude<Tool, "move" | "erase">; pts: XZ[]; text?: string }
+export interface Token { id: string; kind: "p" | "ball" | "eq"; eq?: Equip; rot?: number; team?: Side; num?: number; code?: string; x: number; z: number }
+export interface Mark { id: string; kind: Exclude<Tool, "move" | "erase" | "equip">; pts: XZ[]; text?: string }
 export interface BoardState { mode: Mode; form: Record<Side, string>; tokens: Token[]; marks: Mark[]; frames: Record<string, XZ>[]; caps?: string[] }
 
 interface ModeDef { L: number; W: number }
@@ -120,6 +121,20 @@ function textSprite(t: string): THREE.Sprite {
   return s
 }
 
+function equipObj(e: Equip): THREE.Group {
+  const g = new THREE.Group(), m = (c: string, r = 0.5): THREE.MeshStandardMaterial => new THREE.MeshStandardMaterial({ color: c, roughness: r })
+  const add = (geo: THREE.BufferGeometry, mat: THREE.Material, x = 0, y = 0, z = 0): THREE.Mesh => { const o = new THREE.Mesh(geo, mat); o.position.set(x, y, z); o.castShadow = true; g.add(o); return o }
+  const orange = m("#ff7a1a", 0.45), yellow = m("#f2c14e"), white = m("#ffffff"), red = m("#d9483b"), blue = m("#2a6fe0")
+  if (e === "cone") { add(new THREE.ConeGeometry(0.32, 0.6, 18), orange, 0, 0.3); add(new THREE.CylinderGeometry(0.42, 0.42, 0.04, 18), orange, 0, 0.02) }
+  if (e === "ladder") { [-0.3, 0.3].forEach((z) => add(new THREE.BoxGeometry(4.2, 0.04, 0.05), yellow, 0, 0.03, z)); for (let i = 0; i <= 8; i++) add(new THREE.BoxGeometry(0.05, 0.04, 0.6), yellow, -2.1 + (i * 4.2) / 8, 0.03, 0) }
+  if (e === "hurdle") { [-0.45, 0.45].forEach((z) => add(new THREE.CylinderGeometry(0.03, 0.03, 0.45), red, 0, 0.22, z)); add(new THREE.CylinderGeometry(0.035, 0.035, 0.95), white, 0, 0.45, 0).rotation.x = Math.PI / 2 }
+  if (e === "pole") { add(new THREE.CylinderGeometry(0.04, 0.04, 1.7), yellow, 0, 0.85); add(new THREE.CylinderGeometry(0.15, 0.15, 0.06), m("#333"), 0, 0.03) }
+  if (e === "flag") { add(new THREE.CylinderGeometry(0.03, 0.03, 1.5), white, 0, 0.75); add(new THREE.PlaneGeometry(0.5, 0.35), new THREE.MeshStandardMaterial({ color: "#f2c14e", side: THREE.DoubleSide }), 0.25, 1.32) }
+  if (e === "minigoal") { const w = 1.8, h = 0.9; [-w / 2, w / 2].forEach((z) => add(new THREE.CylinderGeometry(0.04, 0.04, h), white, 0, h / 2, z)); add(new THREE.CylinderGeometry(0.04, 0.04, w), white, 0, h, 0).rotation.x = Math.PI / 2; add(new THREE.PlaneGeometry(w, h), new THREE.MeshStandardMaterial({ color: "#fff", transparent: true, opacity: 0.25, side: THREE.DoubleSide }), 0.5, h / 2).rotation.y = Math.PI / 2 }
+  if (e === "mannequin") { add(new THREE.CapsuleGeometry(0.32, 1.1, 6, 12), blue, 0, 1.0); add(new THREE.SphereGeometry(0.25, 14, 10), blue, 0, 1.95); add(new THREE.CylinderGeometry(0.4, 0.45, 0.08, 16), m("#333"), 0, 0.04) }
+  return g
+}
+
 function markObj(m: Mark): THREE.Object3D {
   if (m.kind === "text") { const s = textSprite(m.text ?? ""); s.position.set(m.pts[0][0], 1.4, m.pts[0][1]); return s }
   const col = MARK_COLOR[m.kind], mat = new THREE.MeshStandardMaterial({ color: col, emissive: col, emissiveIntensity: 0.35, transparent: m.kind === "zone", opacity: m.kind === "zone" ? 0.28 : 1 })
@@ -161,6 +176,7 @@ export interface Board3D {
   readonly canUndo: () => boolean
   readonly canRedo: () => boolean
   setText: (t: string) => void
+  setEquip: (e: Equip) => void
   setCaption: (i: number, t: string) => void
   readonly state: () => BoardState
   load: (b: BoardState) => void
@@ -175,7 +191,7 @@ export interface Board3D {
 }
 
 export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChange: (b: BoardState) => void): Board3D {
-  let st: BoardState = init, tool: Tool = "move", fi = 0, text = ""
+  let st: BoardState = init, tool: Tool = "move", fi = 0, text = "", equip: Equip = "cone"
   const hist: string[] = [], fut: string[] = [], HIST_MAX = 80
   const remember = (): void => { hist.push(JSON.stringify(st)); if (hist.length > HIST_MAX) hist.shift(); fut.length = 0 }
   const rn = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true })
@@ -193,7 +209,7 @@ export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChan
     world.clear(); objs.clear()
     field = pitch(MODES[st.mode]); world.add(field)
     marks = new THREE.Group(); world.add(marks); st.marks.forEach((m) => marks.add(Object.assign(markObj(m), { name: m.id })))
-    st.tokens.forEach((t) => { const o = t.kind === "ball" ? ballMesh() : playerObj(t); o.position.set(t.x, 0, t.z); o.userData.id = t.id; world.add(o); objs.set(t.id, { o, to: o.position.clone() }) })
+    st.tokens.forEach((t) => { const o = t.kind === "ball" ? ballMesh() : t.kind === "eq" ? equipObj(t.eq ?? "cone") : playerObj(t); o.rotation.y = t.rot ?? 0; o.position.set(t.x, 0, t.z); o.userData.id = t.id; world.add(o); objs.set(t.id, { o, to: o.position.clone() }) })
   }
 
   // camera — orbit around the pitch centre; presets ease to their angles
@@ -230,10 +246,17 @@ export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChan
     canvas.setPointerCapture(e.pointerId)
     const p = onGround(e)
     if (e.button === HALF || e.button === 1 || !p) { drag = { k: "orbit", x: e.clientX, y: e.clientY, az: goal.az, el: goal.el }; return }
+    if (tool === "equip") {
+      remember(); const t: Token = { id: uid("e"), kind: "eq", eq: equip, x: p[0], z: p[1], rot: equip === "ladder" || equip === "minigoal" ? 0 : 0 }
+      st.tokens.push(t); st.frames.forEach((f) => { f[t.id] = [t.x, t.z] })
+      const o = equipObj(equip); o.position.set(t.x, 0, t.z); world.add(o); objs.set(t.id, { o, to: o.position.clone() }); onChange(st); return
+    }
     if (tool === "text") { if (!text.trim()) return; remember(); const m: Mark = { id: uid("m"), kind: "text", pts: [p], text: text.trim() }; st.marks.push(m); marks.add(Object.assign(markObj(m), { name: m.id })); onChange(st); return }
     if (tool === "move") { const t = nearest(p); if (t) remember(); drag = t ? { k: "tok", t } : { k: "orbit", x: e.clientX, y: e.clientY, az: goal.az, el: goal.el }; return }
     if (tool === "erase") {
       const hit = st.marks.findIndex((m) => m.pts.some(([x, z]) => Math.hypot(x - p[0], z - p[1]) < PICK_R))
+      const eq = st.tokens.find((t) => t.kind === "eq" && Math.hypot(t.x - p[0], t.z - p[1]) < PICK_R)
+      if (eq) { remember(); st.tokens = st.tokens.filter((t) => t !== eq); st.frames.forEach((f) => { delete f[eq.id] }); const ob = objs.get(eq.id); if (ob) world.remove(ob.o); objs.delete(eq.id); onChange(st); return }
       if (hit >= 0) { remember(); const [m] = st.marks.splice(hit, 1); const o = marks.getObjectByName(m.id); if (o) marks.remove(o); onChange(st) }
       return
     }
@@ -280,6 +303,7 @@ export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChan
     canUndo: () => hist.length > 0,
     canRedo: () => fut.length > 0,
     setText: (t) => { text = t },
+    setEquip: (e) => { equip = e },
     setCaption: (i, t) => { st.caps = st.caps ?? []; st.caps[i] = t; onChange(st) },
     state: () => st,
     load: (b) => { remember(); st = b; fi = 0; build(); Object.assign(goal, presets("broadcast")); onChange(st) },

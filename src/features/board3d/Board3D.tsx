@@ -1,7 +1,7 @@
 // السبورة التكتيكية 3D — the pitch is the screen: draw passes, runs, dribbles and zones on the grass, move players,
 // add movement frames and play them like a broadcast replay. Saved on this device.
 import { useEffect, useRef, useState } from "react"
-import { mountBoard3D, newBoard, formsOf, setFormation, MARK_COLOR, TEAM_COLOR, type Board3D as Api, type BoardState, type Cam, type Mode, type Side, type Tool } from "./engine"
+import { mountBoard3D, newBoard, formsOf, setFormation, MARK_COLOR, TEAM_COLOR, type Board3D as Api, type BoardState, type Cam, type Mode, type Side, type Tool, type Equip } from "./engine"
 import "./board3d.css"
 
 const KEY = "im-board3d-v1"
@@ -14,8 +14,13 @@ const TOOLS: readonly { k: Tool; ar: string; en: string; d: string }[] = [
   { k: "run", ar: "جري بدون كرة", en: "Run", d: "M3 18c5-1 10-6 16-12M19 6h-6M19 6v6" },
   { k: "dribble", ar: "مراوغة بالكرة", en: "Dribble", d: "M3 18l3-3 2 2 3-3 2 2 3-3 2 2M19 6v6M19 6h-6" },
   { k: "zone", ar: "منطقة", en: "Zone", d: "M12 4a8 8 0 100 16 8 8 0 000-16z" },
+  { k: "equip", ar: "أدوات", en: "Equipment", d: "M12 3l5 15H7zM5 20h14" },
   { k: "text", ar: "كتابة", en: "Text", d: "M5 5h14M12 5v14M9 19h6" },
   { k: "erase", ar: "ممحاة", en: "Erase", d: "M4 16l8-8 6 6-6 6H8zM14 20h6" },
+]
+const EQUIP: readonly { k: Equip; ar: string; en: string }[] = [
+  { k: "cone", ar: "قمع", en: "Cone" }, { k: "ladder", ar: "سلم رشاقة", en: "Agility ladder" }, { k: "hurdle", ar: "حاجز", en: "Hurdle" },
+  { k: "pole", ar: "عصا", en: "Pole" }, { k: "flag", ar: "علم", en: "Flag" }, { k: "minigoal", ar: "مرمى صغير", en: "Mini goal" }, { k: "mannequin", ar: "دمية حائط", en: "Mannequin" },
 ]
 const CAMS: readonly { k: Cam; ar: string }[] = [{ k: "broadcast", ar: "البث" }, { k: "top", ar: "علوي" }, { k: "goal", ar: "خلف المرمى" }]
 
@@ -34,6 +39,8 @@ export function Board3D({ dark }: { readonly dark: boolean }): React.JSX.Element
   const [playing, setPlaying] = useState(false)
   const [, tick] = useState(0)
   const [txt, setTxt] = useState("")
+  const [eq, setEq] = useState<Equip>("cone")
+  useEffect(() => { api.current?.setEquip(eq) }, [eq])
   useEffect(() => { api.current?.setText(txt) }, [txt])
   useEffect(() => {
     const k = (e: KeyboardEvent): void => {
@@ -92,6 +99,8 @@ export function Board3D({ dark }: { readonly dark: boolean }): React.JSX.Element
         <button onClick={exportPng} title="صورة PNG"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M4 19h16" /></svg><span>صورة</span></button>
       </nav>
 
+      {tool === "equip" && <div className="b3txt glass"><b>اختار الأداة ثم اضغط مكانها على الملعب · الممحاة تشيلها</b>
+        <div className="eqs">{EQUIP.map((e) => <button key={e.k} className={eq === e.k ? "on" : ""} onClick={() => setEq(e.k)}>{e.ar}<span className="en">{e.en}</span></button>)}</div></div>}
       {tool === "text" && <div className="b3txt glass"><b>اكتب الملاحظة ثم اضغط مكانها على الملعب</b><input autoFocus value={txt} onChange={(e) => setTxt(e.target.value)} placeholder="مثال: ضغط عالي هنا" /></div>}
       {playing && st.caps?.[fi] && <div className="b3cap">{st.caps[fi]}</div>}
       <footer className="b3tl glass">

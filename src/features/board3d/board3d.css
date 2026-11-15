@@ -34,3 +34,4 @@
 .b3cap{position:absolute;bottom:96px;left:50%;transform:translateX(-50%);padding:10px 18px;border-radius:14px;background:#0b1b33e6;color:#fff;font-size:15px;font-weight:600;max-width:70%;text-align:center;animation:b3in .3s both}
 @keyframes b3in{from{opacity:0;transform:translate(-50%,8px)}}
 @media (max-width:860px){.b3txt{left:10px;right:10px;width:auto;top:auto;bottom:230px}.b3cap{bottom:220px;max-width:92%}}
+.b3txt .eqs{display:grid;grid-template-columns:1fr 1fr;gap:4px}.b3txt .eqs button{padding:7px 8px;border-radius:9px;border:1px solid var(--ln);font-size:12.5px;font-weight:600;text-align:start;color:var(--ink)}.b3txt .eqs button.on{border-color:var(--teal);background:#1FB5A81a}
