@@ -1,10 +1,13 @@
 // السبورة التكتيكية 3D — the pitch is the screen: draw passes, runs, dribbles and zones on the grass, move players,
 // add movement frames and play them like a broadcast replay. Saved on this device.
 import { useEffect, useRef, useState } from "react"
-import { mountBoard3D, newBoard, formsOf, setFormation, MARK_COLOR, TEAM_COLOR, type Board3D as Api, type BoardState, type Cam, type Mode, type Side, type Tool, type Equip } from "./engine"
+import { autoQuality, type QualityPref, mountBoard3D, newBoard, formsOf, setFormation, MARK_COLOR, TEAM_COLOR, type Board3D as Api, type BoardState, type Cam, type Mode, type Side, type Tool, type Equip } from "./engine"
 import "./board3d.css"
 
 const KEY = "im-board3d-v1"
+const QKEY = "im-board3d-quality"
+const readQ = (): QualityPref => { try { const v = localStorage.getItem(QKEY); return v === "high" || v === "lite" ? v : "auto" } catch { return "auto" } }
+const resolveQ = (p: QualityPref): "high" | "lite" => (p === "auto" ? autoQuality() : p)
 const MODES: readonly { k: Mode; ar: string; en: string }[] = [
   { k: "fb11", ar: "قدم 11", en: "11v11" }, { k: "fb7", ar: "قدم 7", en: "7v7" }, { k: "futsal", ar: "صالات", en: "Futsal" },
 ]
@@ -39,6 +42,8 @@ export function Board3D({ dark }: { readonly dark: boolean }): React.JSX.Element
   const [playing, setPlaying] = useState(false)
   const [, tick] = useState(0)
   const [txt, setTxt] = useState("")
+  const [qp, setQp] = useState<QualityPref>(readQ)
+  useEffect(() => { try { localStorage.setItem(QKEY, qp) } catch { /* private mode */ } api.current?.setQuality(resolveQ(qp)) }, [qp])
   const [eq, setEq] = useState<Equip>("cone")
   useEffect(() => { api.current?.setEquip(eq) }, [eq])
   useEffect(() => { api.current?.setText(txt) }, [txt])
@@ -53,7 +58,7 @@ export function Board3D({ dark }: { readonly dark: boolean }): React.JSX.Element
 
   useEffect(() => {
     const c = cv.current; if (!c) return
-    const a = mountBoard3D(c, b, (s) => { try { localStorage.setItem(KEY, JSON.stringify(s)) } catch { /* full */ } tick((n) => n + 1) })
+    const a = mountBoard3D(c, b, (s) => { try { localStorage.setItem(KEY, JSON.stringify(s)) } catch { /* full */ } tick((n) => n + 1) }, resolveQ(readQ()))
     api.current = a
     return () => { a.dispose(); api.current = null }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -82,6 +87,8 @@ export function Board3D({ dark }: { readonly dark: boolean }): React.JSX.Element
           <label key={s} className="frm"><i style={{ background: TEAM_COLOR[s] }} />{s === "A" ? "فريقنا" : "المنافس"}
             <select value={st.form[s]} onChange={(e) => form(s, e.target.value)}>{formsOf(st.mode).map((f) => <option key={f}>{f}</option>)}</select></label>
         ))}
+        <label className="frm" title="جودة العرض — «تلقائي» يختار حسب قوة الجهاز">جودة العرض
+          <select value={qp} onChange={(e) => setQp(e.target.value as QualityPref)}><option value="auto">تلقائي</option><option value="high">عالية</option><option value="lite">خفيفة</option></select></label>
         <div className="seg">{CAMS.map((c) => <button key={c.k} className={cam === c.k ? "on" : ""} onClick={() => setCam(c.k)}>{c.ar}</button>)}</div>
       </header>
 

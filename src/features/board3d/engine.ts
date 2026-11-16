@@ -2,6 +2,20 @@
 // Formations and pitch sizes come from the roles engine (same data as the 2D board), so both boards agree.
 import * as THREE from "three"
 import { ENG } from "@/features/roles/engine/engine"
+import { buildAthlete, type Pose, type Rig } from "@/features/library/arena3d/athlete"
+import POSES from "@/features/library/arena3d/poses.json"
+
+/** Display quality: "high" = real athletes + shadows, "lite" = simple figures, no shadows (weak devices). */
+export type Quality = "high" | "lite"
+export type QualityPref = "auto" | Quality
+const POSE = POSES as unknown as Record<string, Pose>
+const LOW_CORES = 4, LOW_MEM = 4, SMALL_SCREEN = 760
+/** Weak device guess: few CPU cores, little memory, or a small touch screen. */
+export function autoQuality(): Quality {
+  const n = navigator as Navigator & { deviceMemory?: number }
+  const weak = (n.hardwareConcurrency ?? 8) <= LOW_CORES || (n.deviceMemory ?? 8) <= LOW_MEM || (matchMedia("(pointer:coarse)").matches && innerWidth < SMALL_SCREEN)
+  return weak ? "lite" : "high"
+}
 
 export type Mode = "fb11" | "fb7" | "futsal"
 export type Tool = "move" | "pass" | "run" | "dribble" | "zone" | "text" | "equip" | "erase"
@@ -91,6 +105,22 @@ function pitch(M: ModeDef): THREE.Group {
     const net = new THREE.Mesh(new THREE.PlaneGeometry(gw * HALF, gh), new THREE.MeshStandardMaterial({ color: "#ffffff", transparent: true, opacity: 0.18, side: THREE.DoubleSide }))
     net.rotation.y = Math.PI / HALF; net.position.set(e + d * 1.6, gh / HALF, 0); g.add(net)
   })
+  return g
+}
+
+const hex = (c: string): number => parseInt(c.slice(1), 16)
+const SKINS = [0xc68e64, 0x8d5a3b, 0xe0b48f, 0xa8744f, 0x6f4630], HAIRS = [0x15110e, 0x2b1d14, 0x0e0c0b]
+const ATH_SCALE = 2.3
+function athleteObj(t: Token, i: number): THREE.Group {
+  const g = new THREE.Group(), col = TEAM_COLOR[t.team ?? "A"], gk = t.code === "GK"
+  const shirt = gk ? 0x2a8be0 : hex(col)
+  const rig = buildAthlete({ shirt, shorts: t.team === "A" ? 0x0b1b33 : 0xffffff, socks: shirt, skin: SKINS[i % SKINS.length], hair: HAIRS[i % HAIRS.length], shoes: 0x111111 }, ATH_SCALE)
+  rig.pose(POSE.athletic ?? POSE.stand)
+  const body = new THREE.Group(); body.add(rig.root); body.rotation.y = t.team === "B" ? -Math.PI / HALF : Math.PI / HALF
+  g.add(body); g.userData.rig = rig; g.userData.body = body
+  const ring = new THREE.Mesh(new THREE.RingGeometry(0.95, 1.2, 32), new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.75 }))
+  ring.rotation.x = -Math.PI / HALF; ring.position.y = Y_LINE; g.add(ring)
+  const sp = numberSprite(String(t.num ?? ""), col); sp.position.y = 5.2; g.add(sp)
   return g
 }
 
@@ -188,14 +218,19 @@ export interface Board3D {
   dark: (on: boolean) => void
   png: () => string
   dispose: () => void
+  setQuality: (q: Quality) => void
 }
 
-export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChange: (b: BoardState) => void): Board3D {
+export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChange: (b: BoardState) => void, quality: Quality = "high"): Board3D {
+  let q = quality
+  let still = 0
+  const wake = (): void => { still = 0 }
   let st: BoardState = init, tool: Tool = "move", fi = 0, text = "", equip: Equip = "cone"
   const hist: string[] = [], fut: string[] = [], HIST_MAX = 80
   const remember = (): void => { hist.push(JSON.stringify(st)); if (hist.length > HIST_MAX) hist.shift(); fut.length = 0 }
   const rn = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true })
-  rn.setPixelRatio(Math.min(window.devicePixelRatio, HALF)); rn.shadowMap.enabled = true
+  const applyQ = (): void => { rn.setPixelRatio(q === "high" ? Math.min(window.devicePixelRatio, HALF) : 1); rn.shadowMap.enabled = q === "high" }
+  applyQ()
   const sc = new THREE.Scene(), cam = new THREE.PerspectiveCamera(38, 1, 0.5, 900)
   sc.add(new THREE.HemisphereLight("#ffffff", "#5a6a5a", 1.15))
   const sun = new THREE.DirectionalLight("#ffffff", 1.6); sun.position.set(30, 80, 40); sun.castShadow = true
@@ -206,10 +241,11 @@ export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChan
   const ballMesh = (): THREE.Group => { const g = new THREE.Group(); const m = new THREE.Mesh(new THREE.SphereGeometry(0.42, 24, 16), new THREE.MeshStandardMaterial({ color: "#ffffff", roughness: 0.35 })); m.position.y = 0.42; m.castShadow = true; g.add(m); return g }
 
   const build = (): void => {
+    still = 0
     world.clear(); objs.clear()
     field = pitch(MODES[st.mode]); world.add(field)
     marks = new THREE.Group(); world.add(marks); st.marks.forEach((m) => marks.add(Object.assign(markObj(m), { name: m.id })))
-    st.tokens.forEach((t) => { const o = t.kind === "ball" ? ballMesh() : t.kind === "eq" ? equipObj(t.eq ?? "cone") : playerObj(t); o.rotation.y = t.rot ?? 0; o.position.set(t.x, 0, t.z); o.userData.id = t.id; world.add(o); objs.set(t.id, { o, to: o.position.clone() }) })
+    st.tokens.forEach((t, i) => { const o = t.kind === "ball" ? ballMesh() : t.kind === "eq" ? equipObj(t.eq ?? "cone") : q === "high" ? athleteObj(t, i) : playerObj(t); if (q !== "high") o.traverse((m) => { m.castShadow = false }); o.rotation.y = t.rot ?? 0; o.position.set(t.x, 0, t.z); o.userData.id = t.id; world.add(o); objs.set(t.id, { o, to: o.position.clone() }) })
   }
 
   // camera — orbit around the pitch centre; presets ease to their angles
@@ -218,10 +254,10 @@ export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChan
   const presets = (c: Cam): typeof view => {
     const L = M0().L
     if (c === "top") return { az: 0, el: 1.5, dist: L * 1.32, tx: 0, tz: 0 }
-    if (c === "goal") return { az: Math.PI / HALF, el: 0.42, dist: L * 0.62, tx: L * 0.12, tz: 0 }
+    if (c === "goal") return { az: -Math.PI / HALF, el: 0.3, dist: L * 0.42, tx: -L * 0.2, tz: 0 }
     return { az: -0.3, el: 0.86, dist: L * 1.42, tx: 0, tz: 4 }
   }
-  const setCam = (c: Cam): void => { Object.assign(goal, presets(c)) }
+  const setCam = (c: Cam): void => { Object.assign(goal, presets(c)); wake() }
   Object.assign(view, presets("broadcast")); Object.assign(goal, view)
 
   const size = (): void => { const r = canvas.getBoundingClientRect(); rn.setSize(r.width, r.height, false); cam.aspect = r.width / Math.max(1, r.height); cam.updateProjectionMatrix() }
@@ -278,22 +314,34 @@ export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChan
     drag = null
   }
   const wheel = (e: WheelEvent): void => { e.preventDefault(); const L = M0().L; goal.dist = Math.max(L * 0.25, Math.min(L * 1.6, goal.dist * (1 + e.deltaY * 0.0012))) }
+  ;["pointerdown", "pointermove", "wheel"].forEach((ev) => canvas.addEventListener(ev, wake))
   canvas.addEventListener("pointerdown", down); canvas.addEventListener("pointermove", move); canvas.addEventListener("pointerup", up); canvas.addEventListener("pointercancel", up)
   canvas.addEventListener("wheel", wheel, { passive: false }); canvas.addEventListener("contextmenu", (e) => e.preventDefault())
 
   let raf = 0
+  const IDLE_FRAMES = 30, MOVING = 0.02, RUN_POSE = POSE.jog ?? POSE.athletic, READY = POSE.athletic ?? POSE.stand
   const loop = (): void => {
     raf = requestAnimationFrame(loop)
-    ;(Object.keys(view) as (keyof typeof view)[]).forEach((k) => { view[k] += (goal[k] - view[k]) * 0.12 })
-    objs.forEach(({ o, to }) => o.position.lerp(to, 0.14))
+    let busy = drag !== null
+    ;(Object.keys(view) as (keyof typeof view)[]).forEach((k) => { const d = goal[k] - view[k]; if (Math.abs(d) > 1e-4) busy = true; view[k] += d * 0.12 })
+    objs.forEach(({ o, to }) => {
+      const dx = to.x - o.position.x, dz = to.z - o.position.z, moving = Math.hypot(dx, dz) > MOVING
+      if (moving) busy = true
+      o.position.lerp(to, 0.14)
+      const rig = o.userData.rig as Rig | undefined, body = o.userData.body as THREE.Group | undefined
+      if (rig && body && o.userData.run !== moving) { o.userData.run = moving; rig.pose(moving ? RUN_POSE : READY) }
+      if (body && moving) body.rotation.y = Math.atan2(dx, dz)
+    })
+    still = busy ? 0 : still + 1
+    if (still > IDLE_FRAMES) return // battery: nothing moves → no redraw
     cam.position.set(view.tx + view.dist * Math.cos(view.el) * Math.sin(view.az), view.dist * Math.sin(view.el), view.tz + view.dist * Math.cos(view.el) * Math.cos(view.az))
     cam.lookAt(view.tx, 0, view.tz); rn.render(sc, cam)
   }
-  const dark = (on: boolean): void => { const bg = on ? "#060b13" : "#dfe7ee"; rn.setClearColor(bg); sc.fog = new THREE.Fog(bg, 160, 320) }
+  const dark = (on: boolean): void => { const bg = on ? "#060b13" : "#dfe7ee"; rn.setClearColor(bg); sc.fog = new THREE.Fog(bg, 160, 320); wake() }
   build(); size(); dark(false); loop()
 
   const frame = (i: number, animate: boolean): void => {
-    fi = Math.max(0, Math.min(st.frames.length - 1, i)); const f = st.frames[fi]
+    fi = Math.max(0, Math.min(st.frames.length - 1, i)); const f = st.frames[fi]; wake()
     st.tokens.forEach((t) => { const p = f[t.id]; if (!p) return; t.x = p[0]; t.z = p[1]; const ob = objs.get(t.id); if (ob) { ob.to.set(p[0], 0, p[1]); if (!animate) ob.o.position.copy(ob.to) } })
   }
   const restore = (from: string[], to: string[]): void => { const s = from.pop(); if (!s) return; to.push(JSON.stringify(st)); st = JSON.parse(s) as BoardState; fi = Math.min(fi, st.frames.length - 1); build(); frame(fi, false); onChange(st) }
@@ -318,6 +366,7 @@ export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChan
     },
     dark,
     png: () => rn.domElement.toDataURL("image/png"),
+    setQuality: (nq) => { q = nq; applyQ(); build(); frame(fi, false); wake() },
     dispose: () => { cancelAnimationFrame(raf); ro.disconnect(); rn.dispose() },
   }
 }
