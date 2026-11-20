@@ -17,7 +17,7 @@ type Family = {
   readonly errors: readonly { readonly x: string; readonly fix: string }[]; readonly ref: string
 }
 const FAMILIES = RAW as readonly Family[]
-interface ProgItem { readonly f: string; readonly v: number; readonly dose: string; readonly next?: string }
+interface ProgItem { readonly f?: string; readonly v?: number; readonly t?: string; readonly dose: string; readonly next?: string }
 interface Program {
   readonly id: string; readonly ar: string; readonly en: string; readonly aud: string; readonly age: string
   readonly weeks: number; readonly perWeek: number; readonly min: number; readonly goal: string; readonly equip: string
@@ -26,8 +26,9 @@ interface Program {
   readonly rules: readonly string[]; readonly ref: string
 }
 const PROGRAMS = PROGS as readonly Program[]
-const AUD_C: Record<string, string> = { "ناشئين": "#2fa36b", "مدارس": "#5b6fe0", "أندية": "#e0661c" }
-const famOf = (id: string): Family | undefined => FAMILIES.find((f) => f.id === id)
+const AUD_C: Record<string, string> = { "ناشئين": "#2fa36b", "مدارس": "#5b6fe0", "أندية": "#e0661c", "وقاية": "#d9483b" }
+const AUDS = ["ناشئين", "مدارس", "أندية", "وقاية"] as const
+const famOf = (id?: string): Family | undefined => FAMILIES.find((f) => f.id === id)
 const BASE = `${import.meta.env.BASE_URL}atlas/`
 const src = (f: string, img: string): string => `${BASE}${f}/${img}.webp`
 
@@ -69,6 +70,7 @@ export function Atlas({ dark }: { readonly dark: boolean }): React.JSX.Element {
   const [open, setOpen] = useState<{ f: string; v: number } | null>(null)
   const [view, setView] = useState<"atlas" | "programs">("atlas")
   const [prog, setProg] = useState<string | null>(null)
+  const [aud, setAud] = useState<string>("all")
 
   const hits = useMemo((): Family[] => {
     const s = q.trim().toLowerCase()
@@ -92,14 +94,15 @@ export function Atlas({ dark }: { readonly dark: boolean }): React.JSX.Element {
   if (view === "programs") {
     const pr = PROGRAMS.find((x) => x.id === prog)
     return <div className="a-pv">{sw}{pr ? <ProgramView p={pr} back={() => setProg(null)} openEx={(f, v) => setOpen({ f, v })} /> : (
-      <div className="a-pgrid">{PROGRAMS.map((p) => (
+      <><div className="chips a-aufl"><button className={`chip ${aud === "all" ? "on" : ""}`} onClick={() => setAud("all")}>الكل {PROGRAMS.length}</button>{AUDS.map((a) => <button key={a} className={`chip ${aud === a ? "on" : ""}`} onClick={() => setAud(a)}>{a === "وقاية" ? "الوقاية من الإصابات" : a} {PROGRAMS.filter((p) => p.aud === a).length}</button>)}</div>
+      <div className="a-pgrid">{PROGRAMS.filter((p) => aud === "all" || p.aud === aud).map((p) => (
         <button key={p.id} className="a-pcard" style={{ "--c": AUD_C[p.aud] ?? "var(--teal)" } as React.CSSProperties} onClick={() => setProg(p.id)}>
           <span className="a-aud">{p.aud} · {p.age}</span>
           <b>{p.ar}</b><span className="en a-e2">{p.en}</span>
           <small>{p.goal}</small>
           <div className="a-pmeta"><div><b>{p.weeks}</b><span>أسابيع</span></div><div><b>{p.perWeek}×</b><span>في الأسبوع</span></div><div><b>{p.min}</b><span>دقيقة</span></div><div><b>{p.blocks.reduce((n, bl) => n + bl.items.length, 0)}</b><span>تمرين</span></div></div>
-          <div className="a-pth">{p.blocks.flatMap((bl) => bl.items).slice(0, 6).map((it, i) => { const fm = famOf(it.f); const vv = fm?.vars[it.v]; return vv ? <img key={i} loading="lazy" src={src(it.f, vv.img)} alt="" /> : null })}</div>
-        </button>))}</div>
+          <div className="a-pth">{p.blocks.flatMap((bl) => bl.items).filter((it) => it.f).slice(0, 6).map((it, i) => { const fm = famOf(it.f); const vv = fm?.vars[it.v ?? 0]; return vv && it.f ? <img key={i} loading="lazy" src={src(it.f, vv.img)} alt="" /> : null })}</div>
+        </button>))}</div></>
     )}</div>
   }
   return (
@@ -182,11 +185,13 @@ function ProgramView({ p, back, openEx }: { readonly p: Program; readonly back: 
           <div key={b.ar} className="a-blk">
             <h5>{b.ar} <span className="en">{b.en}</span><small>{b.min} دقيقة</small></h5>
             <div className="a-exs">{b.items.map((it, i) => {
-              const fm = famOf(it.f), vv = fm?.vars[it.v]; if (!fm || !vv) return null
+              if (it.t) return <div key={i} className="a-ex a-ext"><span className="a-noimg">✦</span><div><b>{it.t}</b><small>بدون أدوات</small><span className="a-dose">{it.dose}</span></div></div>
+              const fm = famOf(it.f), vv = fm?.vars[it.v ?? 0]; if (!fm || !vv || !it.f) return null
+              const fid = it.f, vi = it.v ?? 0
               const [nf, nv] = (it.next ?? "").split(":"), nx = it.next ? famOf(nf)?.vars[Number(nv)] : undefined
               return (
-                <button key={i} className="a-ex" onClick={() => openEx(it.f, it.v)}>
-                  <img loading="lazy" src={src(it.f, vv.img)} alt="" />
+                <button key={i} className="a-ex" onClick={() => openEx(fid, vi)}>
+                  <img loading="lazy" src={src(fid, vv.img)} alt="" />
                   <div><b>{vv.ar}</b><small>{fm.ar}</small><span className="a-dose">{it.dose}</span>{nx && <span className="a-nx">التطور ← {nx.ar}</span>}</div>
                 </button>
               )

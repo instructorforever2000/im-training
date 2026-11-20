@@ -89,3 +89,4 @@
 .a-ex div{display:flex;flex-direction:column;gap:2px;min-width:0}.a-ex b{font-size:13px}.a-ex small{font-size:11px;color:var(--mu)}
 .a-dose{font:700 12.5px Outfit;color:var(--c);direction:ltr;unicode-bidi:isolate;align-self:flex-start}.a-nx{font-size:11px;color:var(--teal2)}
 .a-pv .mu{font-size:12px;color:var(--mu)}
+.a-aufl{margin-bottom:12px}.a-noimg{width:64px;height:64px;border-radius:10px;background:var(--soft);display:grid;place-items:center;color:var(--c);font-size:22px;flex:none}.a-ext{cursor:default}
