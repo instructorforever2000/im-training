@@ -69,6 +69,7 @@ export function Board3D({ dark, playId }: { readonly dark: boolean; readonly pla
   const [playing, setPlaying] = useState(false)
   const [, tick] = useState(0)
   const [txt, setTxt] = useState("")
+  const [menu, setMenu] = useState(false)
   const [role, setRole] = useState<(RoleInfo & { num?: number }) | null>(null)
   const [qp, setQp] = useState<QualityPref>(readQ)
   useEffect(() => { try { localStorage.setItem(QKEY, qp) } catch { /* private mode */ } api.current?.setQuality(resolveQ(qp)) }, [qp])
@@ -147,8 +148,8 @@ export function Board3D({ dark, playId }: { readonly dark: boolean; readonly pla
   return (
     <div className="b3">
       <canvas ref={cv} className="b3gl" />
-      <header className="b3top glass">
-        <div className="ttl"><h1>السبورة التكتيكية <span className="en">3D tactical board</span></h1><span className="live">LIVE 3D</span></div>
+      <header className={`b3top glass ${menu ? "open" : ""}`}>
+        <div className="ttl"><h1>السبورة التكتيكية <span className="en">3D tactical board</span></h1><span className="live">LIVE 3D</span><button className="mtog" onClick={() => setMenu((v) => !v)} aria-expanded={menu}>{menu ? "إخفاء ✕" : "الإعدادات ☰"}</button></div>
         <div className="seg">{MODES.map((m) => <button key={m.k} className={st.mode === m.k ? "on" : ""} onClick={() => replace(newBoard(m.k))}>{m.ar}<span className="en">{m.en}</span></button>)}</div>
         {(["A", "B"] as const).map((s) => (
           <label key={s} className="frm"><i style={{ background: TEAM_COLOR[s] }} />{s === "A" ? "فريقنا" : "المنافس"}

@@ -24,7 +24,7 @@
 .b3tl .frames button{min-width:34px;height:32px;border-radius:9px;border:1px solid var(--ln);font:700 13px Outfit;color:var(--ink)}
 .b3tl .frames button.on{background:var(--teal);border-color:var(--teal);color:#fff}.b3tl .frames .add{padding:0 12px;font:600 12.5px "IBM Plex Sans Arabic";color:#0f8f84;border-style:dashed}
 .b3tl .hint{margin-inline-start:auto;font-size:11.5px;color:var(--mu)}
-@media (max-width:860px){.b3top,.b3tl{right:10px;left:10px}.b3top{top:10px}.b3tl{bottom:10px;padding:8px}.b3tools{top:auto;bottom:76px;transform:none;flex-direction:row;width:auto;left:10px;right:10px;overflow-x:auto}.b3tools hr{display:none}.b3tl .hint{display:none}}
+@media (max-width:860px){.b3top,.b3tl{right:10px;left:10px}.b3top{top:10px}.b3tl{bottom:10px;padding:8px}.b3tools{top:auto;bottom:132px;transform:none;flex-direction:row;width:auto;left:10px;right:10px;overflow-x:auto}.b3tools hr{display:none}.b3tl .hint{display:none}}
 
 .b3tools button:disabled{opacity:.35}
 .b3txt{position:absolute;top:84px;left:116px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;width:280px}
@@ -53,3 +53,5 @@
 .b3role b{font-size:14px}.b3role p{font-size:12.5px;line-height:1.7;color:var(--mu)}.b3role .x{position:absolute;top:8px;left:10px;color:var(--mu)}
 .b3role .lg{display:flex;gap:12px;font-size:11.5px;font-weight:600}.b3role .lg span{display:flex;gap:5px;align-items:center}.b3role .lg i{width:10px;height:10px;border-radius:50%}
 @media (max-width:860px){.b3role{right:10px;left:10px;width:auto;top:auto;bottom:230px}}
+.b3 .mtog{display:none;margin-inline-start:auto;padding:6px 12px;border-radius:10px;background:#0b1726;color:#fff!important;font-size:12.5px;font-weight:600}
+@media (max-width:860px){.b3 .mtog{display:block}.b3top:not(.open)>:not(.ttl){display:none}.b3top{gap:8px;padding:8px 10px}.b3top h1{font-size:15px}.b3top .ttl .en{display:none}.b3top .live{display:none}}
