@@ -17,7 +17,7 @@ export function autoQuality(): Quality {
   return weak ? "lite" : "high"
 }
 
-export type Mode = "fb11" | "fb7" | "futsal"
+export type Mode = "fb11" | "fb7" | "futsal" | "bb" | "hb" | "vb"
 export type Tool = "move" | "pass" | "run" | "dribble" | "zone" | "text" | "equip" | "erase"
 export type Equip = "cone" | "ladder" | "hurdle" | "pole" | "flag" | "minigoal" | "mannequin"
 export type Side = "A" | "B"
@@ -30,7 +30,30 @@ export interface BoardState { mode: Mode; form: Record<Side, string>; tokens: To
 interface ModeDef { L: number; W: number }
 const MODES = ENG.MODES as unknown as Record<string, ModeDef>
 const FORM = ENG.FORM as unknown as Record<string, Record<string, [string, number, number, number][]>>
-export const formsOf = (m: Mode): string[] => Object.keys(FORM[m])
+type Slot = [string, number, number, number]
+const E = ENG as unknown as { BB_OFF: Record<string, Slot[]>; BB_DEF: Record<string, Slot[] | string>; HB_OFF: Record<string, Slot[]>; HB_DEF: Record<string, Slot[]>; VB_FORMS: Record<string, number>; vbFormation: (k: string) => Slot[] }
+const FB = new Set(["fb11", "fb7", "futsal"])
+export const SPORT_OF: Record<Mode, "football" | "basketball" | "handball" | "volleyball"> = { fb11: "football", fb7: "football", futsal: "football", bb: "basketball", hb: "handball", vb: "volleyball" }
+/** Formations for one side: football/futsal share; basketball and handball have attack (A) and defence (B) sets; volleyball rotations. */
+export function formsOf(m: Mode, side: Side = "A"): string[] {
+  if (FB.has(m)) return Object.keys(FORM[m])
+  if (m === "vb") return Object.keys(E.VB_FORMS)
+  const src = m === "bb" ? (side === "A" ? E.BB_OFF : E.BB_DEF) : (side === "A" ? E.HB_OFF : E.HB_DEF)
+  return Object.keys(src).filter((k) => Array.isArray(src[k]))
+}
+/** Slots of a formation as [code, number, x, z] in metres, centred on the court. */
+function slotsOf(m: Mode, side: Side, key: string): Slot[] {
+  const M = MODES[m], cx = M.L / HALF, cz = M.W / HALF
+  const frac = (list: Slot[]): Slot[] => list.map(([c, n, x, y]) => [c, n, (side === "A" ? x : 1 - x) * M.L - cx, (side === "A" ? y : 1 - y) * M.W - cz])
+  const abs = (list: Slot[]): Slot[] => list.map(([c, n, x, y]) => [c, n, x - cx, y - cz])
+  if (FB.has(m)) return frac(FORM[m][key] ?? Object.values(FORM[m])[0])
+  if (m === "vb") return frac(E.vbFormation(key in E.VB_FORMS ? key : "base|1"))
+  const src = (m === "bb" ? (side === "A" ? E.BB_OFF : E.BB_DEF) : (side === "A" ? E.HB_OFF : E.HB_DEF)) as Record<string, Slot[] | string>
+  const list = src[key]
+  return abs(Array.isArray(list) ? list : (Object.values(src).find(Array.isArray) as Slot[]))
+}
+/** Size factor of a court relative to a full football pitch (figures, picking, labels). */
+export const courtK = (m: Mode): number => Math.max(0.42, Math.min(1, MODES[m].L / 105))
 export const TEAM_COLOR: Record<Side, string> = { A: "#E6BE3A", B: "#E0564F" }
 export const MARK_COLOR: Record<Mark["kind"], string> = { pass: "#ffffff", run: "#f2c14e", dribble: "#1FB5A8", zone: "#5b6fe0", text: "#ffffff" }
 
@@ -42,11 +65,11 @@ let seq = 0
 const uid = (p: string): string => `${p}${Date.now().toString(36)}${(seq++).toString(36)}`
 
 export function newBoard(mode: Mode, form?: Partial<Record<Side, string>>): BoardState {
-  const M = MODES[mode], fa = form?.A ?? formsOf(mode)[0], fb = form?.B ?? formsOf(mode)[0]
+  const ok = (side: Side, k?: string): string => (k && formsOf(mode, side).includes(k) ? k : formsOf(mode, side)[0])
+  const fa = ok("A", form?.A), fb = ok("B", form?.B)
   const tokens: Token[] = []
-  const put = (side: Side, key: string): void => FORM[mode][key].forEach(([c, n, x, y]) => {
-    const fx = side === "A" ? x : 1 - x, fy = side === "A" ? y : 1 - y
-    tokens.push({ id: uid("p"), kind: "p", team: side, num: n, code: c, x: fx * M.L - M.L / HALF, z: fy * M.W - M.W / HALF })
+  const put = (side: Side, key: string): void => slotsOf(mode, side, key).forEach(([c, n, x, z]) => {
+    tokens.push({ id: uid("p"), kind: "p", team: side, num: n, code: c, x, z })
   })
   put("A", fa); put("B", fb)
   tokens.push({ id: uid("b"), kind: "ball", x: 0, z: 0 })
@@ -54,7 +77,7 @@ export function newBoard(mode: Mode, form?: Partial<Record<Side, string>>): Boar
   b.frames = [snap(b)]
   return b
 }
-export const PLAY_MODES: readonly string[] = ["fb11", "fb7", "futsal"]
+export const PLAY_MODES: readonly string[] = ["fb11", "fb7", "futsal", "bb", "hb", "vb"]
 interface PlayLike { id: string; mode: string; desc: { ar: string }; tokens: [string, string, number | string, number, number][]; ball0: string; steps: { c: { ar: string }; m: Record<string, [number, number]>; b?: string }[] }
 const BALL_DX = 1.1, BALL_DZ = 0.6
 /** A library play (football modes) as a 3D board: one frame per step, the step text as the frame caption. */
@@ -75,11 +98,10 @@ export const snap = (b: BoardState): Record<string, XZ> => Object.fromEntries(b.
 
 /** Re-place one team on a new formation, keeping the same token ids. */
 export function setFormation(b: BoardState, side: Side, key: string): void {
-  const M = MODES[b.mode], mine = b.tokens.filter((t) => t.kind === "p" && t.team === side)
-  FORM[b.mode][key].forEach(([c, n, x, y], i) => {
+  const mine = b.tokens.filter((t) => t.kind === "p" && t.team === side)
+  slotsOf(b.mode, side, key).forEach(([c, n, x, z], i) => {
     const t = mine[i]; if (!t) return
-    const fx = side === "A" ? x : 1 - x, fy = side === "A" ? y : 1 - y
-    t.code = c; t.num = n; t.x = fx * M.L - M.L / HALF; t.z = fy * M.W - M.W / HALF
+    t.code = c; t.num = n; t.x = x; t.z = z
   })
   b.form[side] = key
 }
@@ -95,6 +117,51 @@ function numberSprite(n: string, bg: string): THREE.Sprite {
   const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(c), depthTest: false }))
   s.scale.set(2.6, 2.6, 1); s.renderOrder = 5
   return s
+}
+
+function court(mode: Mode): THREE.Group {
+  const M = MODES[mode], g = new THREE.Group(), { L, W } = M, hl = L / HALF, hw = W / HALF, sp = SPORT_OF[mode]
+  const plane = (w: number, h: number, color: string, x: number, y: number, z = 0): void => {
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshStandardMaterial({ color, roughness: 0.7 }))
+    m.rotation.x = -Math.PI / HALF; m.position.set(x, y, z); m.receiveShadow = true; g.add(m)
+  }
+  const lm = new THREE.LineBasicMaterial({ color: "#ffffff" })
+  const ln = (pts: XZ[]): void => { g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts.map(([x, z]) => new THREE.Vector3(x, Y_LINE, z))), lm)) }
+  const arc = (cx: number, cz: number, r: number, a0 = 0, a1 = TAU): XZ[] => Array.from({ length: 49 }, (_, i): XZ => { const a = a0 + ((a1 - a0) * i) / 48; return [cx + r * Math.cos(a), cz + r * Math.sin(a)] })
+  const white = new THREE.MeshStandardMaterial({ color: "#ffffff" }), steel = new THREE.MeshStandardMaterial({ color: "#5b6573", metalness: 0.5, roughness: 0.4 })
+  const pole = (x: number, z: number, h: number, r: number, m: THREE.Material): void => { const p = new THREE.Mesh(new THREE.CylinderGeometry(r, r, h), m); p.position.set(x, h / HALF, z); p.castShadow = true; g.add(p) }
+  plane(L + 6, W + 6, sp === "volleyball" ? "#2f6db0" : "#7a5236", 0, 0)
+  plane(L, W, sp === "volleyball" ? "#e2864a" : "#c98a5a", 0, 0.01)
+  ln([[-hl, -hw], [hl, -hw], [hl, hw], [-hl, hw], [-hl, -hw]]); ln([[0, -hw], [0, hw]])
+  if (sp === "basketball") {
+    ln(arc(0, 0, 1.8))
+    ;[-1, 1].forEach((d) => {
+      const e = d * hl, bx = e - d * 1.575
+      ln([[e, -2.45], [e - d * 5.8, -2.45], [e - d * 5.8, 2.45], [e, 2.45]]); ln(arc(e - d * 5.8, 0, 1.8))
+      const a = Math.acos(6.6 / 6.75)
+      ln([[e, -6.6], [bx - d * 6.75 * Math.cos(a) + d * 0, -6.6]]); ln([[e, 6.6], [bx - d * 6.75 * Math.cos(a), 6.6]])
+      ln(arc(bx, 0, 6.75, -Math.PI / HALF + a, Math.PI / HALF - a).map(([x, z]): XZ => [bx - d * (x - bx), z]))
+      pole(e + d * 0.6, 0, 3.4, 0.08, steel)
+      const board = new THREE.Mesh(new THREE.BoxGeometry(0.05, 1.05, 1.8), new THREE.MeshStandardMaterial({ color: "#ffffff", transparent: true, opacity: 0.85 })); board.position.set(e - d * 1.2, 3.4, 0); g.add(board)
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(0.23, 0.02, 8, 24), new THREE.MeshStandardMaterial({ color: "#ff6a1a" })); ring.rotation.x = Math.PI / HALF; ring.position.set(bx, 3.05, 0); g.add(ring)
+    })
+  } else if (sp === "handball") {
+    ln(arc(0, 0, 1.5))
+    ;[-1, 1].forEach((d) => {
+      const e = d * hl
+      const D = (r: number): XZ[] => [...arc(e, -1.5, r, Math.PI / HALF, Math.PI).map(([x, z]): XZ => [e - d * Math.abs(x - e), z]).reverse(), ...arc(e, 1.5, r, Math.PI, Math.PI * 1.5).map(([x, z]): XZ => [e - d * Math.abs(x - e), z]).reverse()]
+      ln(D(6)); ln(D(9)); ln([[e - d * 7, -0.5], [e - d * 7, 0.5]])
+      pole(e, -1.5, 2, 0.05, white); pole(e, 1.5, 2, 0.05, white)
+      const bar = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 3), white); bar.rotation.x = Math.PI / HALF; bar.position.set(e, 2, 0); g.add(bar)
+      const net = new THREE.Mesh(new THREE.PlaneGeometry(3, 2), new THREE.MeshStandardMaterial({ color: "#fff", transparent: true, opacity: 0.2, side: THREE.DoubleSide })); net.rotation.y = Math.PI / HALF; net.position.set(e + d * 0.9, 1, 0); g.add(net)
+    })
+  } else {
+    ln([[-3, -hw], [-3, hw]]); ln([[3, -hw], [3, hw]])
+    pole(0, -hw - 1, 2.55, 0.06, steel); pole(0, hw + 1, 2.55, 0.06, steel)
+    const net = new THREE.Mesh(new THREE.PlaneGeometry(W + 2, 1), new THREE.MeshStandardMaterial({ color: "#111", transparent: true, opacity: 0.35, side: THREE.DoubleSide })); net.rotation.y = Math.PI / HALF; net.position.set(0, 1.93, 0); g.add(net)
+    const tape = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.07, W + 2), white); tape.position.set(0, 2.43, 0); g.add(tape)
+  }
+  return g
 }
 
 function pitch(M: ModeDef): THREE.Group {
@@ -255,14 +322,15 @@ export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChan
   const world = new THREE.Group(); sc.add(world)
   let field = new THREE.Group(), marks = new THREE.Group()
   const objs = new Map<string, { o: THREE.Group; to: THREE.Vector3 }>()
-  const ballMesh = (): THREE.Group => { const g = new THREE.Group(); const m = new THREE.Mesh(new THREE.SphereGeometry(0.42, 24, 16), new THREE.MeshStandardMaterial({ color: "#ffffff", roughness: 0.35 })); m.position.y = 0.42; m.castShadow = true; g.add(m); return g }
+  const BALL_COL = { football: "#ffffff", basketball: "#e0661c", handball: "#d9483b", volleyball: "#f2c14e" }
+  const ballMesh = (): THREE.Group => { const g = new THREE.Group(); const m = new THREE.Mesh(new THREE.SphereGeometry(0.42, 24, 16), new THREE.MeshStandardMaterial({ color: BALL_COL[SPORT_OF[st.mode]], roughness: 0.35 })); m.position.y = 0.42; m.castShadow = true; g.add(m); return g }
 
   const build = (): void => {
     still = 0
     world.clear(); objs.clear()
-    field = pitch(MODES[st.mode]); world.add(field)
+    field = FB.has(st.mode) ? pitch(MODES[st.mode]) : court(st.mode); world.add(field)
     marks = new THREE.Group(); world.add(marks); st.marks.forEach((m) => marks.add(Object.assign(markObj(m), { name: m.id })))
-    st.tokens.forEach((t, i) => { const o = t.kind === "ball" ? ballMesh() : t.kind === "eq" ? equipObj(t.eq ?? "cone") : q === "high" ? athleteObj(t, i) : playerObj(t); if (q !== "high") o.traverse((m) => { m.castShadow = false }); o.rotation.y = t.rot ?? 0; o.position.set(t.x, 0, t.z); o.userData.id = t.id; world.add(o); objs.set(t.id, { o, to: o.position.clone() }) })
+    st.tokens.forEach((t, i) => { const o = t.kind === "ball" ? ballMesh() : t.kind === "eq" ? equipObj(t.eq ?? "cone") : q === "high" ? athleteObj(t, i) : playerObj(t); if (q !== "high") o.traverse((m) => { m.castShadow = false }); o.rotation.y = t.rot ?? 0; if (t.kind !== "eq") o.scale.setScalar(courtK(st.mode)); o.position.set(t.x, 0, t.z); o.userData.id = t.id; world.add(o); objs.set(t.id, { o, to: o.position.clone() }) })
   }
 
   // camera — orbit around the pitch centre; presets ease to their angles
@@ -287,7 +355,7 @@ export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChan
     ray.setFromCamera(ndc, cam); const p = new THREE.Vector3(); return ray.ray.intersectPlane(ground, p) ? [p.x, p.z] : null
   }
   const nearest = (p: XZ): Token | null => {
-    let best: Token | null = null, bd = PICK_R
+    let best: Token | null = null, bd = PICK_R * courtK(st.mode)
     st.tokens.forEach((t) => { const d = Math.hypot(t.x - p[0], t.z - p[1]); if (d < bd) { bd = d; best = t } })
     return best
   }
@@ -307,8 +375,8 @@ export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChan
     if (tool === "text") { if (!text.trim()) return; remember(); const m: Mark = { id: uid("m"), kind: "text", pts: [p], text: text.trim() }; st.marks.push(m); marks.add(Object.assign(markObj(m), { name: m.id })); onChange(st); return }
     if (tool === "move") { const t = nearest(p); if (t) remember(); drag = t ? { k: "tok", t } : { k: "orbit", x: e.clientX, y: e.clientY, az: goal.az, el: goal.el }; return }
     if (tool === "erase") {
-      const hit = st.marks.findIndex((m) => m.pts.some(([x, z]) => Math.hypot(x - p[0], z - p[1]) < PICK_R))
-      const eq = st.tokens.find((t) => t.kind === "eq" && Math.hypot(t.x - p[0], t.z - p[1]) < PICK_R)
+      const hit = st.marks.findIndex((m) => m.pts.some(([x, z]) => Math.hypot(x - p[0], z - p[1]) < PICK_R * courtK(st.mode)))
+      const eq = st.tokens.find((t) => t.kind === "eq" && Math.hypot(t.x - p[0], t.z - p[1]) < PICK_R * courtK(st.mode))
       if (eq) { remember(); st.tokens = st.tokens.filter((t) => t !== eq); st.frames.forEach((f) => { delete f[eq.id] }); const ob = objs.get(eq.id); if (ob) world.remove(ob.o); objs.delete(eq.id); onChange(st); return }
       if (hit >= 0) { remember(); const [m] = st.marks.splice(hit, 1); const o = marks.getObjectByName(m.id); if (o) marks.remove(o); onChange(st) }
       return

@@ -13,11 +13,12 @@ interface Saved { id: string; name: string; at: string; state: BoardState }
 const readLib = (): Saved[] => { try { return JSON.parse(localStorage.getItem(LKEY) ?? "[]") as Saved[] } catch { return [] } }
 const writeLib = (l: Saved[]): void => { try { localStorage.setItem(LKEY, JSON.stringify(l)) } catch { /* storage full */ } }
 const PLAYS3D = PLAYS.filter((p) => PLAY_MODES.includes(p.mode))
-const MODE_AR: Record<string, string> = { fb11: "قدم 11", fb7: "قدم 7", futsal: "صالات" }
+const MODE_AR: Record<string, string> = { fb11: "قدم 11", fb7: "قدم 7", futsal: "صالات", bb: "سلة", hb: "يد", vb: "طائرة" }
 const readQ = (): QualityPref => { try { const v = localStorage.getItem(QKEY); return v === "high" || v === "lite" ? v : "auto" } catch { return "auto" } }
 const resolveQ = (p: QualityPref): "high" | "lite" => (p === "auto" ? autoQuality() : p)
 const MODES: readonly { k: Mode; ar: string; en: string }[] = [
   { k: "fb11", ar: "قدم 11", en: "11v11" }, { k: "fb7", ar: "قدم 7", en: "7v7" }, { k: "futsal", ar: "صالات", en: "Futsal" },
+  { k: "bb", ar: "سلة", en: "Basketball" }, { k: "hb", ar: "يد", en: "Handball" }, { k: "vb", ar: "طائرة", en: "Volleyball" },
 ]
 const TOOLS: readonly { k: Tool; ar: string; en: string; d: string }[] = [
   { k: "move", ar: "تحريك", en: "Move", d: "M12 2v20M2 12h20M12 2l-3 3M12 2l3 3M12 22l-3-3M12 22l3-3M2 12l3-3M2 12l3 3M22 12l-3-3M22 12l-3 3" },
@@ -148,7 +149,7 @@ export function Board3D({ dark, playId }: { readonly dark: boolean; readonly pla
         <div className="seg">{MODES.map((m) => <button key={m.k} className={st.mode === m.k ? "on" : ""} onClick={() => replace(newBoard(m.k))}>{m.ar}<span className="en">{m.en}</span></button>)}</div>
         {(["A", "B"] as const).map((s) => (
           <label key={s} className="frm"><i style={{ background: TEAM_COLOR[s] }} />{s === "A" ? "فريقنا" : "المنافس"}
-            <select value={st.form[s]} onChange={(e) => form(s, e.target.value)}>{st.form[s] === "—" && <option value="—">من الخطة</option>}{formsOf(st.mode).map((f) => <option key={f}>{f}</option>)}</select></label>
+            <select value={st.form[s]} onChange={(e) => form(s, e.target.value)}>{st.form[s] === "—" && <option value="—">من الخطة</option>}{formsOf(st.mode, s).map((f) => <option key={f}>{f}</option>)}</select></label>
         ))}
         <label className="frm" title="جودة العرض — «تلقائي» يختار حسب قوة الجهاز">جودة العرض
           <select value={qp} onChange={(e) => setQp(e.target.value as QualityPref)}><option value="auto">تلقائي</option><option value="high">عالية</option><option value="lite">خفيفة</option></select></label>
@@ -183,7 +184,7 @@ export function Board3D({ dark, playId }: { readonly dark: boolean; readonly pla
           <div className="chips">{["all", ...PLAY_MODES].map((m) => <button key={m} className={pf === m ? "on" : ""} onClick={() => setPf(m)}>{m === "all" ? "الكل" : MODE_AR[m]}</button>)}</div>
           <ul>{PLAYS3D.filter((p) => pf === "all" || p.mode === pf).map((p) => (
             <li key={p.id}><button className="op" onClick={() => openPlay(p.id)} style={{ "--c": PLAY_CAT[p.cat]?.color } as React.CSSProperties}><b><i />{p.name.ar}</b><small>{MODE_AR[p.mode]} · {p.steps.length} خطوات · {PLAY_CAT[p.cat]?.ar}</small></button></li>))}</ul>
-          <p className="mu">خطط السلة واليد والطائرة بتتفتح في السبورة 2D لحد ما ملاعبها تتعمل 3D.</p>
+          
         </aside>
       )}
       {tool === "equip" && <div className="b3txt glass"><b>اختار الأداة ثم اضغط مكانها على الملعب · الممحاة تشيلها</b>
