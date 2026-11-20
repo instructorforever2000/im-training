@@ -4,6 +4,7 @@
 import { useEffect, useMemo, useState } from "react"
 import "./atlas.css"
 import RAW from "./atlas-cards.json"
+import PROGS from "./atlas-programs.json"
 
 type Role = "r" | "b" | "g"
 type Mus = { readonly n: string; readonly r: Role | string; readonly en?: string }
@@ -16,6 +17,17 @@ type Family = {
   readonly errors: readonly { readonly x: string; readonly fix: string }[]; readonly ref: string
 }
 const FAMILIES = RAW as readonly Family[]
+interface ProgItem { readonly f: string; readonly v: number; readonly dose: string; readonly next?: string }
+interface Program {
+  readonly id: string; readonly ar: string; readonly en: string; readonly aud: string; readonly age: string
+  readonly weeks: number; readonly perWeek: number; readonly min: number; readonly goal: string; readonly equip: string
+  readonly phases: readonly { readonly w: string; readonly ar: string; readonly note: string }[]
+  readonly blocks: readonly { readonly ar: string; readonly en: string; readonly min: number; readonly items: readonly ProgItem[] }[]
+  readonly rules: readonly string[]; readonly ref: string
+}
+const PROGRAMS = PROGS as readonly Program[]
+const AUD_C: Record<string, string> = { "ناشئين": "#2fa36b", "مدارس": "#5b6fe0", "أندية": "#e0661c" }
+const famOf = (id: string): Family | undefined => FAMILIES.find((f) => f.id === id)
 const BASE = `${import.meta.env.BASE_URL}atlas/`
 const src = (f: string, img: string): string => `${BASE}${f}/${img}.webp`
 
@@ -55,6 +67,8 @@ export function Atlas({ dark }: { readonly dark: boolean }): React.JSX.Element {
   const [lv, setLv] = useState<string>("all")
   const [q, setQ] = useState("")
   const [open, setOpen] = useState<{ f: string; v: number } | null>(null)
+  const [view, setView] = useState<"atlas" | "programs">("atlas")
+  const [prog, setProg] = useState<string | null>(null)
 
   const hits = useMemo((): Family[] => {
     const s = q.trim().toLowerCase()
@@ -69,8 +83,27 @@ export function Atlas({ dark }: { readonly dark: boolean }): React.JSX.Element {
     const f = FAMILIES.find((x) => x.id === open.f)
     if (f) return <FamilyView f={f} start={open.v} dark={dark} back={() => setOpen(null)} />
   }
+  const sw = (
+    <div className="a-sw" role="tablist">
+      <button role="tab" aria-selected={view === "atlas"} className={view === "atlas" ? "on" : ""} onClick={() => setView("atlas")}>العائلات الحركية <span className="en">Families</span></button>
+      <button role="tab" aria-selected={view === "programs"} className={view === "programs" ? "on" : ""} onClick={() => { setView("programs"); setProg(null) }}>البرامج الجاهزة <span className="en">Programs · {PROGRAMS.length}</span></button>
+    </div>
+  )
+  if (view === "programs") {
+    const pr = PROGRAMS.find((x) => x.id === prog)
+    return <div className="a-pv">{sw}{pr ? <ProgramView p={pr} back={() => setProg(null)} openEx={(f, v) => setOpen({ f, v })} /> : (
+      <div className="a-pgrid">{PROGRAMS.map((p) => (
+        <button key={p.id} className="a-pcard" style={{ "--c": AUD_C[p.aud] ?? "var(--teal)" } as React.CSSProperties} onClick={() => setProg(p.id)}>
+          <span className="a-aud">{p.aud} · {p.age}</span>
+          <b>{p.ar}</b><span className="en a-e2">{p.en}</span>
+          <small>{p.goal}</small>
+          <div className="a-pmeta"><div><b>{p.weeks}</b><span>أسابيع</span></div><div><b>{p.perWeek}×</b><span>في الأسبوع</span></div><div><b>{p.min}</b><span>دقيقة</span></div><div><b>{p.blocks.reduce((n, bl) => n + bl.items.length, 0)}</b><span>تمرين</span></div></div>
+          <div className="a-pth">{p.blocks.flatMap((bl) => bl.items).slice(0, 6).map((it, i) => { const fm = famOf(it.f); const vv = fm?.vars[it.v]; return vv ? <img key={i} loading="lazy" src={src(it.f, vv.img)} alt="" /> : null })}</div>
+        </button>))}</div>
+    )}</div>
+  }
   return (
-    <div className="atl">
+    <>{sw}<div className="atl">
       <aside className="rail">
         <label className="search"><span>⌕</span><input value={q} onChange={(e) => setQ(e.target.value)} placeholder="تمرين، عضلة، أداة… Search" /></label>
         <div>
@@ -123,6 +156,48 @@ export function Atlas({ dark }: { readonly dark: boolean }): React.JSX.Element {
             )
           })}
         </div>
+      </section>
+    </div></>
+  )
+}
+
+function ProgramView({ p, back, openEx }: { readonly p: Program; readonly back: () => void; readonly openEx: (f: string, v: number) => void }): React.JSX.Element {
+  const total = p.blocks.reduce((n, b) => n + b.min, 0)
+  return (
+    <div className="a-prog" style={{ "--c": AUD_C[p.aud] ?? "var(--teal)" } as React.CSSProperties}>
+      <header className="a-fvh glass">
+        <button className="chip" onClick={back}>→ البرامج</button>
+        <div className="ttl"><span className="a-pt">{p.aud} · {p.age}</span><h2>{p.ar} <span className="en">{p.en}</span></h2></div>
+        <div className="a-pmeta"><div><b>{p.weeks}</b><span>أسابيع</span></div><div><b>{p.perWeek}×</b><span>أسبوعيًا</span></div><div><b>{total}</b><span>دقيقة</span></div></div>
+      </header>
+      <section className="glass a-pad"><h4>الهدف <span className="en">Goal</span></h4><p>{p.goal}</p><p className="mu">الأدوات: {p.equip}</p></section>
+      <section className="glass a-pad">
+        <h4>مراحل البرنامج <span className="en">Phases</span></h4>
+        <ol className="a-phases">{p.phases.map((ph) => <li key={ph.w}><b>{ph.w}</b><div><strong>{ph.ar}</strong><span>{ph.note}</span></div></li>)}</ol>
+      </section>
+      <section className="glass a-pad">
+        <h4>الحصة التدريبية <span className="en">Session</span></h4>
+        <div className="a-tline">{p.blocks.map((b) => <i key={b.ar} style={{ flex: b.min }} title={`${b.ar} · ${b.min} د`}><span>{b.ar} · {b.min}د</span></i>)}</div>
+        {p.blocks.map((b) => (
+          <div key={b.ar} className="a-blk">
+            <h5>{b.ar} <span className="en">{b.en}</span><small>{b.min} دقيقة</small></h5>
+            <div className="a-exs">{b.items.map((it, i) => {
+              const fm = famOf(it.f), vv = fm?.vars[it.v]; if (!fm || !vv) return null
+              const [nf, nv] = (it.next ?? "").split(":"), nx = it.next ? famOf(nf)?.vars[Number(nv)] : undefined
+              return (
+                <button key={i} className="a-ex" onClick={() => openEx(it.f, it.v)}>
+                  <img loading="lazy" src={src(it.f, vv.img)} alt="" />
+                  <div><b>{vv.ar}</b><small>{fm.ar}</small><span className="a-dose">{it.dose}</span>{nx && <span className="a-nx">التطور ← {nx.ar}</span>}</div>
+                </button>
+              )
+            })}</div>
+          </div>
+        ))}
+      </section>
+      <section className="glass a-pad">
+        <h4>قواعد البرنامج <span className="en">Rules</span></h4>
+        <ol className="a-rules">{p.rules.map((r) => <li key={r}>{r}</li>)}</ol>
+        <p className="a-ref">المراجع: <span dir="ltr">{p.ref}</span></p>
       </section>
     </div>
   )

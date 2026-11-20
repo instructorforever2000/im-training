@@ -1,0 +1,80 @@
+[
+ {
+  "id": "youth-foundation",
+  "ar": "أساسيات القوة للناشئين", "en": "Youth strength foundation",
+  "aud": "ناشئين", "age": "12–15 سنة", "weeks": 8, "perWeek": 2, "min": 45,
+  "goal": "تعلّم الأنماط الحركية الأساسية بأمان، وبناء قوة عامة وثبات جذع يحمي من الإصابة قبل أي أحمال ثقيلة.",
+  "equip": "دمبل خفيف، أستك، صندوق، عصا، أقماع",
+  "phases": [
+   { "w": "1–2", "ar": "تعلّم التكنيك", "note": "وزن الجسم والعصا، 2 مجموعة × 10–12، التركيز على الشكل الصحيح فقط." },
+   { "w": "3–5", "ar": "تثبيت وزيادة تدريجية", "note": "3 مجموعات × 8–12، زيادة الحمل 5–10% لما يكمل كل التكرارات بشكل سليم." },
+   { "w": "6–8", "ar": "قوة عامة", "note": "3 مجموعات × 6–10 بحمل متوسط، مع الحفاظ على تكرارين احتياط (RIR 2)." }
+  ],
+  "blocks": [
+   { "ar": "الإحماء والحركية", "en": "Warm-up", "min": 10, "items": [
+     { "f": "warmup-mobility", "v": 0, "dose": "6 تكرارات" }, { "f": "warmup-mobility", "v": 1, "dose": "4 لكل جهة" },
+     { "f": "warmup-mobility", "v": 5, "dose": "8 لكل رجل" }, { "f": "plyometrics", "v": 0, "dose": "2 × 5 هبوط" } ] },
+   { "ar": "القوة الرئيسية", "en": "Main strength", "min": 25, "items": [
+     { "f": "squat-variations", "v": 1, "dose": "3 × 8–10", "next": "squat-variations:2" },
+     { "f": "hip-hinge", "v": 0, "dose": "3 × 10", "next": "rdl:0" },
+     { "f": "push-up-variations", "v": 3, "dose": "3 × 8–12", "next": "push-up-variations:0" },
+     { "f": "row-variations", "v": 2, "dose": "3 × 10–12", "next": "row-variations:3" } ] },
+   { "ar": "الجذع والحمل", "en": "Core & carry", "min": 10, "items": [
+     { "f": "core-stability", "v": 3, "dose": "3 × 6 لكل جهة" }, { "f": "core-stability", "v": 0, "dose": "3 × 20–30 ث" },
+     { "f": "loaded-carries", "v": 0, "dose": "3 × 20 م" } ] }
+  ],
+  "rules": ["يومين في الأسبوع غير متتاليين، وبإشراف مدرب مؤهل دائمًا.", "التكنيك قبل الحمل: لا زيادة في الوزن إلا لما يكمل كل التكرارات بشكل صحيح.", "راحة 60–90 ثانية بين المجموعات، والتدريب يكون ممتعًا ومتنوعًا."],
+  "ref": "Faigenbaum et al. (2009) Youth resistance training: NSCA position statement · Lloyd et al. (2014) BJSM international consensus"
+ },
+ {
+  "id": "school-circuit",
+  "ar": "دائرة اللياقة لحصة التربية البدنية", "en": "PE class fitness circuit",
+  "aud": "مدارس", "age": "المرحلة المتوسطة والثانوية", "weeks": 6, "perWeek": 2, "min": 40,
+  "goal": "حصة منظمة لفصل كامل بأدوات بسيطة: 8 محطات تطوّر القوة والتوافق والرشاقة، وكل طالب يشتغل على قد مستواه.",
+  "equip": "أقماع، أستك، سلم رشاقة، صناديق أو مقاعد، مراتب",
+  "phases": [
+   { "w": "1–2", "ar": "تعلّم المحطات", "note": "30 ث شغل / 30 ث راحة، دورة واحدة، والمعلّم يصحّح الأداء في كل محطة." },
+   { "w": "3–4", "ar": "دورتين", "note": "30 ث شغل / 20 ث انتقال، دورتين بينهم 2 دقيقة راحة." },
+   { "w": "5–6", "ar": "تحدّي المستوى", "note": "40 ث شغل / 20 ث انتقال، والطالب يختار التشكيل الأصعب لو أداؤه سليم." }
+  ],
+  "blocks": [
+   { "ar": "الإحماء", "en": "Warm-up", "min": 8, "items": [
+     { "f": "speed-agility", "v": 0, "dose": "2 × 15 م" }, { "f": "warmup-mobility", "v": 2, "dose": "10 لكل رجل" }, { "f": "warmup-mobility", "v": 4, "dose": "15 تكرار" } ] },
+   { "ar": "الدائرة — 8 محطات", "en": "Circuit — 8 stations", "min": 24, "items": [
+     { "f": "squat-variations", "v": 0, "dose": "محطة 1" }, { "f": "push-up-variations", "v": 3, "dose": "محطة 2" },
+     { "f": "speed-agility", "v": 1, "dose": "محطة 3" }, { "f": "core-stability", "v": 4, "dose": "محطة 4" },
+     { "f": "reverse-lunge", "v": 2, "dose": "محطة 5 (أو بوزن الجسم)" }, { "f": "row-variations", "v": 2, "dose": "محطة 6" },
+     { "f": "plyometrics", "v": 1, "dose": "محطة 7" }, { "f": "core-stability", "v": 5, "dose": "محطة 8" } ] },
+   { "ar": "التهدئة", "en": "Cool-down", "min": 8, "items": [
+     { "f": "warmup-mobility", "v": 3, "dose": "5 لكل جهة" }, { "f": "warmup-mobility", "v": 1, "dose": "3 لكل جهة ببطء" } ] }
+  ],
+  "rules": ["طالبين أو تلاتة في كل محطة، والمحطات متباعدة بأمان.", "كل محطة فيها تشكيل أسهل وأصعب من نفس الكارت (سلّم التدرّج).", "اللي عنده إصابة أو حالة صحية بيكمّل محطات بديلة بموافقة ولي الأمر."],
+  "ref": "Faigenbaum et al. (2009) NSCA youth position statement · NSCA Essentials of Strength Training & Conditioning, 4th ed."
+ },
+ {
+  "id": "club-inseason",
+  "ar": "قوة ووقاية للاعب أثناء الموسم", "en": "In-season strength & injury prevention",
+  "aud": "أندية", "age": "16 سنة فما فوق", "weeks": 12, "perWeek": 2, "min": 50,
+  "goal": "المحافظة على القوة والقدرة الانفجارية طول الموسم بحجم تدريب قليل، مع تمارين وقاية للأوتار الخلفية والجذع.",
+  "equip": "بار، دمبل، صندوق، كرة طبية، زلاجة أو أستك",
+  "phases": [
+   { "w": "يوم MD-4", "ar": "اليوم الأثقل", "note": "قوة قصوى: 3 × 3–5 بحمل عالي، وقدرة انفجارية قبلها." },
+   { "w": "يوم MD-2", "ar": "اليوم الأخف", "note": "سرعة وقدرة بحجم قليل: 2 × 3، من غير إجهاد قبل المباراة." },
+   { "w": "كل 4 أسابيع", "ar": "أسبوع تخفيف", "note": "تقليل الحجم 40% مع الحفاظ على الشدة." }
+  ],
+  "blocks": [
+   { "ar": "الإحماء والتنشيط", "en": "Warm-up & activation", "min": 12, "items": [
+     { "f": "warmup-mobility", "v": 1, "dose": "4 لكل جهة" }, { "f": "warmup-mobility", "v": 3, "dose": "5 لكل جهة" },
+     { "f": "speed-agility", "v": 0, "dose": "2 × 20 م" }, { "f": "plyometrics", "v": 1, "dose": "2 × 15" } ] },
+   { "ar": "القدرة الانفجارية", "en": "Power", "min": 10, "items": [
+     { "f": "plyometrics", "v": 2, "dose": "3 × 3" }, { "f": "plyometrics", "v": 5, "dose": "3 × 5" }, { "f": "speed-agility", "v": 3, "dose": "4 × 10 م" } ] },
+   { "ar": "القوة", "en": "Strength", "min": 20, "items": [
+     { "f": "squat-variations", "v": 4, "dose": "3 × 3–5" }, { "f": "hip-hinge", "v": 3, "dose": "3 × 4–6" },
+     { "f": "overhead-press", "v": 2, "dose": "3 × 6 لكل يد" }, { "f": "vertical-pull", "v": 4, "dose": "3 × 5–8" } ] },
+   { "ar": "الوقاية", "en": "Injury prevention", "min": 8, "items": [
+     { "f": "hip-hinge", "v": 5, "dose": "2 × 4–6" }, { "f": "core-stability", "v": 2, "dose": "2 × 8 لكل جهة" }, { "f": "core-stability", "v": 1, "dose": "2 × 20 ث" } ] }
+  ],
+  "rules": ["آخر حصة قوة ثقيلة قبل المباراة بـ4 أيام على الأقل (MD-4).", "الحجم قليل والشدة عالية: الهدف المحافظة على القوة، مش الإرهاق.", "النوردي مرة أو مرتين في الأسبوع ثابت طول الموسم لحماية الأوتار الخلفية."],
+  "ref": "NSCA Essentials of Strength Training & Conditioning, 4th ed. · van der Horst et al. (2015) Nordic hamstring exercise RCT · FIFA 11+ injury prevention programme"
+ }
+]
