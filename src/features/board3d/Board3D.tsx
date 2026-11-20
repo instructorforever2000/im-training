@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { fromPlay, PLAY_MODES, autoQuality, type QualityPref, mountBoard3D, newBoard, formsOf, setFormation, MARK_COLOR, TEAM_COLOR, type Board3D as Api, type BoardState, type Cam, type Mode, type Side, type Tool, type Equip } from "./engine"
 import "./board3d.css"
+import { can, guard } from "@/features/auth/caps"
 import { PLAYS, PLAY_CAT } from "@/features/library/content"
 
 const KEY = "im-board3d-v1"
@@ -98,7 +99,46 @@ export function Board3D({ dark, playId }: { readonly dark: boolean; readonly pla
   const replace = (n: BoardState): void => { setB(n); setFi(0); api.current?.load(n) }
   const form = (side: Side, key: string): void => { const s = api.current?.state(); if (!s) return; setFormation(s, side, key); s.frames[fi] = Object.fromEntries(s.tokens.map((t) => [t.id, [t.x, t.z]])); api.current?.frame(fi, true); api.current?.load(s); api.current?.frame(fi, false) }
   const clearMarks = (): void => { const s = api.current?.state(); if (!s) return; api.current?.load({ ...s, marks: [] }) }
-  const exportPng = (): void => { const u = api.current?.png(); if (!u) return; const a = document.createElement("a"); a.href = u; a.download = "IM-tactical-board-3d.png"; a.click() }
+  const [rec, setRec] = useState(false)
+  /** Video of the movement frames (WebM): the pitch + each frame's caption + platform mark, recorded while it plays. */
+  const exportVideo = (): void => {
+    if (!can("download")) { guard("download", () => {}); return }
+    const gl = cv.current, a = api.current; if (!gl || !a || rec) return
+    const mime = ["video/webm;codecs=vp9", "video/webm;codecs=vp8", "video/webm"].find((m) => typeof MediaRecorder !== "undefined" && MediaRecorder.isTypeSupported(m))
+    if (!mime) { alert("تصدير الفيديو غير مدعوم في هذا المتصفح — جرّب Chrome أو Edge"); return }
+    const c = document.createElement("canvas"); c.width = gl.width; c.height = gl.height
+    const x = c.getContext("2d"); if (!x) return
+    const r = new MediaRecorder(c.captureStream(30), { mimeType: mime, videoBitsPerSecond: 6e6 }), chunks: Blob[] = []
+    r.ondataavailable = (e) => { if (e.data.size) chunks.push(e.data) }
+    let cur = 0, raf = 0, done = false
+    const k = c.width / 1440
+    const draw = (): void => {
+      x.drawImage(gl, 0, 0)
+      const cap = a.state().caps?.[cur]
+      if (cap) {
+        x.font = `600 ${Math.round(26 * k)}px "IBM Plex Sans Arabic", sans-serif`; x.direction = "rtl"; x.textAlign = "center"
+        const w = x.measureText(cap).width + 48 * k, h = 52 * k, cx = c.width / 2, y = c.height - 90 * k
+        x.fillStyle = "#0b1b33e6"; x.beginPath(); x.roundRect(cx - w / 2, y - h / 2, w, h, 14 * k); x.fill()
+        x.fillStyle = "#fff"; x.textBaseline = "middle"; x.fillText(cap, cx, y + 2 * k)
+      }
+      x.font = `700 ${Math.round(18 * k)}px Outfit, sans-serif`; x.textAlign = "left"; x.direction = "ltr"; x.fillStyle = "#0b1b33bb"
+      x.fillText("IM TRAINING · Instructor Motion", 24 * k, 36 * k)
+      x.fillStyle = "#e0564f"; x.beginPath(); x.arc(c.width - 40 * k, 34 * k, 8 * k, 0, Math.PI * 2); x.fill()
+      if (!done) raf = requestAnimationFrame(draw)
+    }
+    setRec(true); setPlaying(false); r.start(); draw()
+    const stop = a.play((i) => { cur = i; setFi(i) }, () => {
+      window.setTimeout(() => {
+        done = true; cancelAnimationFrame(raf); r.stop(); stop()
+      }, 900)
+    })
+    r.onstop = () => {
+      const url = URL.createObjectURL(new Blob(chunks, { type: "video/webm" })), l = document.createElement("a")
+      l.href = url; l.download = "IM-tactical-board-3d.webm"; l.click(); window.setTimeout(() => URL.revokeObjectURL(url), 4000); setRec(false)
+    }
+  }
+  const exportPng = (): void => {
+    if (!can("download")) { guard("download", () => {}); return } const u = api.current?.png(); if (!u) return; const a = document.createElement("a"); a.href = u; a.download = "IM-tactical-board-3d.png"; a.click() }
 
   return (
     <div className="b3">
@@ -127,6 +167,7 @@ export function Board3D({ dark, playId }: { readonly dark: boolean; readonly pla
         <button onClick={() => api.current?.redo()} disabled={!api.current?.canRedo()} title="إعادة Ctrl+Y"><svg viewBox="0 0 24 24"><path d="M15 14l5-5-5-5M20 9H10a6 6 0 000 12h3" /></svg><span>إعادة</span></button>
         <button onClick={clearMarks} title="مسح الرسم"><svg viewBox="0 0 24 24"><path d="M5 7h14M9 7V4h6v3M7 7l1 13h8l1-13" /></svg><span>مسح الرسم</span></button>
         <button onClick={() => replace(newBoard(st.mode, st.form))} title="لوحة جديدة"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></svg><span>لوحة جديدة</span></button>
+        <button onClick={exportVideo} disabled={rec || st.frames.length < 2} title="فيديو للمراحل (WebM)"><svg viewBox="0 0 24 24"><path d="M3 6h12v12H3zM15 10l6-3v10l-6-3" /></svg><span>{rec ? "جاري التسجيل…" : "فيديو"}</span></button>
         <button onClick={exportPng} title="صورة PNG"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M4 19h16" /></svg><span>صورة</span></button>
       </nav>
 
