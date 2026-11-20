@@ -17,26 +17,29 @@ export function autoQuality(): Quality {
   return weak ? "lite" : "high"
 }
 
-export type Mode = "fb11" | "fb7" | "futsal" | "bb" | "hb" | "vb"
+export type Mode = "fb11" | "fb7" | "futsal" | "bb" | "hb" | "vb" | "area"
 export type Tool = "move" | "pass" | "run" | "dribble" | "zone" | "text" | "equip" | "erase"
 export type Equip = "cone" | "ladder" | "hurdle" | "pole" | "flag" | "minigoal" | "mannequin"
 export type Side = "A" | "B"
-export type Cam = "broadcast" | "top" | "goal"
+export type Cam = "broadcast" | "top" | "goal" | "half" | "vertical"
 type XZ = [number, number]
 export interface Token { id: string; kind: "p" | "ball" | "eq"; eq?: Equip; rot?: number; team?: Side; num?: number; code?: string; x: number; z: number }
 export interface Mark { id: string; kind: Exclude<Tool, "move" | "erase" | "equip">; pts: XZ[]; text?: string }
-export interface BoardState { mode: Mode; form: Record<Side, string>; tokens: Token[]; marks: Mark[]; frames: Record<string, XZ>[]; caps?: string[] }
+export interface BoardState { mode: Mode; form: Record<Side, string>; tokens: Token[]; marks: Mark[]; frames: Record<string, XZ>[]; caps?: string[]; dims?: { L: number; W: number } }
 
 interface ModeDef { L: number; W: number }
-const MODES = ENG.MODES as unknown as Record<string, ModeDef>
+const MODES = { ...(ENG.MODES as unknown as Record<string, ModeDef>), area: { L: 30, W: 20 } } as Record<string, ModeDef>
+/** Size of the field of a board: a general activity area keeps its own size (from the play), every sport its court. */
+export const dimsOf = (b: BoardState): ModeDef => b.dims ?? MODES[b.mode]
 const FORM = ENG.FORM as unknown as Record<string, Record<string, [string, number, number, number][]>>
 type Slot = [string, number, number, number]
 const E = ENG as unknown as { BB_OFF: Record<string, Slot[]>; BB_DEF: Record<string, Slot[] | string>; HB_OFF: Record<string, Slot[]>; HB_DEF: Record<string, Slot[]>; VB_FORMS: Record<string, number>; vbFormation: (k: string) => Slot[] }
 const FB = new Set(["fb11", "fb7", "futsal"])
-export const SPORT_OF: Record<Mode, "football" | "basketball" | "handball" | "volleyball"> = { fb11: "football", fb7: "football", futsal: "football", bb: "basketball", hb: "handball", vb: "volleyball" }
+export const SPORT_OF: Record<Mode, "football" | "basketball" | "handball" | "volleyball"> = { area: "football", fb11: "football", fb7: "football", futsal: "football", bb: "basketball", hb: "handball", vb: "volleyball" }
 /** Formations for one side: football/futsal share; basketball and handball have attack (A) and defence (B) sets; volleyball rotations. */
 export function formsOf(m: Mode, side: Side = "A"): string[] {
   if (FB.has(m)) return Object.keys(FORM[m])
+  if (m === "area") return ["4v4"]
   if (m === "vb") return Object.keys(E.VB_FORMS)
   const src = m === "bb" ? (side === "A" ? E.BB_OFF : E.BB_DEF) : (side === "A" ? E.HB_OFF : E.HB_DEF)
   return Object.keys(src).filter((k) => Array.isArray(src[k]))
@@ -47,13 +50,14 @@ function slotsOf(m: Mode, side: Side, key: string): Slot[] {
   const frac = (list: Slot[]): Slot[] => list.map(([c, n, x, y]) => [c, n, (side === "A" ? x : 1 - x) * M.L - cx, (side === "A" ? y : 1 - y) * M.W - cz])
   const abs = (list: Slot[]): Slot[] => list.map(([c, n, x, y]) => [c, n, x - cx, y - cz])
   if (FB.has(m)) return frac(FORM[m][key] ?? Object.values(FORM[m])[0])
+  if (m === "area") return frac([1, 2, 3, 4].map((n): Slot => ["", n, 0.3, n / 5]))
   if (m === "vb") return frac(E.vbFormation(key in E.VB_FORMS ? key : "base|1"))
   const src = (m === "bb" ? (side === "A" ? E.BB_OFF : E.BB_DEF) : (side === "A" ? E.HB_OFF : E.HB_DEF)) as Record<string, Slot[] | string>
   const list = src[key]
   return abs(Array.isArray(list) ? list : (Object.values(src).find(Array.isArray) as Slot[]))
 }
 /** Size factor of a court relative to a full football pitch (figures, picking, labels). */
-export const courtK = (m: Mode): number => Math.max(0.42, Math.min(1, MODES[m].L / 105))
+export const courtK = (m: Mode, d?: ModeDef): number => Math.max(0.42, Math.min(1, (d ?? MODES[m]).L / 105))
 export const TEAM_COLOR: Record<Side, string> = { A: "#E6BE3A", B: "#E0564F" }
 export const MARK_COLOR: Record<Mark["kind"], string> = { pass: "#ffffff", run: "#f2c14e", dribble: "#1FB5A8", zone: "#5b6fe0", text: "#ffffff" }
 
@@ -77,13 +81,24 @@ export function newBoard(mode: Mode, form?: Partial<Record<Side, string>>): Boar
   b.frames = [snap(b)]
   return b
 }
-export const PLAY_MODES: readonly string[] = ["fb11", "fb7", "futsal", "bb", "hb", "vb"]
+export const PLAY_MODES: readonly string[] = ["fb11", "fb7", "futsal", "bb", "hb", "vb", "area"]
+/** Every play opens in 3D: sports on their court, general activities ("a-…") on an area sized to the play. */
+export const opensIn3D = (mode: string): boolean => PLAY_MODES.includes(mode) || mode.startsWith("a-")
+const AREA_PAD = 4
 interface PlayLike { id: string; mode: string; desc: { ar: string }; tokens: [string, string, number | string, number, number][]; ball0: string; steps: { c: { ar: string }; m: Record<string, [number, number]>; b?: string }[] }
 const BALL_DX = 1.1, BALL_DZ = 0.6
 /** A library play (football modes) as a 3D board: one frame per step, the step text as the frame caption. */
 export function fromPlay(p: PlayLike): BoardState | null {
-  if (!PLAY_MODES.includes(p.mode)) return null
-  const M = MODES[p.mode], cx = M.L / HALF, cz = M.W / HALF
+  if (!opensIn3D(p.mode)) return null
+  const area = p.mode.startsWith("a-")
+  let M = MODES[p.mode], ox = 0, oz = 0
+  if (area) {
+    const xs: number[] = [], zs: number[] = []
+    p.tokens.forEach((t) => { xs.push(t[3]); zs.push(t[4]) }); p.steps.forEach((s) => Object.values(s.m).forEach(([x, z]) => { xs.push(x); zs.push(z) }))
+    ox = Math.min(...xs) - AREA_PAD; oz = Math.min(...zs) - AREA_PAD
+    M = { L: Math.max(Math.max(...xs) - ox + AREA_PAD, 12), W: Math.max(Math.max(...zs) - oz + AREA_PAD, 10) }
+  }
+  const cx = M.L / HALF + ox, cz = M.W / HALF + oz
   const tokens: Token[] = p.tokens.map(([id, code, num, x, z]) => ({ id, kind: "p", team: id.startsWith("a") ? "A" : "B", code, num: Number(num) || undefined, x: x - cx, z: z - cz }))
   const ball: Token = { id: "ball", kind: "ball", x: 0, z: 0 }; tokens.push(ball)
   const at: Record<string, XZ> = Object.fromEntries(tokens.map((t) => [t.id, [t.x, t.z] as XZ]))
@@ -92,7 +107,7 @@ export function fromPlay(p: PlayLike): BoardState | null {
   const frames = [frameNow()], caps = [p.desc.ar]
   p.steps.forEach((s) => { Object.entries(s.m).forEach(([id, [x, z]]) => { at[id] = [x - cx, z - cz] }); if (s.b) holder = s.b; frames.push(frameNow()); caps.push(s.c.ar) })
   ball.x = frames[0].ball[0]; ball.z = frames[0].ball[1]
-  return { mode: p.mode as Mode, form: { A: "—", B: "—" }, tokens, marks: [], frames, caps }
+  return { mode: area ? "area" : (p.mode as Mode), form: { A: "—", B: "—" }, tokens, marks: [], frames, caps, ...(area ? { dims: { L: M.L, W: M.W } } : {}) }
 }
 export const snap = (b: BoardState): Record<string, XZ> => Object.fromEntries(b.tokens.map((t) => [t.id, [t.x, t.z] as XZ]))
 
@@ -161,6 +176,17 @@ function court(mode: Mode): THREE.Group {
     const net = new THREE.Mesh(new THREE.PlaneGeometry(W + 2, 1), new THREE.MeshStandardMaterial({ color: "#111", transparent: true, opacity: 0.35, side: THREE.DoubleSide })); net.rotation.y = Math.PI / HALF; net.position.set(0, 1.93, 0); g.add(net)
     const tape = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.07, W + 2), white); tape.position.set(0, 2.43, 0); g.add(tape)
   }
+  return g
+}
+
+/** General activity area: grass with a cone-marked boundary. */
+function areaField(M: ModeDef): THREE.Group {
+  const g = new THREE.Group(), hl = M.L / HALF, hw = M.W / HALF
+  const base = new THREE.Mesh(new THREE.PlaneGeometry(M.L + 10, M.W + 10), new THREE.MeshStandardMaterial({ color: "#2d8a5e", roughness: 0.95 }))
+  base.rotation.x = -Math.PI / HALF; base.receiveShadow = true; g.add(base)
+  const lm = new THREE.LineBasicMaterial({ color: "#ffffff", transparent: true, opacity: 0.7 })
+  g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([[-hl, -hw], [hl, -hw], [hl, hw], [-hl, hw], [-hl, -hw]].map(([x, z]) => new THREE.Vector3(x, Y_LINE, z))), lm))
+  ;[[-hl, -hw], [hl, -hw], [hl, hw], [-hl, hw]].forEach(([x, z]) => { const c = equipObj("cone"); c.position.set(x, 0, z); g.add(c) })
   return g
 }
 
@@ -284,7 +310,17 @@ function markObj(m: Mark): THREE.Object3D {
   return g
 }
 
+/** The tactical role of a player (by position code) and its movement zones, from the roles engine. */
+export interface RoleInfo { ar: string; en: string; desc: string }
+const ENGX = ENG as unknown as { roleById: (id: string) => { name: { ar: string; en: string }; desc: { ar: string }; z?: { wb: number[]; nb: number[] } } | undefined; defaultVariant: (rs: string, code: string) => string | null }
+const RS: Record<Mode, string> = { fb11: "fb", fb7: "fb", futsal: "fs", bb: "bb", hb: "hb", vb: "vb", area: "" }
+function roleFor(mode: Mode, code?: string): ReturnType<typeof ENGX.roleById> {
+  if (!code || !RS[mode]) return undefined
+  const id = ENGX.defaultVariant(RS[mode], code); return id ? ENGX.roleById(id) : undefined
+}
+
 export interface Board3D {
+  select: (id: string | null) => void
   undo: () => void
   redo: () => void
   readonly canUndo: () => boolean
@@ -305,7 +341,7 @@ export interface Board3D {
   setQuality: (q: Quality) => void
 }
 
-export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChange: (b: BoardState) => void, quality: Quality = "high"): Board3D {
+export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChange: (b: BoardState) => void, quality: Quality = "high", onSelect: (r: (RoleInfo & { num?: number }) | null) => void = () => {}): Board3D {
   let q = quality
   let still = 0
   const wake = (): void => { still = 0 }
@@ -322,22 +358,43 @@ export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChan
   const world = new THREE.Group(); sc.add(world)
   let field = new THREE.Group(), marks = new THREE.Group()
   const objs = new Map<string, { o: THREE.Group; to: THREE.Vector3 }>()
+  const zones = new THREE.Group(); let sel: string | null = null
+  /** Movement zones of the selected player: yellow = with the ball, teal dashed = without it (same rules as the 2D board). */
+  const drawZones = (): void => {
+    zones.clear(); const t = st.tokens.find((x) => x.id === sel)
+    if (!t || t.kind !== "p") { onSelect(null); return }
+    const role = roleFor(st.mode, t.code)
+    onSelect(role ? { ar: role.name.ar, en: role.name.en, desc: role.desc.ar, num: t.num } : { ar: t.code || "لاعب", en: "", desc: "", num: t.num })
+    if (!role?.z) return
+    const M = dimsOf(st), flip = t.team === "B", yf = flip ? 0.5 - t.z / M.W : 0.5 + t.z / M.W, sign = yf > 0.56 ? 1 : yf < 0.44 ? -1 : 0
+    const ell = (z: number[], col: string, op: number): void => {
+      const [zx, dy, rx, ry] = z; let cy = Math.max(ry * 0.6, Math.min(1 - ry * 0.6, yf + dy * sign)), cx = zx
+      if (flip) { cx = 1 - cx; cy = 1 - cy }
+      const m = new THREE.Mesh(new THREE.CircleGeometry(1, 48), new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: op, depthWrite: false }))
+      m.rotation.x = -Math.PI / HALF; m.scale.set(rx * M.L, ry * M.W, 1); m.position.set(cx * M.L - M.L / HALF, Y_MARK - 0.02, cy * M.W - M.W / HALF); zones.add(m)
+      const e = new THREE.Mesh(new THREE.RingGeometry(0.97, 1, 64), new THREE.MeshBasicMaterial({ color: col })); e.rotation.x = -Math.PI / HALF; e.scale.set(rx * M.L, ry * M.W, 1); e.position.copy(m.position).setY(Y_MARK); zones.add(e)
+    }
+    ell(role.z.nb, "#4FD1C5", 0.16); ell(role.z.wb, "#F4D03F", 0.22)
+  }
   const BALL_COL = { football: "#ffffff", basketball: "#e0661c", handball: "#d9483b", volleyball: "#f2c14e" }
   const ballMesh = (): THREE.Group => { const g = new THREE.Group(); const m = new THREE.Mesh(new THREE.SphereGeometry(0.42, 24, 16), new THREE.MeshStandardMaterial({ color: BALL_COL[SPORT_OF[st.mode]], roughness: 0.35 })); m.position.y = 0.42; m.castShadow = true; g.add(m); return g }
 
   const build = (): void => {
     still = 0
     world.clear(); objs.clear()
-    field = FB.has(st.mode) ? pitch(MODES[st.mode]) : court(st.mode); world.add(field)
+    field = st.mode === "area" ? areaField(dimsOf(st)) : FB.has(st.mode) ? pitch(MODES[st.mode]) : court(st.mode); world.add(field)
+    world.add(zones); sel = null; zones.clear(); onSelect(null)
     marks = new THREE.Group(); world.add(marks); st.marks.forEach((m) => marks.add(Object.assign(markObj(m), { name: m.id })))
-    st.tokens.forEach((t, i) => { const o = t.kind === "ball" ? ballMesh() : t.kind === "eq" ? equipObj(t.eq ?? "cone") : q === "high" ? athleteObj(t, i) : playerObj(t); if (q !== "high") o.traverse((m) => { m.castShadow = false }); o.rotation.y = t.rot ?? 0; if (t.kind !== "eq") o.scale.setScalar(courtK(st.mode)); o.position.set(t.x, 0, t.z); o.userData.id = t.id; world.add(o); objs.set(t.id, { o, to: o.position.clone() }) })
+    st.tokens.forEach((t, i) => { const o = t.kind === "ball" ? ballMesh() : t.kind === "eq" ? equipObj(t.eq ?? "cone") : q === "high" ? athleteObj(t, i) : playerObj(t); if (q !== "high") o.traverse((m) => { m.castShadow = false }); o.rotation.y = t.rot ?? 0; if (t.kind !== "eq") o.scale.setScalar(courtK(st.mode, dimsOf(st))); o.position.set(t.x, 0, t.z); o.userData.id = t.id; world.add(o); objs.set(t.id, { o, to: o.position.clone() }) })
   }
 
   // camera — orbit around the pitch centre; presets ease to their angles
-  const M0 = (): ModeDef => MODES[st.mode]
+  const M0 = (): ModeDef => dimsOf(st)
   const view = { az: -0.35, el: 0.82, dist: 1, tx: 0, tz: 0 }, goal = { ...view }
   const presets = (c: Cam): typeof view => {
     const L = M0().L
+    if (c === "half") return { az: -0.25, el: 0.9, dist: L * 0.82, tx: L * 0.24, tz: 0 }
+    if (c === "vertical") return { az: Math.PI / HALF, el: 1.32, dist: L * 1.12, tx: 0, tz: 0 }
     if (c === "top") return { az: 0, el: 1.5, dist: L * 1.32, tx: 0, tz: 0 }
     if (c === "goal") return { az: -Math.PI / HALF, el: 0.3, dist: L * 0.42, tx: -L * 0.2, tz: 0 }
     return { az: -0.3, el: 0.86, dist: L * 1.42, tx: 0, tz: 4 }
@@ -355,12 +412,13 @@ export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChan
     ray.setFromCamera(ndc, cam); const p = new THREE.Vector3(); return ray.ray.intersectPlane(ground, p) ? [p.x, p.z] : null
   }
   const nearest = (p: XZ): Token | null => {
-    let best: Token | null = null, bd = PICK_R * courtK(st.mode)
+    let best: Token | null = null, bd = PICK_R * courtK(st.mode, dimsOf(st))
     st.tokens.forEach((t) => { const d = Math.hypot(t.x - p[0], t.z - p[1]); if (d < bd) { bd = d; best = t } })
     return best
   }
   const commit = (): void => { st.frames[fi] = snap(st); onChange(st) }
 
+  let moved = false
   type Drag = { k: "tok"; t: Token } | { k: "draw"; m: Mark; o: THREE.Object3D } | { k: "orbit"; x: number; y: number; az: number; el: number }
   let drag: Drag | null = null
   const down = (e: PointerEvent): void => {
@@ -373,10 +431,10 @@ export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChan
       const o = equipObj(equip); o.position.set(t.x, 0, t.z); world.add(o); objs.set(t.id, { o, to: o.position.clone() }); onChange(st); return
     }
     if (tool === "text") { if (!text.trim()) return; remember(); const m: Mark = { id: uid("m"), kind: "text", pts: [p], text: text.trim() }; st.marks.push(m); marks.add(Object.assign(markObj(m), { name: m.id })); onChange(st); return }
-    if (tool === "move") { const t = nearest(p); if (t) remember(); drag = t ? { k: "tok", t } : { k: "orbit", x: e.clientX, y: e.clientY, az: goal.az, el: goal.el }; return }
+    if (tool === "move") { const t = nearest(p); moved = false; if (t) remember(); else if (sel) { sel = null; drawZones() } drag = t ? { k: "tok", t } : { k: "orbit", x: e.clientX, y: e.clientY, az: goal.az, el: goal.el }; return }
     if (tool === "erase") {
-      const hit = st.marks.findIndex((m) => m.pts.some(([x, z]) => Math.hypot(x - p[0], z - p[1]) < PICK_R * courtK(st.mode)))
-      const eq = st.tokens.find((t) => t.kind === "eq" && Math.hypot(t.x - p[0], t.z - p[1]) < PICK_R * courtK(st.mode))
+      const hit = st.marks.findIndex((m) => m.pts.some(([x, z]) => Math.hypot(x - p[0], z - p[1]) < PICK_R * courtK(st.mode, dimsOf(st))))
+      const eq = st.tokens.find((t) => t.kind === "eq" && Math.hypot(t.x - p[0], t.z - p[1]) < PICK_R * courtK(st.mode, dimsOf(st)))
       if (eq) { remember(); st.tokens = st.tokens.filter((t) => t !== eq); st.frames.forEach((f) => { delete f[eq.id] }); const ob = objs.get(eq.id); if (ob) world.remove(ob.o); objs.delete(eq.id); onChange(st); return }
       if (hit >= 0) { remember(); const [m] = st.marks.splice(hit, 1); const o = marks.getObjectByName(m.id); if (o) marks.remove(o); onChange(st) }
       return
@@ -387,14 +445,14 @@ export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChan
     if (!drag) return
     if (drag.k === "orbit") { goal.az = drag.az - (e.clientX - drag.x) * 0.006; goal.el = Math.max(0.25, Math.min(1.52, drag.el + (e.clientY - drag.y) * 0.005)); return }
     const p = onGround(e); if (!p) return
-    if (drag.k === "tok") { const M = M0(); drag.t.x = Math.max(-M.L / HALF - 4, Math.min(M.L / HALF + 4, p[0])); drag.t.z = Math.max(-M.W / HALF - 4, Math.min(M.W / HALF + 4, p[1])); const ob = objs.get(drag.t.id); if (ob) { ob.to.set(drag.t.x, 0, drag.t.z); ob.o.position.copy(ob.to) }; return }
+    if (drag.k === "tok") { moved = true; const M = M0(); drag.t.x = Math.max(-M.L / HALF - 4, Math.min(M.L / HALF + 4, p[0])); drag.t.z = Math.max(-M.W / HALF - 4, Math.min(M.W / HALF + 4, p[1])); const ob = objs.get(drag.t.id); if (ob) { ob.to.set(drag.t.x, 0, drag.t.z); ob.o.position.copy(ob.to) }; return }
     const last = drag.m.pts[drag.m.pts.length - 1]
     if (drag.m.kind === "zone" || drag.m.kind === "pass") drag.m.pts = [drag.m.pts[0], p]
     else if (Math.hypot(p[0] - last[0], p[1] - last[1]) > MIN_STEP) drag.m.pts.push(p)
     marks.remove(drag.o); drag.o = markObj(drag.m); drag.o.name = drag.m.id; marks.add(drag.o)
   }
   const up = (): void => {
-    if (drag?.k === "tok") commit()
+    if (drag?.k === "tok") { if (!moved) { hist.pop(); sel = drag.t.id; drawZones() } else { commit(); if (sel === drag.t.id) drawZones() } }
     if (drag?.k === "draw") { const [a, b] = [drag.m.pts[0], drag.m.pts[drag.m.pts.length - 1]]; if (Math.hypot(b[0] - a[0], b[1] - a[1]) > 1) { remember(); st.marks.push(drag.m); onChange(st) } else marks.remove(drag.o) }
     drag = null
   }
@@ -436,6 +494,7 @@ export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChan
     canUndo: () => hist.length > 0,
     canRedo: () => fut.length > 0,
     setText: (t) => { text = t },
+    select: (id) => { sel = id; drawZones(); wake() },
     setEquip: (e) => { equip = e },
     setCaption: (i, t) => { st.caps = st.caps ?? []; st.caps[i] = t; onChange(st) },
     state: () => st,

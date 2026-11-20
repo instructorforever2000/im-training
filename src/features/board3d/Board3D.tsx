@@ -1,7 +1,7 @@
 // السبورة التكتيكية 3D — the pitch is the screen: draw passes, runs, dribbles and zones on the grass, move players,
 // add movement frames and play them like a broadcast replay. Saved on this device.
 import { useEffect, useRef, useState } from "react"
-import { fromPlay, PLAY_MODES, autoQuality, type QualityPref, mountBoard3D, newBoard, formsOf, setFormation, MARK_COLOR, TEAM_COLOR, type Board3D as Api, type BoardState, type Cam, type Mode, type Side, type Tool, type Equip } from "./engine"
+import { fromPlay, opensIn3D, type RoleInfo, PLAY_MODES, autoQuality, type QualityPref, mountBoard3D, newBoard, formsOf, setFormation, MARK_COLOR, TEAM_COLOR, type Board3D as Api, type BoardState, type Cam, type Mode, type Side, type Tool, type Equip } from "./engine"
 import "./board3d.css"
 import { can, guard } from "@/features/auth/caps"
 import { PLAYS, PLAY_CAT } from "@/features/library/content"
@@ -12,13 +12,15 @@ const LKEY = "im-board3d-library"
 interface Saved { id: string; name: string; at: string; state: BoardState }
 const readLib = (): Saved[] => { try { return JSON.parse(localStorage.getItem(LKEY) ?? "[]") as Saved[] } catch { return [] } }
 const writeLib = (l: Saved[]): void => { try { localStorage.setItem(LKEY, JSON.stringify(l)) } catch { /* storage full */ } }
-const PLAYS3D = PLAYS.filter((p) => PLAY_MODES.includes(p.mode))
-const MODE_AR: Record<string, string> = { fb11: "قدم 11", fb7: "قدم 7", futsal: "صالات", bb: "سلة", hb: "يد", vb: "طائرة" }
+const PLAYS3D = PLAYS.filter((p) => opensIn3D(p.mode))
+const modeKey = (m: string): string => (m.startsWith("a-") ? "area" : m)
+const MODE_AR: Record<string, string> = { fb11: "قدم 11", fb7: "قدم 7", futsal: "صالات", bb: "سلة", hb: "يد", vb: "طائرة", area: "أنشطة عامة" }
 const readQ = (): QualityPref => { try { const v = localStorage.getItem(QKEY); return v === "high" || v === "lite" ? v : "auto" } catch { return "auto" } }
 const resolveQ = (p: QualityPref): "high" | "lite" => (p === "auto" ? autoQuality() : p)
 const MODES: readonly { k: Mode; ar: string; en: string }[] = [
   { k: "fb11", ar: "قدم 11", en: "11v11" }, { k: "fb7", ar: "قدم 7", en: "7v7" }, { k: "futsal", ar: "صالات", en: "Futsal" },
   { k: "bb", ar: "سلة", en: "Basketball" }, { k: "hb", ar: "يد", en: "Handball" }, { k: "vb", ar: "طائرة", en: "Volleyball" },
+  { k: "area", ar: "مساحة تمرين", en: "Drill area" },
 ]
 const TOOLS: readonly { k: Tool; ar: string; en: string; d: string }[] = [
   { k: "move", ar: "تحريك", en: "Move", d: "M12 2v20M2 12h20M12 2l-3 3M12 2l3 3M12 22l-3-3M12 22l3-3M2 12l3-3M2 12l3 3M22 12l-3-3M22 12l-3 3" },
@@ -34,7 +36,7 @@ const EQUIP: readonly { k: Equip; ar: string; en: string }[] = [
   { k: "cone", ar: "قمع", en: "Cone" }, { k: "ladder", ar: "سلم رشاقة", en: "Agility ladder" }, { k: "hurdle", ar: "حاجز", en: "Hurdle" },
   { k: "pole", ar: "عصا", en: "Pole" }, { k: "flag", ar: "علم", en: "Flag" }, { k: "minigoal", ar: "مرمى صغير", en: "Mini goal" }, { k: "mannequin", ar: "دمية حائط", en: "Mannequin" },
 ]
-const CAMS: readonly { k: Cam; ar: string }[] = [{ k: "broadcast", ar: "البث" }, { k: "top", ar: "علوي" }, { k: "goal", ar: "خلف المرمى" }]
+const CAMS: readonly { k: Cam; ar: string }[] = [{ k: "broadcast", ar: "البث" }, { k: "half", ar: "نص الملعب" }, { k: "top", ar: "علوي" }, { k: "vertical", ar: "طولي" }, { k: "goal", ar: "خلف المرمى" }]
 
 function load(): BoardState {
   try { const s = localStorage.getItem(KEY); if (s) return JSON.parse(s) as BoardState } catch { /* first visit */ }
@@ -67,6 +69,7 @@ export function Board3D({ dark, playId }: { readonly dark: boolean; readonly pla
   const [playing, setPlaying] = useState(false)
   const [, tick] = useState(0)
   const [txt, setTxt] = useState("")
+  const [role, setRole] = useState<(RoleInfo & { num?: number }) | null>(null)
   const [qp, setQp] = useState<QualityPref>(readQ)
   useEffect(() => { try { localStorage.setItem(QKEY, qp) } catch { /* private mode */ } api.current?.setQuality(resolveQ(qp)) }, [qp])
   const [eq, setEq] = useState<Equip>("cone")
@@ -83,7 +86,7 @@ export function Board3D({ dark, playId }: { readonly dark: boolean; readonly pla
 
   useEffect(() => {
     const c = cv.current; if (!c) return
-    const a = mountBoard3D(c, b, (s) => { try { localStorage.setItem(KEY, JSON.stringify(s)) } catch { /* full */ } tick((n) => n + 1) }, resolveQ(readQ()))
+    const a = mountBoard3D(c, b, (s) => { try { localStorage.setItem(KEY, JSON.stringify(s)) } catch { /* full */ } tick((n) => n + 1) }, resolveQ(readQ()), setRole)
     api.current = a
     return () => { a.dispose(); api.current = null }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -182,10 +185,17 @@ export function Board3D({ dark, playId }: { readonly dark: boolean; readonly pla
               <button className={`rm ${del === x.id ? "sure" : ""}`} onClick={() => remove(x.id)} title="حذف">{del === x.id ? "تأكيد الحذف" : "حذف"}</button></li>))}</ul>
           <div className="hd"><b>خطط المكتبة <span className="en">Library plays · {PLAYS3D.length}</span></b></div>
           <div className="chips">{["all", ...PLAY_MODES].map((m) => <button key={m} className={pf === m ? "on" : ""} onClick={() => setPf(m)}>{m === "all" ? "الكل" : MODE_AR[m]}</button>)}</div>
-          <ul>{PLAYS3D.filter((p) => pf === "all" || p.mode === pf).map((p) => (
-            <li key={p.id}><button className="op" onClick={() => openPlay(p.id)} style={{ "--c": PLAY_CAT[p.cat]?.color } as React.CSSProperties}><b><i />{p.name.ar}</b><small>{MODE_AR[p.mode]} · {p.steps.length} خطوات · {PLAY_CAT[p.cat]?.ar}</small></button></li>))}</ul>
+          <ul>{PLAYS3D.filter((p) => pf === "all" || modeKey(p.mode) === pf).map((p) => (
+            <li key={p.id}><button className="op" onClick={() => openPlay(p.id)} style={{ "--c": PLAY_CAT[p.cat]?.color } as React.CSSProperties}><b><i />{p.name.ar}</b><small>{MODE_AR[modeKey(p.mode)]} · {p.steps.length} خطوات · {PLAY_CAT[p.cat]?.ar}</small></button></li>))}</ul>
           
         </aside>
+      )}
+      {role && tool === "move" && (
+        <div className="b3role glass"><button className="x" onClick={() => api.current?.select(null)}>✕</button>
+          <b>{role.num ? `${role.num} · ` : ""}{role.ar} {role.en && <span className="en">{role.en}</span>}</b>
+          {role.desc && <p>{role.desc}</p>}
+          <div className="lg"><span><i style={{ background: "#F4D03F" }} />منطقة التحرك بالكرة</span><span><i style={{ background: "#4FD1C5" }} />بدون كرة</span></div>
+        </div>
       )}
       {tool === "equip" && <div className="b3txt glass"><b>اختار الأداة ثم اضغط مكانها على الملعب · الممحاة تشيلها</b>
         <div className="eqs">{EQUIP.map((e) => <button key={e.k} className={eq === e.k ? "on" : ""} onClick={() => setEq(e.k)}>{e.ar}<span className="en">{e.en}</span></button>)}</div></div>}
@@ -200,7 +210,7 @@ export function Board3D({ dark, playId }: { readonly dark: boolean; readonly pla
           <button className="add" onClick={() => setFi(api.current?.addFrame() ?? fi)}>+ مرحلة</button>
         </div>
         <input className="cap" value={st.caps?.[fi] ?? ""} onChange={(e) => api.current?.setCaption(fi, e.target.value)} placeholder={`شرح المرحلة ${fi + 1} (يظهر أثناء التشغيل)`} />
-        <span className="hint">اسحب الملعب للدوران · العجلة للتقريب · Ctrl+Z تراجع</span>
+        <span className="hint">اضغط لاعب لعرض دوره ومنطقة تحركه · اسحب الملعب للدوران · Ctrl+Z تراجع</span>
       </footer>
     </div>
   )
