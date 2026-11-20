@@ -54,6 +54,23 @@ export function newBoard(mode: Mode, form?: Partial<Record<Side, string>>): Boar
   b.frames = [snap(b)]
   return b
 }
+export const PLAY_MODES: readonly string[] = ["fb11", "fb7", "futsal"]
+interface PlayLike { id: string; mode: string; desc: { ar: string }; tokens: [string, string, number | string, number, number][]; ball0: string; steps: { c: { ar: string }; m: Record<string, [number, number]>; b?: string }[] }
+const BALL_DX = 1.1, BALL_DZ = 0.6
+/** A library play (football modes) as a 3D board: one frame per step, the step text as the frame caption. */
+export function fromPlay(p: PlayLike): BoardState | null {
+  if (!PLAY_MODES.includes(p.mode)) return null
+  const M = MODES[p.mode], cx = M.L / HALF, cz = M.W / HALF
+  const tokens: Token[] = p.tokens.map(([id, code, num, x, z]) => ({ id, kind: "p", team: id.startsWith("a") ? "A" : "B", code, num: Number(num) || undefined, x: x - cx, z: z - cz }))
+  const ball: Token = { id: "ball", kind: "ball", x: 0, z: 0 }; tokens.push(ball)
+  const at: Record<string, XZ> = Object.fromEntries(tokens.map((t) => [t.id, [t.x, t.z] as XZ]))
+  let holder = p.ball0
+  const frameNow = (): Record<string, XZ> => { const h = at[holder]; return { ...at, ball: h ? [h[0] + BALL_DX, h[1] + BALL_DZ] : [0, 0] } }
+  const frames = [frameNow()], caps = [p.desc.ar]
+  p.steps.forEach((s) => { Object.entries(s.m).forEach(([id, [x, z]]) => { at[id] = [x - cx, z - cz] }); if (s.b) holder = s.b; frames.push(frameNow()); caps.push(s.c.ar) })
+  ball.x = frames[0].ball[0]; ball.z = frames[0].ball[1]
+  return { mode: p.mode as Mode, form: { A: "—", B: "—" }, tokens, marks: [], frames, caps }
+}
 export const snap = (b: BoardState): Record<string, XZ> => Object.fromEntries(b.tokens.map((t) => [t.id, [t.x, t.z] as XZ]))
 
 /** Re-place one team on a new formation, keeping the same token ids. */

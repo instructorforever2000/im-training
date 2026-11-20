@@ -2,6 +2,7 @@
 // "#/board?play=<id>" opens an animated play from the library on the board with all its frames.
 import { useEffect, useRef, useState } from "react"
 import { Board3D } from "@/features/board3d/Board3D"
+import { PLAY_MODES } from "@/features/board3d/engine"
 import { Dock } from "@/components/ui/Dock"
 import { PLAYS } from "@/features/library/content"
 import { mountBoard } from "./board.js"
@@ -14,7 +15,10 @@ const PLAY_RE = /[?&]play=([^&#]+)/
 export function BoardScreen(): React.JSX.Element {
   const host = useRef<HTMLDivElement>(null)
   // 3D is the default; the 2D board stays available (and is used for a play opened from the library) until 3D has every feature.
-  const [three, setThree] = useState(() => !PLAY_RE.test(window.location.hash))
+  const pid = PLAY_RE.exec(window.location.hash)?.[1]
+  const pmode = pid ? PLAYS.find((p) => p.id === decodeURIComponent(pid))?.mode : undefined
+  // Plays of the 3D sports (football 11/7, futsal) open on the 3D board; other sports keep the 2D board for now.
+  const [three, setThree] = useState(() => !pmode || PLAY_MODES.includes(pmode))
   useEffect(() => {
     if (three) return
     const el = host.current
@@ -24,7 +28,7 @@ export function BoardScreen(): React.JSX.Element {
     return mountBoard(el, play)
   }, [three])
   const sw = <button className="bd3sw" onClick={() => setThree((t) => !t)}>{three ? "السبورة 2D" : "السبورة 3D"}</button>
-  if (three) return <div className="bd" dir="rtl" lang="ar"><Dock active="board" /><Board3D dark={false} />{sw}</div>
+  if (three) return <div className="bd" dir="rtl" lang="ar"><Dock active="board" /><Board3D dark={false} playId={pid ? decodeURIComponent(pid) : undefined} />{sw}</div>
   return (
     <div className="bd" dir="rtl" lang="ar">
       <Dock active="board" />

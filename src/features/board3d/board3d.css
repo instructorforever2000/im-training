@@ -35,3 +35,17 @@
 @keyframes b3in{from{opacity:0;transform:translate(-50%,8px)}}
 @media (max-width:860px){.b3txt{left:10px;right:10px;width:auto;top:auto;bottom:230px}.b3cap{bottom:220px;max-width:92%}}
 .b3txt .eqs{display:grid;grid-template-columns:1fr 1fr;gap:4px}.b3txt .eqs button{padding:7px 8px;border-radius:9px;border:1px solid var(--ln);font-size:12.5px;font-weight:600;text-align:start;color:var(--ink)}.b3txt .eqs button.on{border-color:var(--teal);background:#1FB5A81a}
+
+.b3 .chip{padding:7px 12px;border-radius:10px;font-size:12.5px;font-weight:600;border:1px solid var(--ln);color:var(--ink)}.b3 .chip.on{background:#1FB5A81a;border-color:var(--teal);color:#0f8f84}
+.b3lib{position:absolute;top:84px;bottom:96px;left:116px;width:340px;padding:12px;display:flex;flex-direction:column;gap:8px;overflow-y:auto;z-index:5}
+.b3lib .hd{display:flex;justify-content:space-between;align-items:center;margin-top:4px}.b3lib .hd b{font-size:13.5px}
+.b3lib .save{display:flex;gap:6px}.b3lib .save input{flex:1;font:inherit;font-size:13px;padding:8px 10px;border-radius:10px;border:1px solid var(--ln);background:transparent;color:var(--ink)}
+.b3lib .save button{padding:0 14px;border-radius:10px;background:var(--teal);color:#fff;font-weight:700}.b3lib .save button:disabled{opacity:.4}
+.b3lib ul{list-style:none;display:flex;flex-direction:column;gap:5px}.b3lib li{display:flex;gap:4px}
+.b3lib .op{flex:1;text-align:start;padding:8px 10px;border-radius:10px;border:1px solid var(--ln);display:flex;flex-direction:column;gap:2px}
+.b3lib .op:hover{border-color:var(--teal)}.b3lib .op b{font-size:12.5px;display:flex;gap:6px;align-items:center}.b3lib .op i{width:8px;height:8px;border-radius:2px;background:var(--c,var(--teal));flex:none}
+.b3lib .op small{font-size:11px;color:var(--mu)}
+.b3lib .rm{padding:0 10px;border-radius:10px;font-size:11.5px;color:var(--mu);border:1px solid var(--ln)}.b3lib .rm.sure{background:#d9483b;color:#fff;border-color:#d9483b}
+.b3lib .chips{display:flex;gap:4px;flex-wrap:wrap}.b3lib .chips button{padding:4px 10px;border-radius:999px;font-size:12px;border:1px solid var(--ln);color:var(--mu)}.b3lib .chips button.on{border-color:var(--teal);color:#0f8f84;background:#1FB5A81a}
+.b3lib .mu{font-size:11.5px;color:var(--mu);line-height:1.6}
+@media (max-width:860px){.b3lib{left:10px;right:10px;width:auto;top:120px;bottom:220px}}

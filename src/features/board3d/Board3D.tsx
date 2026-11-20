@@ -1,11 +1,18 @@
 // السبورة التكتيكية 3D — the pitch is the screen: draw passes, runs, dribbles and zones on the grass, move players,
 // add movement frames and play them like a broadcast replay. Saved on this device.
 import { useEffect, useRef, useState } from "react"
-import { autoQuality, type QualityPref, mountBoard3D, newBoard, formsOf, setFormation, MARK_COLOR, TEAM_COLOR, type Board3D as Api, type BoardState, type Cam, type Mode, type Side, type Tool, type Equip } from "./engine"
+import { fromPlay, PLAY_MODES, autoQuality, type QualityPref, mountBoard3D, newBoard, formsOf, setFormation, MARK_COLOR, TEAM_COLOR, type Board3D as Api, type BoardState, type Cam, type Mode, type Side, type Tool, type Equip } from "./engine"
 import "./board3d.css"
+import { PLAYS, PLAY_CAT } from "@/features/library/content"
 
 const KEY = "im-board3d-v1"
 const QKEY = "im-board3d-quality"
+const LKEY = "im-board3d-library"
+interface Saved { id: string; name: string; at: string; state: BoardState }
+const readLib = (): Saved[] => { try { return JSON.parse(localStorage.getItem(LKEY) ?? "[]") as Saved[] } catch { return [] } }
+const writeLib = (l: Saved[]): void => { try { localStorage.setItem(LKEY, JSON.stringify(l)) } catch { /* storage full */ } }
+const PLAYS3D = PLAYS.filter((p) => PLAY_MODES.includes(p.mode))
+const MODE_AR: Record<string, string> = { fb11: "قدم 11", fb7: "قدم 7", futsal: "صالات" }
 const readQ = (): QualityPref => { try { const v = localStorage.getItem(QKEY); return v === "high" || v === "lite" ? v : "auto" } catch { return "auto" } }
 const resolveQ = (p: QualityPref): "high" | "lite" => (p === "auto" ? autoQuality() : p)
 const MODES: readonly { k: Mode; ar: string; en: string }[] = [
@@ -32,10 +39,26 @@ function load(): BoardState {
   return newBoard("fb11", { A: "4-3-3", B: "4-4-2" })
 }
 
-export function Board3D({ dark }: { readonly dark: boolean }): React.JSX.Element {
+export function Board3D({ dark, playId }: { readonly dark: boolean; readonly playId?: string }): React.JSX.Element {
   const cv = useRef<HTMLCanvasElement>(null)
   const api = useRef<Api | null>(null)
-  const [b, setB] = useState<BoardState>(load)
+  const [b, setB] = useState<BoardState>(() => {
+    const pl = playId ? PLAYS.find((p) => p.id === playId) : undefined
+    return (pl && fromPlay(pl)) || load()
+  })
+  const [panel, setPanel] = useState(false)
+  const [lib, setLib] = useState<Saved[]>(readLib)
+  const [name, setName] = useState("")
+  const [pf, setPf] = useState<string>("all")
+  const [del, setDel] = useState<string | null>(null)
+  const saveAs = (): void => {
+    const s = api.current?.state(); if (!s || !name.trim()) return
+    const ex = lib.find((x) => x.name === name.trim())
+    const item: Saved = { id: ex?.id ?? `l${Date.now().toString(36)}`, name: name.trim(), at: new Date().toISOString().slice(0, 10), state: JSON.parse(JSON.stringify(s)) as BoardState }
+    const n = [item, ...lib.filter((x) => x.id !== item.id)]; setLib(n); writeLib(n); setName("")
+  }
+  const remove = (id: string): void => { if (del !== id) { setDel(id); return } const n = lib.filter((x) => x.id !== id); setLib(n); writeLib(n); setDel(null) }
+  const openPlay = (id: string): void => { const pl = PLAYS.find((p) => p.id === id); const st2 = pl && fromPlay(pl); if (st2) { replace(st2); setPanel(false); setCam("broadcast") } }
   const [tool, setTool] = useState<Tool>("move")
   const [cam, setCam] = useState<Cam>("broadcast")
   const [fi, setFi] = useState(0)
@@ -85,10 +108,11 @@ export function Board3D({ dark }: { readonly dark: boolean }): React.JSX.Element
         <div className="seg">{MODES.map((m) => <button key={m.k} className={st.mode === m.k ? "on" : ""} onClick={() => replace(newBoard(m.k))}>{m.ar}<span className="en">{m.en}</span></button>)}</div>
         {(["A", "B"] as const).map((s) => (
           <label key={s} className="frm"><i style={{ background: TEAM_COLOR[s] }} />{s === "A" ? "فريقنا" : "المنافس"}
-            <select value={st.form[s]} onChange={(e) => form(s, e.target.value)}>{formsOf(st.mode).map((f) => <option key={f}>{f}</option>)}</select></label>
+            <select value={st.form[s]} onChange={(e) => form(s, e.target.value)}>{st.form[s] === "—" && <option value="—">من الخطة</option>}{formsOf(st.mode).map((f) => <option key={f}>{f}</option>)}</select></label>
         ))}
         <label className="frm" title="جودة العرض — «تلقائي» يختار حسب قوة الجهاز">جودة العرض
           <select value={qp} onChange={(e) => setQp(e.target.value as QualityPref)}><option value="auto">تلقائي</option><option value="high">عالية</option><option value="lite">خفيفة</option></select></label>
+        <button className="chip on" onClick={() => setPanel((v) => !v)}>اللوحات والخطط <span className="en">Library</span></button>
         <div className="seg">{CAMS.map((c) => <button key={c.k} className={cam === c.k ? "on" : ""} onClick={() => setCam(c.k)}>{c.ar}</button>)}</div>
       </header>
 
@@ -106,6 +130,21 @@ export function Board3D({ dark }: { readonly dark: boolean }): React.JSX.Element
         <button onClick={exportPng} title="صورة PNG"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M4 19h16" /></svg><span>صورة</span></button>
       </nav>
 
+      {panel && (
+        <aside className="b3lib glass" aria-label="اللوحات والخطط">
+          <div className="hd"><b>اللوحات المحفوظة <span className="en">My boards</span></b><button onClick={() => setPanel(false)}>✕</button></div>
+          <div className="save"><input value={name} onChange={(e) => setName(e.target.value)} placeholder="اسم اللوحة الحالية" onKeyDown={(e) => e.key === "Enter" && saveAs()} /><button disabled={!name.trim()} onClick={saveAs}>حفظ</button></div>
+          {lib.length === 0 && <p className="mu">لسه مفيش لوحات محفوظة — اكتب اسم واضغط «حفظ».</p>}
+          <ul>{lib.map((x) => (
+            <li key={x.id}><button className="op" onClick={() => { replace(JSON.parse(JSON.stringify(x.state)) as BoardState); setPanel(false) }}><b>{x.name}</b><small>{MODE_AR[x.state.mode]} · {x.state.frames.length} مراحل · {x.at}</small></button>
+              <button className={`rm ${del === x.id ? "sure" : ""}`} onClick={() => remove(x.id)} title="حذف">{del === x.id ? "تأكيد الحذف" : "حذف"}</button></li>))}</ul>
+          <div className="hd"><b>خطط المكتبة <span className="en">Library plays · {PLAYS3D.length}</span></b></div>
+          <div className="chips">{["all", ...PLAY_MODES].map((m) => <button key={m} className={pf === m ? "on" : ""} onClick={() => setPf(m)}>{m === "all" ? "الكل" : MODE_AR[m]}</button>)}</div>
+          <ul>{PLAYS3D.filter((p) => pf === "all" || p.mode === pf).map((p) => (
+            <li key={p.id}><button className="op" onClick={() => openPlay(p.id)} style={{ "--c": PLAY_CAT[p.cat]?.color } as React.CSSProperties}><b><i />{p.name.ar}</b><small>{MODE_AR[p.mode]} · {p.steps.length} خطوات · {PLAY_CAT[p.cat]?.ar}</small></button></li>))}</ul>
+          <p className="mu">خطط السلة واليد والطائرة بتتفتح في السبورة 2D لحد ما ملاعبها تتعمل 3D.</p>
+        </aside>
+      )}
       {tool === "equip" && <div className="b3txt glass"><b>اختار الأداة ثم اضغط مكانها على الملعب · الممحاة تشيلها</b>
         <div className="eqs">{EQUIP.map((e) => <button key={e.k} className={eq === e.k ? "on" : ""} onClick={() => setEq(e.k)}>{e.ar}<span className="en">{e.en}</span></button>)}</div></div>}
       {tool === "text" && <div className="b3txt glass"><b>اكتب الملاحظة ثم اضغط مكانها على الملعب</b><input autoFocus value={txt} onChange={(e) => setTxt(e.target.value)} placeholder="مثال: ضغط عالي هنا" /></div>}
