@@ -93,3 +93,11 @@
 .rs.v5.shut .stabs{border:0;padding:0}
 .rs.v5.shut .shide{width:auto;padding:8px 14px;border-radius:999px;background:var(--navy);color:#fff;font-size:12.5px}
 @media(max-width:900px){.rs.v5 .sgrip{display:none}.rs.v5 .shide{display:none}}
+/* جوال بالعرض — Landscape phone: الملعب على جنب واللوحة جنبه بدل ما تكون تحته */
+@media(max-width:1000px) and (orientation:landscape) and (max-height:560px){
+.rs.v5 main{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);align-items:start}
+.rs.v5 .hud{grid-column:1/-1}
+.rs.v5 #stage{grid-column:1;grid-row:2/span 4;top:4px!important;height:calc(100dvh - 70px);margin:4px}
+.rs.v5 #capbar,.rs.v5 #tl,.rs.v5 #sheet{grid-column:2}
+.rs.v5 .stabs{top:0}
+}

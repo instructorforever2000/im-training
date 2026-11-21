@@ -90,3 +90,5 @@
 .a-dose{font:700 12.5px Outfit;color:var(--c);direction:ltr;unicode-bidi:isolate;align-self:flex-start}.a-nx{font-size:11px;color:var(--teal2)}
 .a-pv .mu{font-size:12px;color:var(--mu)}
 .a-aufl{margin-bottom:12px}.a-noimg{width:64px;height:64px;border-radius:10px;background:var(--soft);display:grid;place-items:center;color:var(--c);font-size:22px;flex:none}.a-ext{cursor:default}
+/* الموبايل بالعرض (landscape phones): cards side by side instead of one column */
+@media (orientation:landscape) and (max-height:560px){.a-fams{grid-template-columns:repeat(2,minmax(0,1fr))}.a-fvb,.a-fvl{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr)}}

@@ -8,6 +8,7 @@
   "start_url": "/im-training/",
   "scope": "/im-training/",
   "display": "standalone",
+  "orientation": "any",
   "background_color": "#ffffff",
   "theme_color": "#0f8f8c",
   "icons": [

@@ -46,6 +46,21 @@ function load(): BoardState {
 export function Board3D({ dark, playId }: { readonly dark: boolean; readonly playId?: string }): React.JSX.Element {
   const cv = useRef<HTMLCanvasElement>(null)
   const api = useRef<Api | null>(null)
+  const root = useRef<HTMLDivElement>(null)
+  const [full, setFull] = useState(false)
+  useEffect(() => {
+    const f = (): void => setFull(document.fullscreenElement === root.current)
+    document.addEventListener("fullscreenchange", f); return () => document.removeEventListener("fullscreenchange", f)
+  }, [])
+  // ملء الشاشة بالعرض — Android locks landscape; iPhone only enlarges (rotate by hand)
+  const toggleFull = async (): Promise<void> => {
+    try {
+      if (document.fullscreenElement) { await document.exitFullscreen(); return }
+      await root.current?.requestFullscreen?.()
+      const o = screen.orientation as ScreenOrientation & { lock?: (t: string) => Promise<void> }
+      await o.lock?.("landscape")
+    } catch { /* not supported on this device — the board still works in the window */ }
+  }
   const [b, setB] = useState<BoardState>(() => {
     const pl = playId ? PLAYS.find((p) => p.id === playId) : undefined
     return (pl && fromPlay(pl)) || load()
@@ -146,10 +161,10 @@ export function Board3D({ dark, playId }: { readonly dark: boolean; readonly pla
     if (!can("download")) { guard("download", () => {}); return } const u = api.current?.png(); if (!u) return; const a = document.createElement("a"); a.href = u; a.download = "IM-tactical-board-3d.png"; a.click() }
 
   return (
-    <div className="b3">
+    <div className={`b3${full ? " full" : ""}`} ref={root}>
       <canvas ref={cv} className="b3gl" />
       <header className={`b3top glass ${menu ? "open" : ""}`}>
-        <div className="ttl"><h1>السبورة التكتيكية <span className="en">3D tactical board</span></h1><span className="live">LIVE 3D</span><button className="mtog" onClick={() => setMenu((v) => !v)} aria-expanded={menu}>{menu ? "إخفاء ✕" : "الإعدادات ☰"}</button></div>
+        <div className="ttl"><h1>السبورة التكتيكية <span className="en">3D tactical board</span></h1><span className="live">LIVE 3D</span><button className="mtog" onClick={() => setMenu((v) => !v)} aria-expanded={menu}>{menu ? "إخفاء ✕" : "الإعدادات ☰"}</button><button className="fsb" onClick={() => void toggleFull()} title="ملء الشاشة بالعرض — Fullscreen landscape">{full ? "خروج ⤡" : "بالعرض ⤢"}</button></div>
         <div className="seg">{MODES.map((m) => <button key={m.k} className={st.mode === m.k ? "on" : ""} onClick={() => replace(newBoard(m.k))}>{m.ar}<span className="en">{m.en}</span></button>)}</div>
         {(["A", "B"] as const).map((s) => (
           <label key={s} className="frm"><i style={{ background: TEAM_COLOR[s] }} />{s === "A" ? "فريقنا" : "المنافس"}
