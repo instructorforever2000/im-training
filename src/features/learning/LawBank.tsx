@@ -1,29 +1,12 @@
 // بنك القوانين (Laws bank) — every rules question of the platform, organised by sport and by law/chapter:
 // a timed-free quiz of any length, flip cards for revision, and a study view that lists every question with its explanation.
 import { useMemo, useState } from "react"
-import legacy from "@/content/legacy-v28/quiz-bank.json"
-import cur from "./curriculum.json"
-import football from "./laws/football.json"
-import futsal from "./laws/futsal.json"
-import basketball from "./laws/basketball.json"
-import handball from "./laws/handball.json"
-import volleyball from "./laws/volleyball.json"
-import comp from "./laws/comp.json"
+import { LAW_BANK, GENERAL, MIXED, type LawQ } from "./lawBankData"
 import { CapButton } from "@/components/ui/CapButton"
 import { printWith } from "@/features/auth/caps"
 
-type Row = readonly [string, string, string, string, string, string]
-export interface LawQ { readonly sp: string; readonly ch: string; readonly row: Row }
 type Mode = "home" | "quiz" | "cards" | "study" | "result"
 
-const GENERAL = "أسئلة عامة"
-const MIXED = "مواقف متنوعة"
-const FILES: Record<string, readonly { ch: string; q: Row }[]> = { football, futsal, basketball, handball, volleyball, comp } as unknown as Record<string, readonly { ch: string; q: Row }[]>
-export const LAW_BANK: readonly LawQ[] = [
-  ...(legacy as unknown as readonly { sp: string; ar: Row }[]).map((x) => ({ sp: x.sp, ch: GENERAL, row: x.ar })),
-  ...Object.entries(cur.lawBank as unknown as Record<string, readonly Row[]>).flatMap(([sp, rows]) => rows.map((row) => ({ sp, ch: MIXED, row }))),
-  ...Object.entries(FILES).flatMap(([sp, rows]) => rows.map((r) => ({ sp, ch: r.ch, row: r.q }))),
-]
 const SP: Record<string, { ar: string; en: string; c: string }> = {
   football: { ar: "كرة القدم", en: "Football · IFAB", c: "#2fa36b" },
   futsal: { ar: "كرة الصالات", en: "Futsal · FIFA", c: "#1FB5A8" },

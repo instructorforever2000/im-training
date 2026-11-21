@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment -- ported design code, type-checking intentionally off */
 // @ts-nocheck — 3D studio for المراكز والأدوار (approved design roles-concept-v4), mounted inside a host element.
 // Behaviour is unchanged from the approved design; this wrapper only scopes it to the host and cleans up on leave.
 import * as THREE from 'three';
@@ -16,7 +17,7 @@ const offs = [], obs = [];
 const on = (t, ev, fn, o) => { t.addEventListener(ev, fn, o); offs.push(() => t.removeEventListener(ev, fn, o)) };
 const track = ro => { obs.push(ro); return ro };
 const E = ENG, C = E.S.ui.st, $ = s => host.querySelector(s), $$ = (s, r = host) => [...r.querySelectorAll(s)], root = host;
-const store = { get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d } catch (e) { return d } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)) } catch (e) { } } };
+const store = { get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d } catch { return d } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)) } catch { /* storage full or blocked */ } } };
 Object.assign(C, store.get('im-roles-st', {}));
 if (store.get('im-theme-v', null)) root.dataset.theme = store.get('im-theme-v');
 const X = { cmp: null, play: true, cam: 'broadcast', tab: store.get('im-roles-tab', 'now'), speed: 1 };
@@ -69,7 +70,7 @@ function surface(S, dark) {
   }
   // court lines (official dimensions)
   g.strokeStyle = 'rgba(255,255,255,.93)'; g.lineWidth = Math.max(2, M(S.kind === 'grass' ? .12 : .05)); g.lineCap = 'round';
-  const P = (x, y) => [ox + M(x), oy + M(y)], line = (pts) => { g.beginPath(); pts.forEach(([x, y], i) => { const [a, b] = P(x, y); i ? g.lineTo(a, b) : g.moveTo(a, b) }); g.stroke() };
+  const P = (x, y) => [ox + M(x), oy + M(y)], line = (pts) => { g.beginPath(); pts.forEach(([x, y], i) => { const [a, b] = P(x, y); if (i) g.lineTo(a, b); else g.moveTo(a, b) }); g.stroke() };
   const arc = (x, y, rr, a0, a1, ccw) => { const [a, b] = P(x, y); g.beginPath(); g.arc(a, b, M(rr), a0, a1, ccw); g.stroke() };
   const { L, W } = S; line([[0, 0], [L, 0], [L, W], [0, W], [0, 0]]); if (S.court !== 'vb') line([[L / 2, 0], [L / 2, W]]);
   if (S.court === 'fb') { const q = S.L / 105;
@@ -100,7 +101,7 @@ function goal(w, h, d, x, dir) {
 }
 function buildArena() {
   const m = M(), court = COURT[C.mode], S = { L: m.L, W: m.W, court, kind: KIND[court] }, dark = root.dataset.theme === 'dark';
-  if (arena) { scene.remove(arena); arena.traverse(o => { o.geometry && o.geometry.dispose(); if (o.material) { o.material.map && o.material.map.dispose(); o.material.dispose() } }) }
+  if (arena) { scene.remove(arena); arena.traverse(o => { o.geometry?.dispose(); if (o.material) { o.material.map?.dispose(); o.material.dispose() } }) }
   arena = new THREE.Group(); scene.add(arena); dims = S;
   const ground = new THREE.Mesh(new THREE.PlaneGeometry(S.L * 6, S.W * 8), mat(dark ? 0x05080c : 0xcfd8df, { roughness: 1 })); ground.rotation.x = -Math.PI / 2; ground.position.y = -.05; ground.receiveShadow = true; arena.add(ground);
   const surf = new THREE.Mesh(new THREE.PlaneGeometry(S.L + 8, S.W + 8), new THREE.MeshStandardMaterial({ map: surface(S, dark), roughness: S.kind === 'grass' ? .95 : .38 })); surf.rotation.x = -Math.PI / 2; surf.receiveShadow = true; arena.add(surf);
@@ -156,7 +157,7 @@ function buildTeams() {
   const op = C.opp ? E.stOpp(C.mode, C.phase) : null; them = (op || []).map((p, i) => { const a = athlete(p, true, i + 3); oppG.add(a); return a }); oppG.visible = !!op;
   place(true); highlight();
 }
-let tw = { t0: 0, dur: 2600 };
+const tw = { t0: 0, dur: 2600 };
 /** Move every player (and the ball) to the current phase layout, tweening from where they stand. */
 function place(instant) {
   if (X.st) { const l = stepPlays(); if (!l.some(q => q.id === X.st.id)) { if (l.length) stepsEnter(l[0].id); else stepsExit() } return }
@@ -198,10 +199,8 @@ function trails() {
 /* ---------- camera: presets framed in the free area between panels ---------- */
 const camGoal = { p: new THREE.Vector3(), t: new THREE.Vector3(), on: false };
 function freeRect() {
-  const sb = $('#stage').getBoundingClientRect(); let l = sb.left, r = sb.right, t = sb.top, b = sb.bottom;
+  const sb = $('#stage').getBoundingClientRect(); const t = sb.top, b = sb.bottom; let l = sb.left, r = sb.right;
   /* الملعب ثابت بحجمه الكامل: اللوحات والقائمة طبقات عائمة فوقه ولا تغيّر الكاميرا */
-  if (false) { const hb = $('.hud').getBoundingClientRect(); t = Math.max(t, hb.bottom + 8);
-    $$('.pnl').forEach(p => { if (p.classList.contains('hidden')) return; const q = p.getBoundingClientRect(); if (q.width > sb.width * .6) { if (q.top > sb.top + sb.height / 2) b = Math.min(b, q.top - 8); return } if (p.classList.contains('min')) return; const cx = q.left + q.width / 2; if (cx > sb.left + sb.width / 2) r = Math.min(r, q.left - 8); else l = Math.max(l, q.right + 8) }) }
   if (r - l < sb.width * .3) { l = sb.left; r = sb.right } return { sb, l, r, t, b }
 }
 function frame() { const { sb, l, r, t, b } = freeRect(); cam.setViewOffset(sb.width, sb.height, (sb.left + sb.width / 2) - (l + r) / 2, (sb.top + sb.height / 2) - (t + b) / 2, sb.width, sb.height); return { fw: (r - l) / sb.width, fh: (b - t) / sb.height, asp: sb.width / sb.height } }
@@ -289,7 +288,7 @@ on(window, 'resize', placePanels);
 
 /* ---------- controls bar (every option the studio had) ---------- */
 function controls() {
-  const m = M(), mode = C.mode;
+  const mode = C.mode;
   $('#sports').innerHTML = Object.entries(E.MODES).map(([k, v]) => `<button class="chip ${k === mode ? 'on' : ''}" data-m="${k}">${esc(T(v.name))}</button>`).join('');
   $$('#sports [data-m]').forEach(b => b.onclick = () => { C.mode = b.dataset.m; X.cmp = null; C.phase = PHS()[0]; { const pl = layout().players; C.sel = (pl[C.mode === 'fb11' ? 1 : 0] || pl[0]).id } saveSt(); buildArena(); all() });
   const opt = (k, label, cur) => `<option value="${esc(k)}" ${String(k) === String(cur) ? 'selected' : ''}>${esc(label)}</option>`; let h = '';
@@ -336,7 +335,6 @@ function rolePanel() {
     h += `<section class="card" data-tab="qual"><div class="sw2"><div><div class="lbl bad">! ${L('أخطاء شائعة', 'Common mistakes')}</div>${list(T(F.mistakes), 'plain')}</div><div><div class="lbl good">🗣 ${L('تعليمات المدرب', 'Coaching cues')}</div>${list(T(F.cues), 'plain cues')}</div></div></section>`;
     h += `<section class="card" data-tab="qual"><div class="eyebrow">${L('للفئات السنية', 'For youth groups')}</div><p class="desc">${esc(T(F.youth))}</p></section>`;
     h += `<section class="card" data-tab="drills"><div class="eyebrow">${L('تمارين لتطوير الدور', 'Drills to develop the role')}</div><div class="dr">${role.drills.map(id => { const d = E.drillById(id); return d ? `<button><span class="pill">${esc(T(E.CATS[d.cat]))}</span><span class="g">${esc((d[E.getLang()] || d.ar).name)}</span><span class="mut">${d.dur} ${L('د', 'min')}</span></button>` : '' }).join('')}</div></section>`;
-    if (C.phase === 'sp' && T(role.sp).length) { }
   }
   const keys = tabs.map(t => t[0]); if (!keys.includes(X.tab)) X.tab = keys[0];
   el.innerHTML = `<div class="tabs">${tabs.map(([k, t]) => `<button data-tb="${k}" class="${k === X.tab ? 'on' : ''}">${esc(T(t))}</button>`).join('')}<button data-tb="all" class="${X.tab === 'all' ? 'on' : ''}">${L('الكل', 'All')}</button></div>` + h;
@@ -377,6 +375,7 @@ function printCard() {
   if (p) { const F = famOf(p), r = roleOfP(p); body = `<h1>${esc(p.n)} — ${esc(E.codeName(rs, p.code))} · ${esc(T(r.name))}</h1><p class="s">${esc(T(r.desc))}</p><img src="${img}"><div class="g"><section><h3>${L('الصفات المطلوبة', 'Key attributes')}</h3>${F.qual.map(([a, v]) => `<div class="a"><span>${esc(T(E.ATTR[a]))}</span><b>${'●'.repeat(v)}${'○'.repeat(5 - v)}</b></div>`).join('')}</section><section><h3>${L('مؤشرات الأداء', 'KPIs')}</h3>${list(T(r.kpi))}</section><section><h3>${L('أخطاء شائعة', 'Common mistakes')}</h3>${list(T(F.mistakes))}</section><section><h3>${L('تعليمات المدرب', 'Coaching cues')}</h3>${list(T(F.cues))}</section></div><div class="ph">${ps.map(q => `<section class="${q === C.phase ? 'on' : ''}"><h3>${esc(T(n[q]))}</h3>${list(q === 'sp' ? T(r.sp) : T(r.ph[q]))}</section>`).join('')}</div><section><h3>${L('للفئات السنية', 'For youth groups')}</h3><p>${esc(T(F.youth))}</p></section>` }
   else { const fk = E.FORM[mode] ? E.stForm(mode) : mode === 'vb' ? 'vb51' : E.stForm(mode), fi = E.FINFO[fk]; body = `<h1>${esc(T(E.MODES[mode].name))} · ${esc(mode === 'vb' ? L('نظام 5-1', '5-1 system') : E.fname(mode, 'A', fk))}</h1><p class="s">${esc(T(n[C.phase]))}</p><img src="${img}"><div class="g">${fi ? `<section><h3>${L('تحليل الخطة', 'Formation analysis')}</h3><p>${esc(T(fi).p)}</p></section><section><h3>${L('نقاط القوة', 'Strengths')}</h3>${list(T(fi).s)}</section><section><h3>${L('نقاط الضعف', 'Weaknesses')}</h3>${list(T(fi).w)}</section>` : ''}<section><h3>${L('مبادئ المرحلة', 'Phase principles')}</h3>${list(T(E.PHASE_INFO[rs][C.phase]))}</section></div>` }
   const w = open('', '_blank'); if (!w) { toast(L('منع المتصفح فتح نافذة البطاقة — اسمح بالنوافذ المنبثقة', 'The browser blocked the card window — allow pop-ups')); return }
+  // eslint-disable-next-line no-useless-escape -- keeps the closing tag safe inside the printed HTML
   w.document.write(`<!doctype html><html lang="${E.getLang()}" dir="${dir}"><head><meta charset="utf-8"><title>${L('بطاقة الدور', 'Role card')}</title><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"IBM Plex Sans Arabic",sans-serif;color:#0b1726;margin:24px;max-width:1000px}h1{font-size:22px;margin:0}.s{color:#566;margin:4px 0 12px}img{width:100%;border-radius:12px}.g{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}.ph{display:grid;grid-template-columns:repeat(${ps.length},1fr);gap:8px}section{border:1px solid #dde4ec;border-radius:10px;padding:10px;break-inside:avoid}section.on{border-color:#1FB5A8;background:#e6f7f5}h3{font-size:13px;margin:0 0 6px;color:#0f8f84}li,p{font-size:12.5px;line-height:1.7}.a{display:flex;justify-content:space-between;font-size:12.5px}.a b{color:#1FB5A8;letter-spacing:2px}footer{margin-top:14px;font-size:11px;color:#677;display:flex;justify-content:space-between}</style></head><body>${body}<footer><span>IM Training · ${L('المراكز والأدوار', 'Positions & Roles')}</span><b>Instructor Motion</b></footer><script>setTimeout(()=>print(),600)<\/script></body></html>`); w.document.close();
 }
 
@@ -470,7 +469,7 @@ function stepsEnter(id, i = 0) {
   usG.clear(); oppG.clear(); us = []; them = []; oppG.visible = true;
   Object.entries(stepCP.meta).forEach(([tid, m], k) => { const a = athlete({ id: tid, code: m.code, n: m.n }, m.team === 'b', k); (m.team === 'b' ? oppG : usG).add(a); (m.team === 'b' ? them : us).push(a); const q = W3(...stepCP.init[tid]); a.position.copy(q); a.userData.from.copy(q); a.userData.to.copy(q) });
   const b0 = holderPos(p.ball0, stepCP.init); if (b0) ballM.position.copy(W3(b0[0], b0[1])).setY(ballM.userData.r);
-  frameSteps(); stepGo(Math.min(i, stepCP.segs.length - 1), true); if (i === 0) { stepCP.segs.length && (tw.t0 = performance.now() + 500) }
+  frameSteps(); stepGo(Math.min(i, stepCP.segs.length - 1), true); if (i === 0) { if (stepCP.segs.length) tw.t0 = performance.now() + 500 }
 }
 function frameSteps() {
   const xs = [], ys = []; [stepCP.init, ...stepCP.segs.map(q => q.to)].forEach(o => Object.values(o).forEach(q => { xs.push(q[0]); ys.push(q[1]) }));
@@ -522,7 +521,7 @@ $$('#camv button').forEach(b => b.onclick = () => setCam(b.dataset.v));
 $$('#lang button').forEach(b => b.onclick = () => { E.setLang(b.dataset.l); $$('#lang button').forEach(x => x.classList.toggle('on', x === b)); all() });
 /* ---------- more room for the pitch: top bar auto-hides, side dock folds, caption bar moves ---------- */
 { const rs = host, prefs = store.get('im-roles-ui', { pin: false, dock: true }), saveUi = () => store.set('im-roles-ui', prefs);
-  let hideT = 0; const show = v => { if (rs.classList.contains('hh') === !v) return; rs.classList.toggle('hh', !v) };
+  const show = v => { if (rs.classList.contains('hh') === !v) return; rs.classList.toggle('hh', !v) };
   const pinUi = () => { $('#pin').classList.toggle('on', prefs.pin); if (prefs.pin) show(true) };
   const dockUi = () => { rs.classList.toggle('dh', !prefs.dock); $('#dockb').classList.toggle('on', !prefs.dock); setTimeout(placePanels, 320) };
   $('#pin').onclick = () => { prefs.pin = !prefs.pin; saveUi(); pinUi(); toast(prefs.pin ? L('القائمة العلوية مثبّتة', 'Top bar pinned') : L('القائمة العلوية تُفتح بالضغط على زر القائمة', 'Top bar opens from the menu button')) };
@@ -552,5 +551,5 @@ resize(); buildArena(); all();
 if (H.includes('cmp')) { const p = selP(); const v = E.ROLES.filter(r => r.rs === RS() && r.fam === p.fam); X.cmp = (v[1] || v[0]).id; zones(); varsPanel() }
 ['top', 'goal', 'player'].forEach(v => H.includes('cam=' + v) && setCam(v, true)); if (H.includes('still')) X.play = false; playBtns();
 raf = requestAnimationFrame(tick);
-return () => { dead = true; cancelAnimationFrame(raf); offs.forEach(f => f()); obs.forEach(o => o.disconnect()); try { ctl.dispose() } catch (e) { } scene.traverse(o => { o.geometry?.dispose?.(); const m = o.material; (Array.isArray(m) ? m : m ? [m] : []).forEach(x => { x.map?.dispose?.(); x.dispose?.() }) }); rn.dispose(); rn.forceContextLoss?.() };
+return () => { dead = true; cancelAnimationFrame(raf); offs.forEach(f => f()); obs.forEach(o => o.disconnect()); try { ctl.dispose() } catch { /* already disposed */ } scene.traverse(o => { o.geometry?.dispose?.(); const m = o.material; (Array.isArray(m) ? m : m ? [m] : []).forEach(x => { x.map?.dispose?.(); x.dispose?.() }) }); rn.dispose(); rn.forceContextLoss?.() };
 }

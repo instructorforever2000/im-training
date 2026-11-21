@@ -68,8 +68,6 @@
 .rs .phh .en{font-size:10px;color:var(--c);opacity:.85}
 .rs .now{margin-inline-start:auto;font-size:10.5px;color:#fff;background:var(--c);padding:1px 7px;border-radius:999px}
 .rs .phx p{font-size:13px;line-height:1.7;margin-top:5px}
-.rs .duty{display:grid;gap:6px}
-.rs .duty div{font-size:13px;line-height:1.7;padding:8px 10px;border-radius:11px;background:var(--soft);border-inline-start:3px solid var(--c)}
 .rs .kpi{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 .rs .kpi div{font-size:12px;padding:8px 9px;border-radius:10px;border:1px dashed var(--ln);display:flex;gap:6px}
 .rs .kpi div:before{content:"◎";color:var(--teal)}

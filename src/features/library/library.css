@@ -18,20 +18,15 @@ button{font-family:inherit;color:inherit;cursor:pointer;background:none;border:0
 
 .wrap{margin-right:104px;padding:20px 20px 20px 20px;display:grid;grid-template-columns:minmax(0,1fr) 420px;gap:16px;min-height:100vh}
 .cmd{grid-column:1/-1;padding:18px 20px;display:flex;flex-direction:column;gap:12px}
-.cmd .row1{display:flex;align-items:center;gap:14px}
 .cmd h1{font-size:21px;white-space:nowrap}.cmd h1 .en{font-size:13px;margin-inline-start:6px}
 .ask{flex:1;display:flex;align-items:center;gap:12px;padding:14px 18px;border-radius:16px;background:var(--soft);border:1.5px solid var(--teal);box-shadow:0 0 0 5px #1FB5A81a;font-size:16px}
 .ask .ai{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--teal),var(--royal));display:grid;place-items:center;color:#fff;font:700 12px Outfit;flex:none}
 .ask input{flex:1;border:0;background:none;font:inherit;color:var(--ink);outline:0}
-.parsed{display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:12.5px;color:var(--mu)}
-.parsed .chip{font-size:12.5px}.parsed .chip b{font-weight:600;color:var(--ink)}
 .res{padding:18px;display:flex;flex-direction:column;gap:12px;min-width:0}
-.rh{display:flex;align-items:baseline;gap:10px}.rh h2{font-size:17px}.rh span{font:600 13px Outfit;color:var(--mu)}
 .lanes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 .lane h3{font-size:13px;display:flex;gap:8px;align-items:center;margin-bottom:8px}.lane h3 i{width:10px;height:10px;border-radius:3px;background:var(--c)}.lane h3 small{margin-inline-start:auto;font:600 11.5px Outfit;color:var(--mu)}
 .rc{display:flex;gap:10px;align-items:center;padding:11px;border-radius:15px;border:1px solid var(--ln);background:var(--card);margin-bottom:8px;text-align:start;width:100%;animation:in .5s both}
 
-.rc .mring{width:44px;height:44px;flex:none;position:relative}.rc .mring svg{width:44px;height:44px;transform:rotate(-90deg)}.rc .mring b{position:absolute;inset:0;display:grid;place-items:center;font:700 12px Outfit}
 .rc .t{min-width:0;flex:1}.rc .t b{display:block;font-size:13px;line-height:1.45}.rc .t small{font-size:11px;color:var(--mu)}
 .rc .add{width:30px;height:30px;border-radius:9px;background:var(--tealbg);color:var(--teal2);font:700 18px Outfit;flex:none}
 .rc.in{border-color:var(--teal);background:var(--tealbg)}
@@ -71,11 +66,6 @@ button{font-family:inherit;color:inherit;cursor:pointer;background:none;border:0
 .insp{top:104px;left:20px;width:300px;max-height:calc(100vh - 290px)}
 .insp .bbtn{display:grid;place-items:center;text-decoration:none;border-radius:12px;height:40px;border:1px solid var(--ln);font-weight:600;font-size:13px;color:var(--ink);flex:1}
 .insp .tag{font-size:12px;color:var(--mu)}.insp h2{font-size:19px;line-height:1.45}.insp .e2{font:500 12.5px Outfit;color:var(--teal2);direction:ltr;text-align:right}
-.body3{display:flex;gap:14px;align-items:center}
-.body3 svg{width:110px;flex:none}
-.musc{display:grid;gap:7px;flex:1;font-size:12.5px}
-.musc div{display:grid;grid-template-columns:70px 1fr 30px;gap:8px;align-items:center}.musc i{height:7px;border-radius:4px;background:var(--chip);overflow:hidden}.musc i b{display:block;height:100%;background:linear-gradient(90deg,var(--teal),#7fe0d6);border-radius:4px}
-.musc span:last-child{font:600 11px Outfit;color:var(--mu)}
 .load{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.load div{padding:10px;border-radius:12px;background:var(--soft);text-align:center}.load b{font:700 20px Outfit;display:block}.load span{font-size:11px;color:var(--mu)}
 .act{display:flex;gap:8px}.act button{flex:1;height:42px;border-radius:12px;font-weight:600;font-size:13px;border:1px solid var(--ln);background:var(--card)}.act .p{background:var(--teal);color:#fff;border-color:var(--teal)}
 .tl{left:340px;right:404px;bottom:20px;padding:14px 18px}
@@ -131,7 +121,7 @@ button{font-family:inherit;color:inherit;cursor:pointer;background:none;border:0
  .map .galaxy{display:none}
 }
 @media (max-width:760px){
- .cmdv .wrap{margin-right:0;padding:12px 12px 90px}.cmdv .cmd .row1{flex-wrap:wrap}.cmdv .ask{order:3;flex-basis:100%;font-size:14px}
+ .cmdv .wrap{margin-right:0;padding:12px 12px 90px}.cmdv .ask{order:3;flex-basis:100%;font-size:14px}
  .cmdv .lanes{grid-template-columns:minmax(0,1fr)}
  .lab .title{right:12px;left:12px;top:12px}.lab .title h1 .en,.lab .live{display:none}.lab .modes{display:none}
  .lab .insp{top:auto;left:12px;right:12px;bottom:230px;width:auto;max-height:34vh;overflow:auto;padding:14px}

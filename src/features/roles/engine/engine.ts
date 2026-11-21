@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment -- ported engine, type-checking intentionally off */
 // @ts-nocheck — Roles studio engine, kept byte-for-byte in behaviour (data + layout logic). Do not "simplify": every table is coaching content.
 import drillsData from "@/content/legacy-v28/drills.json"
 /* Roles studio engine — ported verbatim from the platform (legacy v28 lines 1577-2292, 3462-3471, 5543-5652). */
 let LANG="ar";const L=(ar,en)=>LANG==="en"?en:ar;
 const T=v=>v==null?"":(typeof v==="object"&&!Array.isArray(v)&&("ar" in v||"en" in v))?(v[LANG]??v.ar):v;
-const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));const bi=(ar,en)=>({ar,en});
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const S={ui:{st:{mode:"fb11",form:{},oppForm:{},def:{},oppDef:{},rv:{},rot:1,phase:"att",sel:null,opp:true,trails:true}},customDrills:[]};
 const MODES = {
   fb11:   { sport: 'football',   rs: 'fb', name: { ar: 'قدم 11 × 11', en: 'Football 11v11' }, L: 105, W: 68, n: 11, mirror: true,  m: 3 },
@@ -195,11 +196,14 @@ const HB_CODE_NAME = { LW: { ar: 'جناح أيسر', en: 'Left wing' }, RW: { a
 
 /* ---------- Drill categories, intensity ---------- */
 const CATS = { warm: { ar: 'إحماء', en: 'Warm-up' }, tech: { ar: 'مهاري', en: 'Technical' }, tact: { ar: 'خططي', en: 'Tactical' }, phys: { ar: 'بدني', en: 'Physical' }, game: { ar: 'لعب مصغّر', en: 'Small-sided game' }, cool: { ar: 'تهدئة', en: 'Cool-down' } };
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- coaching content kept from v28 (not shown yet; do not delete)
 const INT = { 1: { ar: 'منخفضة', en: 'Low' }, 2: { ar: 'متوسطة', en: 'Moderate' }, 3: { ar: 'عالية', en: 'High' }, 4: { ar: 'قصوى', en: 'Maximal' } };
 
 /* ---------- Evaluation ---------- */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- coaching content kept from v28 (not shown yet; do not delete)
 const PILLARS = { tech: { ar: 'فني', en: 'Technical' }, tact: { ar: 'خططي', en: 'Tactical' }, phys: { ar: 'بدني', en: 'Physical' }, ment: { ar: 'ذهني', en: 'Mental' } };
 const MENT = [['foc', { ar: 'التركيز', en: 'Focus' }], ['conf', { ar: 'الثقة', en: 'Confidence' }], ['disc', { ar: 'الانضباط', en: 'Discipline' }], ['team', { ar: 'العمل الجماعي', en: 'Teamwork' }]];
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- coaching content kept from v28 (not shown yet; do not delete)
 const EVAL = {
   football: {
     tech: [['ctrl', { ar: 'الاستلام والتحكم', en: 'First touch' }], ['pass', { ar: 'التمرير', en: 'Passing' }], ['drib', { ar: 'المراوغة', en: 'Dribbling' }], ['fin', { ar: 'التسديد والإنهاء', en: 'Finishing' }]],
@@ -218,6 +222,7 @@ const EVAL = {
     tact: [['defs', { ar: 'الدفاع الجماعي', en: 'Team defence' }], ['pen', { ar: 'الاختراق', en: 'Penetration' }], ['piv', { ar: 'اللعب مع الدائرة', en: 'Play with the pivot' }], ['trans', { ar: 'التحول', en: 'Transition' }]],
     phys: [['spd', { ar: 'السرعة', en: 'Speed' }], ['end', { ar: 'التحمل', en: 'Endurance' }], ['str', { ar: 'القوة', en: 'Strength' }], ['jmp', { ar: 'القفز', en: 'Jumping' }]], ment: MENT }
 };
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- coaching content kept from v28 (not shown yet; do not delete)
 const TESTS = [
   { k: 'sp30', name: { ar: 'سرعة 30م', en: '30 m sprint' }, unit: { ar: 'ث', en: 's' }, lower: true, dp: 2 },
   { k: 'yoyo', name: { ar: 'Yo-Yo IR1', en: 'Yo-Yo IR1' }, unit: { ar: 'م', en: 'm' }, lower: false, dp: 0 },
@@ -799,17 +804,17 @@ function layoutFootball(mode, form, phase, rvMap) {
 function manMark(offence, target) { return offence.map(o => { const dx = target[0] - o.x, dy = target[1] - o.y, len = Math.hypot(dx, dy) || 1, g = Math.min(1.4, len * .35); return { x: o.x + dx / len * g, y: o.y + dy / len * g, code: o.code }; }); }
 function layoutCourt(mode, cfg, phase, rvMap, oppAtt) {
   const M = MODES[mode], rs = M.rs, off = mode === 'bb' ? BB_OFF[cfg.off] || BB_OFF['5out'] : HB_OFF[cfg.off] || HB_OFF['33'];
-  const base = off.map(([code, n, x, y]) => ({ code, n, x, y }));
+  const base = off.map(([code, , x, y]) => ({ code, n, x, y }));
   const players = base.map(b => { const fam = CODE_FAMILY[rs][b.code], rv = rvMap[rvKey(mode, cfg.off, b.code)] || defaultVariant(rs, b.code); return { id: b.code, code: b.code, n: b.n, fam, rv, x: b.x, y: b.y, by: b.y }; });
   const byCode = c => players.find(p => p.code === c);
   if (phase === 'def') {
-    let d = mode === 'bb' ? BB_DEF[cfg.def] : HB_DEF[cfg.def];
-    if (d === 'man') { const offence = (oppAtt || BB_OFF['5out'].map(([code, n, x, y]) => ({ code, x: M.L - x, y: M.W - y }))); manMark(offence, [1.575, 7.5]).forEach((q, i) => { const p = byCode(q.code) || players[i]; p.x = q.x; p.y = q.y; }); }
-    else (d || []).forEach(([code, n, x, y]) => { const p = byCode(code); if (p) { p.x = M.L - x; p.y = M.W - y; } });
+    const d = mode === 'bb' ? BB_DEF[cfg.def] : HB_DEF[cfg.def];
+    if (d === 'man') { const offence = (oppAtt || BB_OFF['5out'].map(([code, , x, y]) => ({ code, x: M.L - x, y: M.W - y }))); manMark(offence, [1.575, 7.5]).forEach((q, i) => { const p = byCode(q.code) || players[i]; p.x = q.x; p.y = q.y; }); }
+    else (d || []).forEach(([code, , x, y]) => { const p = byCode(code); if (p) { p.x = M.L - x; p.y = M.W - y; } });
   } else if (phase === 'ta' || phase === 'td') {
     players.forEach(p => { const m = FAM[rs][p.fam] && FAM[rs][p.fam].mv && FAM[rs][p.fam].mv[phase]; if (!m) return; const s = p.by / M.W - .5, sign = s > .02 ? 1 : s < -.02 ? -1 : 0; p.x = m[0] * M.L; p.y = (.5 + sign * m[1]) * M.W; });
   } else if (phase === 'sp') {
-    if (mode === 'bb') { BB_OFF.box.forEach(([code, n, x, y]) => { const p = byCode(code); if (p) { p.x = x; p.y = y; } }); const sf = byCode('SF'); sf.x = 28.45; sf.y = 4.4; }
+    if (mode === 'bb') { BB_OFF.box.forEach(([code, , x, y]) => { const p = byCode(code); if (p) { p.x = x; p.y = y; } }); const sf = byCode('SF'); sf.x = 28.45; sf.y = 4.4; }
     else { const shooter = byCode('RB') || players[1]; shooter.x = 33; shooter.y = 10; const spots = [[30.2, 2.6], [29.6, 6.6], [29.6, 13.4], [30.2, 17.4], [27.6, 10]]; players.filter(p => p !== shooter && p.code !== 'GK').forEach((p, i) => { p.x = spots[i][0]; p.y = spots[i][1]; }); }
   }
   let ball;

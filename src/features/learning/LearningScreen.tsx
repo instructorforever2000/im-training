@@ -6,7 +6,8 @@ import "@fontsource/outfit/500.css"
 import "./learning.css"
 import "./paths.css"
 import { Paths } from "./Paths"
-import { LawBank, LAW_BANK } from "./LawBank"
+import { LawBank } from "./LawBank"
+import { LAW_BANK } from "./lawBankData"
 
 type Tab = "paths" | "bank"
 export function LearningScreen(): React.JSX.Element {
