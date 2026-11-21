@@ -130,7 +130,7 @@ function numberSprite(n: string, bg: string, dot?: string): THREE.Sprite {
     x.fillStyle = bg; x.beginPath(); x.arc(px / HALF, px / HALF, px / HALF - 4, 0, TAU); x.fill()
     x.lineWidth = 6; x.strokeStyle = "#0b1b33"; x.stroke()
     x.fillStyle = "#0b1b33"; x.font = `bold ${px / HALF}px Outfit, sans-serif`; x.textAlign = "center"; x.textBaseline = "middle"; x.fillText(n, px / HALF, px / HALF + 4)
-    if (dot) { x.fillStyle = dot; x.beginPath(); x.arc(px * 0.82, px * 0.18, px * 0.17, 0, TAU); x.fill(); x.lineWidth = 5; x.strokeStyle = "#ffffff"; x.stroke() }
+    if (dot) { x.fillStyle = dot; x.beginPath(); x.arc(px * 0.8, px * 0.2, px * 0.2, 0, TAU); x.fill(); x.lineWidth = 5; x.strokeStyle = "#ffffff"; x.stroke() }
   }
   const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(c), depthTest: false }))
   s.scale.set(2.6, 2.6, 1); s.renderOrder = 5
@@ -351,6 +351,8 @@ export interface Board3D {
   png: (names?: boolean) => string
   /** Show/hide player names on the pitch (exports hide them unless asked). */
   setNames: (on: boolean) => void
+  /** While exporting: names follow the coach's choice, never shown when the board hides them. */
+  exportNames: (on: boolean) => void
   dispose: () => void
   setQuality: (q: Quality) => void
 }
@@ -393,6 +395,8 @@ export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChan
   const BALL_COL = { football: "#ffffff", basketball: "#e0661c", handball: "#d9483b", volleyball: "#f2c14e" }
   const ballMesh = (): THREE.Group => { const g = new THREE.Group(); const m = new THREE.Mesh(new THREE.SphereGeometry(0.42, 24, 16), new THREE.MeshStandardMaterial({ color: BALL_COL[SPORT_OF[st.mode]], roughness: 0.35 })); m.position.y = 0.42; m.castShadow = true; g.add(m); return g }
 
+  let namesOn = true
+  const showNames = (on: boolean): void => { world.traverse((o) => { if (o.userData.isName) o.visible = on }) }
   const build = (): void => {
     still = 0
     world.clear(); objs.clear()
@@ -400,6 +404,7 @@ export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChan
     world.add(zones); sel = null; zones.clear(); onSelect(null)
     marks = new THREE.Group(); world.add(marks); st.marks.forEach((m) => marks.add(Object.assign(markObj(m), { name: m.id })))
     st.tokens.forEach((t, i) => { const o = t.kind === "ball" ? ballMesh() : t.kind === "eq" ? equipObj(t.eq ?? "cone") : q === "high" ? athleteObj(t, i) : playerObj(t); if (q !== "high") o.traverse((m) => { m.castShadow = false }); o.rotation.y = t.rot ?? 0; if (t.kind !== "eq") o.scale.setScalar(courtK(st.mode, dimsOf(st))); o.position.set(t.x, 0, t.z); o.userData.id = t.id; world.add(o); objs.set(t.id, { o, to: o.position.clone() }) })
+    showNames(namesOn)
   }
 
   // camera — orbit around the pitch centre; presets ease to their angles
@@ -430,7 +435,6 @@ export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChan
     st.tokens.forEach((t) => { const d = Math.hypot(t.x - p[0], t.z - p[1]); if (d < bd) { bd = d; best = t } })
     return best
   }
-  const showNames = (on: boolean): void => { world.traverse((o) => { if (o.userData.isName) o.visible = on }) }
   const commit = (): void => { st.frames[fi] = snap(st); onChange(st) }
 
   let moved = false
@@ -524,8 +528,9 @@ export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChan
       return () => window.clearInterval(t)
     },
     dark,
-    png: (names = true) => { showNames(names); cam.lookAt(view.tx, 0, view.tz); rn.render(sc, cam); const u = rn.domElement.toDataURL("image/png"); showNames(true); rn.render(sc, cam); return u },
-    setNames: (on) => { showNames(on); wake() },
+    png: (names = true) => { showNames(names && namesOn); cam.lookAt(view.tx, 0, view.tz); rn.render(sc, cam); const u = rn.domElement.toDataURL("image/png"); showNames(namesOn); rn.render(sc, cam); return u },
+    setNames: (on) => { namesOn = on; showNames(on); wake() },
+    exportNames: (on) => { showNames(on && namesOn); wake() },
     setQuality: (nq) => { q = nq; applyQ(); build(); frame(fi, false); wake() },
     dispose: () => { cancelAnimationFrame(raf); ro.disconnect(); rn.dispose() },
   }

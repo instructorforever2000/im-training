@@ -47,8 +47,33 @@ export const availableByDefault = (p: Player): boolean => p.is_active && (p.stat
 
 // Spaces between name parts: matches " " and "  "; rejects "-". https://regex101.com/?regex=%5Cs%2B&testString=%D9%85%D8%AD%D9%85%D8%AF%20%D8%B9%D9%8A%D8%A7%D8%AF
 const SPACES = /\s+/
+/** Words that are only half a name: "عبد الله"، "أبو بكر"، "عبد الرحمن" stay together. */
+const JOINED: ReadonlySet<string> = new Set(["عبد", "عبدال", "أبو", "ابو", "أبي", "ابي", "بن", "ابن", "آل", "ال", "Abdul", "Abd", "Abu", "Al", "El", "Bin"])
+/** Name parts with "عبد / أبو …" kept with the word after them: "عبد الله محمد" → ["عبد الله", "محمد"]. */
+export function nameParts(full: string): string[] {
+  return full.trim().split(SPACES).filter(Boolean).reduce<string[]>((out, w) => {
+    const last = out.at(-1)
+    return last !== undefined && JOINED.has(last) ? [...out.slice(0, -1), `${last} ${w}`] : [...out, w]
+  }, [])
+}
 /** First name only — keeps the pitch readable ("10 · محمد"). */
-export const shortName = (full: string): string => full.trim().split(SPACES)[0] ?? full
+export const shortName = (full: string): string => nameParts(full)[0] ?? full.trim()
+
+/** Pitch labels for a squad: first name; when two players share it, add the father's initial ("محمد ع."), then the full father's name. */
+const LEVELS = [0, 1, 2, 3]
+export function pitchNames(players: readonly Player[]): Map<string, string> {
+  const parts = new Map(players.map((p) => [p.id, nameParts(p.full_name)]))
+  /** Each name gets longer only as far as its parts allow: محمد → محمد ع. → محمد علي → محمد علي ح. */
+  const forms = (ps: readonly string[]): string[] => [
+    ps[0], ...(ps[1] ? [`${ps[0]} ${ps[1][0]}.`, `${ps[0]} ${ps[1]}`] : []), ...(ps[1] && ps[2] ? [`${ps[0]} ${ps[1]} ${ps[2][0]}.`] : []),
+  ].filter((x): x is string => !!x)
+  const label = (p: Player, depth: number): string => {
+    const f = forms(parts.get(p.id) ?? [])
+    return f[Math.min(depth, f.length - 1)] ?? p.full_name
+  }
+  const clash = (p: Player, depth: number): boolean => players.some((o) => o.id !== p.id && label(o, depth) === label(p, depth))
+  return new Map(players.map((p) => [p.id, label(p, LEVELS.find((d) => !clash(p, d)) ?? LEVELS.length - 1)]))
+}
 
 const LINK_KEYS = new Set(["pid", "nm", "ps"])
 const unlink = (t: Token): Token => Object.fromEntries(Object.entries(t).filter(([k]) => !LINK_KEYS.has(k))) as unknown as Token
@@ -62,10 +87,11 @@ export function placeSquad(b: BoardState, team: Team, chosen: readonly Player[])
     const taken = m.has(t.id) || [...m.values()].some((x) => x.id === p.id)
     return taken ? m : m.set(t.id, p)
   }, new Map())
+  const names = pitchNames(chosen)
   const tokens = b.tokens.map((t): Token => {
     const p = match.get(t.id)
     if (!p) return unlink(t)
-    return { ...unlink(t), pid: p.id, nm: shortName(p.full_name), ps: p.status, num: p.shirt_number ?? t.num }
+    return { ...unlink(t), pid: p.id, nm: names.get(p.id) ?? shortName(p.full_name), ps: p.status, num: p.shirt_number ?? t.num }
   })
   const placed = new Set([...match.values()].map((p) => p.id))
   return { board: { ...b, tokens, squad: { id: team.id, name: team.name } }, bench: chosen.filter((p) => !placed.has(p.id)) }

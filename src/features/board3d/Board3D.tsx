@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { fromPlay, opensIn3D, type RoleInfo, PLAY_MODES, autoQuality, type QualityPref, mountBoard3D, newBoard, formsOf, setFormation, MARK_COLOR, TEAM_COLOR, type Board3D as Api, type BoardState, type Cam, type Mode, type Side, type Tool, type Equip } from "./engine"
 import "./board3d.css"
-import { can, guard } from "@/features/auth/caps"
+import { can, guard, useWho } from "@/features/auth/caps"
 import { PLAYS, PLAY_CAT } from "@/features/library/content"
 import { useSquadData, positionsFor, type Player } from "@/features/squad/data"
 import { SquadPicker, PlayerCard } from "./SquadPicker"
@@ -91,6 +91,7 @@ export function Board3D({ dark, playId }: { readonly dark: boolean; readonly pla
   const [role, setRole] = useState<(RoleInfo & { num?: number; pid?: string }) | null>(null)
   // فريقي — the coach's real players on "فريقنا"
   const { data: squad, error: squadErr } = useSquadData()
+  const who = useWho()
   const [picker, setPicker] = useState(false)
   const [chosen, setChosen] = useState<Player[]>([])
   const [bench, setBench] = useState<Player[]>([])
@@ -125,7 +126,7 @@ export function Board3D({ dark, playId }: { readonly dark: boolean; readonly pla
   }, [playing])
 
   const st = api.current?.state() ?? b
-  const replace = (n: BoardState): void => { setB(n); setFi(0); api.current?.load(n) }
+  const replace = (n: BoardState): void => { const m = privacy(n); setB(m); setFi(0); api.current?.load(m); api.current?.setNames(!(m.squad && !squad)) }
   /** Players on a frame-0 board: put them, keep every frame's positions for the same tokens. */
   const link = (teamId: string, players: Player[]): void => {
     const s = api.current?.state(); const team = squad?.teams.find((t) => t.id === teamId); if (!s || !team) return
@@ -133,11 +134,18 @@ export function Board3D({ dark, playId }: { readonly dark: boolean; readonly pla
     setChosen(players); setBench(rest); setFi(0); api.current?.load(board); setPicker(false)
   }
   const unlinkSquad = (): void => { const s = api.current?.state(); if (!s) return; api.current?.load(stripSquad(s)); setChosen([]); setBench([]) }
-  // Privacy: a saved board shows real names only to someone who can see that team.
+  // Privacy: a saved board shows real names only to someone who can see that team. Not loaded yet or
+  // offline → names are only hidden on screen (the coach's own board keeps them); loaded and not theirs → removed.
+  function privacy(n: BoardState): BoardState {
+    if (!n.squad || !squad) return n
+    return squad.teams.some((t) => t.id === n.squad?.id) ? n : stripSquad(n)
+  }
   useEffect(() => {
-    const s = api.current?.state(); if (!s?.squad || (!squad && !squadErr)) return
-    if (!squad?.teams.some((t) => t.id === s.squad?.id)) { api.current?.load(stripSquad(s)); return }
-    if (!chosen.length) setChosen(squad.players.filter((p) => s.tokens.some((t) => t.pid === p.id)))
+    const s = api.current?.state(); if (!s?.squad) return
+    const m = privacy(s)
+    if (m !== s) { api.current?.load(m); return }
+    api.current?.setNames(!!squad)
+    if (squad && !chosen.length) setChosen(squad.players.filter((p) => s.tokens.some((t) => t.pid === p.id)))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [squad, squadErr])
   const form = (side: Side, key: string): void => { const s = api.current?.state(); if (!s) return; setFormation(s, side, key); if (side === "A" && s.squad && chosen.length) { const team = squad?.teams.find((t) => t.id === s.squad?.id); if (team) { const o = placeSquad(s, team, chosen); Object.assign(s, o.board); setBench(o.bench) } } s.frames[fi] = Object.fromEntries(s.tokens.map((t) => [t.id, [t.x, t.z]])); api.current?.frame(fi, true); api.current?.load(s); api.current?.frame(fi, false) }
@@ -169,7 +177,7 @@ export function Board3D({ dark, playId }: { readonly dark: boolean; readonly pla
       x.fillStyle = "#e0564f"; x.beginPath(); x.arc(c.width - 40 * k, 34 * k, 8 * k, 0, Math.PI * 2); x.fill()
       if (!done) raf = requestAnimationFrame(draw)
     }
-    setRec(true); setPlaying(false); a.setNames(expNames); r.start(); draw()
+    setRec(true); setPlaying(false); a.exportNames(expNames); r.start(); draw()
     const stop = a.play((i) => { cur = i; setFi(i) }, () => {
       window.setTimeout(() => {
         done = true; cancelAnimationFrame(raf); r.stop(); stop()
@@ -177,7 +185,7 @@ export function Board3D({ dark, playId }: { readonly dark: boolean; readonly pla
     })
     r.onstop = () => {
       const url = URL.createObjectURL(new Blob(chunks, { type: "video/webm" })), l = document.createElement("a")
-      l.href = url; l.download = "IM-tactical-board-3d.webm"; l.click(); window.setTimeout(() => URL.revokeObjectURL(url), 4000); setRec(false); a.setNames(true)
+      l.href = url; l.download = "IM-tactical-board-3d.webm"; l.click(); window.setTimeout(() => URL.revokeObjectURL(url), 4000); setRec(false); a.exportNames(true)
     }
   }
   const exportPng = (): void => {
@@ -230,7 +238,7 @@ export function Board3D({ dark, playId }: { readonly dark: boolean; readonly pla
           
         </aside>
       )}
-      {picker && SPORT_OF_MODE[st.mode] && <SquadPicker mode={st.mode} data={squad} error={squadErr} slots={st.tokens.filter((t) => t.kind === "p" && t.team === "A").length}
+      {picker && SPORT_OF_MODE[st.mode] && <SquadPicker who={who} mode={st.mode} data={squad} error={squadErr} slots={st.tokens.filter((t) => t.kind === "p" && t.team === "A").length}
         linkedTeam={st.squad?.id} chosen={chosen} bench={bench} expNames={expNames} onExpNames={setExpNames} onApply={link} onUnlink={unlinkSquad} onClose={() => setPicker(false)} />}
       {role && tool === "move" && role.pid && squad && (() => { const p = squad.players.find((x) => x.id === role.pid); const tm = p && squad.teams.find((t) => t.id === p.team_id); return p && tm ? <PlayerCard p={p} pos={positionsFor(tm.sport).find((x) => x.code === p.position)} role={role} onClose={() => api.current?.select(null)} /> : null })()}
       {role && tool === "move" && !(role.pid && squad?.players.some((x) => x.id === role.pid)) && (

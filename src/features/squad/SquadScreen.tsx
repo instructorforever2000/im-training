@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react"
 import "./squad.css"
 import cfg from "./squad-config.json"
+import { useWho } from "@/features/auth/caps"
 import { SPORTS } from "@/features/sports/registry"
 import {
   addPlayers, ageOf, parseRoster, positionsFor, savePlayer, saveTeam, setPlayerActive, setTeamActive, useSquadData,
@@ -109,7 +110,7 @@ function BulkForm({ team, close }: { team: Team; close: () => void }): React.JSX
 }
 
 // ---------------- player file (beside the list) ----------------
-function PlayerFile({ team, player, close }: { team: Team; player: Player | "new"; close: () => void }): React.JSX.Element {
+function PlayerFile({ team, player, close, canSave }: { team: Team; player: Player | "new"; close: () => void; canSave: boolean }): React.JSX.Element {
   const isNew = player === "new"
   const p = isNew ? null : player
   const [f, setF] = useState<PlayerInput>({
@@ -159,8 +160,8 @@ function PlayerFile({ team, player, close }: { team: Team; player: Player | "new
       <label className="fld">ملاحظة المدرب <span className="en">Coach note</span><textarea value={f.coach_notes ?? ""} onChange={(e) => setF({ ...f, coach_notes: e.target.value || null })} /></label>
       <div className="sec"><h4>آخر تقييم <span className="en">Last evaluation</span></h4><div className="empty">يظهر هنا رسم آخر تقييم للاعب من قسم «التقييم».</div></div>
       {err && <p className="err">{err}</p>}{ok && <p className="muted" style={{ color: "var(--green)" }}>تم الحفظ ✓</p>}
-      <div className="formacts"><button className="btn p" onClick={() => void save()}>{isNew ? "إضافة اللاعب" : "حفظ"}</button>
-        {p && <button className="btn" onClick={() => void toggle()}>{p.is_active ? "إيقاف اللاعب" : "إعادة تفعيل"}</button>}</div>
+      {canSave && <div className="formacts"><button className="btn p" onClick={() => void save()}>{isNew ? "إضافة اللاعب" : "حفظ"}</button>
+        {p && <button className="btn" onClick={() => void toggle()}>{p.is_active ? "إيقاف اللاعب" : "إعادة تفعيل"}</button>}</div>}
     </aside>
   )
 }
@@ -176,8 +177,8 @@ function Ring({ p }: { p: Player }): React.JSX.Element {
   )
 }
 
-function TeamPanel({ team, players, selected, onPick, onNew, onEdit, onBulk }: {
-  team: Team; players: Player[]; selected: string | null; onPick: (p: Player) => void; onNew: () => void; onEdit: () => void; onBulk: () => void
+function TeamPanel({ team, players, selected, onPick, onNew, onEdit, onBulk, canTeam, canAdd }: {
+  team: Team; players: Player[]; selected: string | null; onPick: (p: Player) => void; onNew: () => void; onEdit: () => void; onBulk: () => void; canTeam: boolean; canAdd: boolean
 }): React.JSX.Element {
   const [pos, setPos] = useState<string>("")
   const [mode, setMode] = useState<"cards" | "table">("cards")
@@ -194,7 +195,7 @@ function TeamPanel({ team, players, selected, onPick, onNew, onEdit, onBulk }: {
     <section className="card" style={{ "--tc": team.color } as React.CSSProperties}>
       <div className="tbar"><span className="badge">{team.age_group ?? sportAr(team.sport).slice(0, BADGE_CHARS)}</span>
         <div><h2>{team.name}</h2><div className="meta"><span className="chip">{sportAr(team.sport)}</span>{teamLabel(team) && <span className="chip">{teamLabel(team)}</span>}{team.play_format && <span className="chip">{team.play_format}</span>}{!team.is_active && <span className="chip">موقوف</span>}</div></div>
-        <span className="sp" /><button className="btn" onClick={onEdit}>✎ تعديل الفريق</button></div>
+        <span className="sp" />{canTeam && <button className="btn" onClick={onEdit}>✎ تعديل الفريق</button>}</div>
       <div className="stats">
         <div className="st"><b>{active.length}</b><span>في القائمة</span></div>
         <div className="st g"><b>{count("ready")}</b><span>جاهز</span></div>
@@ -205,7 +206,7 @@ function TeamPanel({ team, players, selected, onPick, onNew, onEdit, onBulk }: {
         {codes.length > 0 && <div className="seg"><button className={pos ? "" : "on"} onClick={() => setPos("")}>الكل</button>{codes.map((c) => <button key={c.code} className={pos === c.code ? "on" : ""} onClick={() => setPos(c.code)}>{c.ar}</button>)}</div>}
         <span className="sp" />
         <div className="view"><button className={mode === "cards" ? "on" : ""} onClick={() => setMode("cards")}>بطاقات</button><button className={mode === "table" ? "on" : ""} onClick={() => setMode("table")}>جدول</button></div>
-        <button className="btn p" style={{ height: "36px" }} onClick={onNew}>+ لاعب</button>
+        {canAdd && <button className="btn p" style={{ height: "36px" }} onClick={onNew}>+ لاعب</button>}
       </div>
       {!players.length && <div className="empty">لا يضم هذا الفريق لاعبين بعد.<br />أضفهم واحدًا تلو الآخر بزر «+ لاعب»، أو الصق القائمة كاملة من Excel دفعة واحدة.</div>}
       {players.length > 0 && mode === "cards" && (
@@ -217,7 +218,7 @@ function TeamPanel({ team, players, selected, onPick, onNew, onEdit, onBulk }: {
               <small>{ST[p.status].ar}{ageOf(p.birth_date) !== null ? ` · ${ageOf(p.birth_date)} سنة` : ""}</small>
             </button>
           ))}
-          <button className="addp" onClick={onNew}><span><i>+</i>لاعب جديد</span></button>
+          {canAdd && <button className="addp" onClick={onNew}><span><i>+</i>لاعب جديد</span></button>}
         </div>
       )}
       {players.length > 0 && mode === "table" && (
@@ -233,7 +234,7 @@ function TeamPanel({ team, players, selected, onPick, onNew, onEdit, onBulk }: {
             {ageBins.length ? <div className="ages">{ageBins.map((b) => <div key={b.a} style={{ height: `${(b.n / maxAge) * FULL}%` }}><span>{b.a} سنة</span></div>)}</div> : <p className="muted" style={{ marginTop: "10px" }}>أضف تواريخ الميلاد ليظهر توزيع الأعمار.</p>}</div>
         </div>
       )}
-      <div className="bulk"><p><b>هل لديك القائمة في Excel؟</b> انسخ الأعمدة (الاسم · الرقم · المركز · تاريخ الميلاد) والصقها مرة واحدة.</p><button className="btn p" onClick={onBulk}>لصق القائمة</button></div>
+      {canAdd && <div className="bulk"><p><b>هل لديك القائمة في Excel؟</b> انسخ الأعمدة (الاسم · الرقم · المركز · تاريخ الميلاد) والصقها مرة واحدة.</p><button className="btn p" onClick={onBulk}>لصق القائمة</button></div>}
     </section>
   )
 }
@@ -253,7 +254,11 @@ export function Squad({ data, reload }: { data: SquadData; reload: () => void })
   const orgPlayers = data.players.filter((p) => p.org_id === orgId && p.is_active).length
   const sportsHere = [...new Set(data.teams.filter((t) => t.org_id === orgId).map((t) => t.sport))]
   const choose = (t: Team): void => { setTeamId(t.id); setPick(null) }
+  // What this person may do here — same rules as the database policies (teams_write / players_write / players_update).
+  const who = useWho()
+  const canPlayerSave = who.rosterEditor || who.role === "fitness_coach"
 
+  if (!who.staff) return <div className="loading">قسم الفرق واللاعبين متاح للجهاز الفني فقط. <span className="en">Coaching staff only</span></div>
   if (!data.orgs.length) return <div className="loading">سجّل جهة أولًا من لوحة المدير؛ فكل فريق يتبع جهة.</div>
   return (
     <div className="app">
@@ -264,12 +269,12 @@ export function Squad({ data, reload }: { data: SquadData; reload: () => void })
           <div className="pill" style={{ borderColor: "var(--teal)" }}>● <select value={sport} onChange={(e) => setSport(e.target.value)} aria-label="اللعبة"><option value="">كل الألعاب</option>{sportsHere.map((s) => <option key={s} value={s}>{sportAr(s)}</option>)}</select></div>
           <div className="pill">الجهة: <select value={orgId} onChange={(e) => { setOrgId(e.target.value); setTeamId(null); setPick(null) }} aria-label="الجهة">{data.orgs.map((o) => <option key={o.id} value={o.id}>{o.name_ar}</option>)}</select></div>
           <div className="pill search"><input value={q} onChange={(e) => setQ(e.target.value)} placeholder="ابحث عن لاعب بالاسم أو الرقم…" /></div>
-          <a className="pill" href="#/">← لوحة المدير</a>
+          {who.role === "owner" && <a className="pill" href="#/">← لوحة المدير</a>}
         </div>
         <div className="head">
           <div><h1>الفرق واللاعبين<span className="en">Teams &amp; Players</span></h1>
             <p>كل فريق بفئته ولعبته · اضغط على لاعب ليُفتح ملفه بجوار القائمة دون مغادرة الصفحة</p></div>
-          <div className="acts">{team && <button className="btn" onClick={() => setModal({ k: "bulk" })}>⇪ لصق قائمة من Excel</button>}<button className="btn p" onClick={() => setModal({ k: "team" })}>+ فريق جديد</button></div>
+          <div className="acts">{team && who.rosterEditor && <button className="btn" onClick={() => setModal({ k: "bulk" })}>⇪ لصق قائمة من Excel</button>}{who.teamAdmin && <button className="btn p" onClick={() => setModal({ k: "team" })}>+ فريق جديد</button>}</div>
         </div>
         <div className="lay">
           <section className="card">
@@ -280,14 +285,14 @@ export function Squad({ data, reload }: { data: SquadData; reload: () => void })
                   <span className="sw">{t.age_group ?? sportAr(t.sport).slice(0, BADGE_CHARS)}</span><div><b>{t.name}</b><small>{sportAr(t.sport)}{teamLabel(t) ? ` · ${teamLabel(t)}` : ""}</small></div>
                   <span className="n">{playersIn(t)}<small>لاعب</small></span></button>
               ))}
-              <button className="addt" onClick={() => setModal({ k: "team" })}>+ فريق جديد — بأي لعبة</button>
+              {who.teamAdmin && <button className="addt" onClick={() => setModal({ k: "team" })}>+ فريق جديد — بأي لعبة</button>}
             </div>
             <div className="coaches"><h3>المدربون <span className="en">Coaches</span></h3>
               <p className="muted" style={{ marginTop: "8px" }}>ينضم المدربون برمز دعوة بدور «مدرب» من لوحة المدير، ويظهرون هنا فور موافقتك عليهم.</p></div>
           </section>
-          {team ? <TeamPanel key={team.id} team={team} players={roster} selected={pick && pick !== "new" ? pick.id : null} onPick={setPick} onNew={() => setPick("new")} onEdit={() => setModal({ k: "team", team })} onBulk={() => setModal({ k: "bulk" })} />
-            : <section className="card"><div className="empty">لا توجد فرق لهذه الجهة بعد.<br />اضغط «+ فريق جديد» واختر اللعبة والفئة.</div></section>}
-          {team && pick && <PlayerFile key={pick === "new" ? "new" : pick.id} team={team} player={pick} close={() => { setPick(null); reload() }} />}
+          {team ? <TeamPanel key={team.id} team={team} players={roster} selected={pick && pick !== "new" ? pick.id : null} onPick={setPick} onNew={() => setPick("new")} onEdit={() => setModal({ k: "team", team })} onBulk={() => setModal({ k: "bulk" })} canTeam={who.teamAdmin} canAdd={who.rosterEditor} />
+            : <section className="card"><div className="empty">لا توجد فرق لهذه الجهة بعد.{who.teamAdmin ? <><br />اضغط «+ فريق جديد» واختر اللعبة والفئة.</> : <><br />مدير الجهة أو المدير الفني هو اللي بيضيف الفرق.</>}</div></section>}
+          {team && pick && <PlayerFile key={pick === "new" ? "new" : pick.id} team={team} player={pick} close={() => { setPick(null); reload() }} canSave={pick === "new" ? who.rosterEditor : canPlayerSave} />}
         </div>
         <div className="foot"><span>IM Training · الفرق واللاعبون — كل البيانات حقيقية من قاعدة البيانات</span></div>
       </main>

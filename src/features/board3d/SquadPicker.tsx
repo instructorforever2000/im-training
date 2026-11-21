@@ -5,19 +5,20 @@ import { STATUS_DOT } from "./engine"
 import { teamsFor, availableByDefault, shortName } from "./team"
 import { positionsFor, ageOf, type Player, type Position, type SquadData, type LoadError } from "@/features/squad/data"
 import cfg from "@/features/squad/squad-config.json"
+import type { Who } from "@/features/auth/caps"
 
 const STATUS = cfg.status as Record<string, { ar: string; en: string }>
 const NO_NUMBER = 999
 const FOOT_AR: Record<string, string> = { R: "اليمنى", L: "اليسرى", B: "الاتنين" }
 
 interface PickerProps {
-  readonly mode: Mode; readonly data: SquadData | null; readonly error: LoadError; readonly slots: number
+  readonly who: Who; readonly mode: Mode; readonly data: SquadData | null; readonly error: LoadError; readonly slots: number
   readonly linkedTeam?: string; readonly chosen: readonly Player[]; readonly bench: readonly Player[]
   readonly expNames: boolean; readonly onExpNames: (on: boolean) => void
   readonly onApply: (teamId: string, players: Player[]) => void; readonly onUnlink: () => void; readonly onClose: () => void
 }
 
-export function SquadPicker({ mode, data, error, slots, linkedTeam, chosen, bench, expNames, onExpNames, onApply, onUnlink, onClose }: PickerProps): React.JSX.Element {
+export function SquadPicker({ who, mode, data, error, slots, linkedTeam, chosen, bench, expNames, onExpNames, onApply, onUnlink, onClose }: PickerProps): React.JSX.Element {
   const teams = data ? teamsFor(mode, data.teams) : []
   const [teamId, setTeamId] = useState<string>(linkedTeam ?? teams[0]?.id ?? "")
   const roster = (data?.players ?? []).filter((p) => p.team_id === teamId && p.is_active)
@@ -32,9 +33,12 @@ export function SquadPicker({ mode, data, error, slots, linkedTeam, chosen, benc
   const changeTeam = (id: string): void => { setTeamId(id); setPick(new Set((data?.players ?? []).filter((p) => p.team_id === id && availableByDefault(p)).map((p) => p.id))) }
 
   const body = ((): React.JSX.Element => {
-    if (error) return <p className="mu">{error === "schema" ? "قاعدة اللاعبين لسه مش مفعّلة لهذا الحساب." : "سجّل الدخول علشان تظهر فرقك ولاعبيك."}</p>
+    if (!who.role) return <p className="mu">«فريقي» ميزة لأعضاء المنصة — سجّل الدخول علشان تظهر فرقك ولاعبيك على الملعب. <span className="en">Members only</span></p>
+    if (!who.staff) return <p className="mu">«فريقي» متاحة للجهاز الفني فقط (المدربين ومدير الجهة والمشرف). <span className="en">Coaching staff only</span></p>
+    if (error === "schema") return <p className="mu">قاعدة اللاعبين لسه مش مفعّلة لهذا الحساب.</p>
+    if (error) return <p className="mu">تعذّر تحميل الفرق — اتأكد من الاتصال بالإنترنت وافتح «فريقي» تاني.</p>
     if (!data) return <p className="mu">جاري تحميل الفرق…</p>
-    if (!teams.length) return <p className="mu">مفيش فريق مسجّل للعبة دي — ضيف الفريق ولاعبيه من شاشة «الفريق» الأول.</p>
+    if (!teams.length) return <p className="mu">مفيش فريق مسجّل للعبة دي. {who.teamAdmin ? "ضيفه هو ولاعبيه من شاشة «الفرق واللاعبين» الأول." : "مدير الجهة أو المدير الفني بيضيف الفرق من شاشة «الفرق واللاعبين»."}</p>
     return (
       <>
         <select className="tsel" value={teamId} onChange={(e) => changeTeam(e.target.value)}>{teams.map((t) => <option key={t.id} value={t.id}>{t.name}{t.age_group ? ` · ${t.age_group}` : ""}</option>)}</select>

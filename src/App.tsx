@@ -43,7 +43,7 @@ function NotGranted(): React.JSX.Element {
 function MemberArea({ route, access }: { route: string; access: AccessApi }): React.JSX.Element {
   useEffect(() => { document.documentElement.dataset.member = ""; return () => { delete document.documentElement.dataset.member } }, [])
   const m = access.membership
-  setGrant(m ? m.capabilities ?? null : "all", m?.sections ?? null)
+  setGrant(m ? m.capabilities ?? null : "all", m?.sections ?? null, m?.role ?? "owner")
   const key = baseRoute(route)
   if (key === "welcome") return <AccessGranted access={access} />
   if (key in MEMBER_SCREENS && !canOpen(key)) return <NotGranted />

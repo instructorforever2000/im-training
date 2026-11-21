@@ -82,3 +82,4 @@
 .b3pc .facts{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;font-size:12px;margin:6px 0}
 .b3pc .facts span{display:flex;gap:5px;align-items:center}.b3pc .facts i{width:9px;height:9px;border-radius:50%}
 .b3pc .facts em{font-style:normal;color:var(--mu);font-size:10.5px}
+.b3sq .go{position:sticky;bottom:0;z-index:1;box-shadow:0 -8px 16px -6px #0b1b3326}
