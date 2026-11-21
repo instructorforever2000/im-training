@@ -26,7 +26,9 @@ type XZ = [number, number]
 /** A token linked to a real player of the squad (فريقي): pid = players.id, nm = short name shown on the pitch, ps = status colour key. */
 export interface Token { id: string; kind: "p" | "ball" | "eq"; eq?: Equip; rot?: number; team?: Side; num?: number; code?: string; pid?: string; nm?: string; ps?: string; x: number; z: number }
 export interface Mark { id: string; kind: Exclude<Tool, "move" | "erase" | "equip">; pts: XZ[]; text?: string }
-export interface BoardState { squad?: { id: string; name: string }; mode: Mode; form: Record<Side, string>; tokens: Token[]; marks: Mark[]; frames: Record<string, XZ>[]; caps?: string[]; dims?: { L: number; W: number } }
+/** A substitution from frame f on: token tid now shows another real player (التبديل داخل المراحل). */
+export interface Sub { f: number; tid: string; pid: string; nm: string; ps?: string; num?: number }
+export interface BoardState { squad?: { id: string; name: string }; subs?: Sub[]; mode: Mode; form: Record<Side, string>; tokens: Token[]; marks: Mark[]; frames: Record<string, XZ>[]; caps?: string[]; dims?: { L: number; W: number } }
 
 interface ModeDef { L: number; W: number }
 const MODES = { ...(ENG.MODES as unknown as Record<string, ModeDef>), area: { L: 30, W: 20 } } as Record<string, ModeDef>
@@ -110,6 +112,15 @@ export function fromPlay(p: PlayLike): BoardState | null {
   ball.x = frames[0].ball[0]; ball.z = frames[0].ball[1]
   return { mode: area ? "area" : (p.mode as Mode), form: { A: "—", B: "—" }, tokens, marks: [], frames, caps, ...(area ? { dims: { L: M.L, W: M.W } } : {}) }
 }
+/** Who a token shows at frame i: its starting player, or the last substitution at or before i. */
+export function identAt(b: BoardState, t: Token, i: number): Token {
+  const s = (b.subs ?? []).filter((x) => x.tid === t.id && x.f <= i).sort((a, z) => a.f - z.f).at(-1)
+  return s ? { ...t, pid: s.pid, nm: s.nm, ps: s.ps, num: s.num ?? t.num } : t
+}
+/** Real players on the pitch at frame i (for the bench). */
+export const onPitchAt = (b: BoardState, i: number): Set<string> =>
+  new Set(b.tokens.filter((t) => t.kind === "p").map((t) => identAt(b, t, i).pid).filter((x): x is string => !!x))
+const identKey = (t: Token): string => `${t.pid ?? ""}|${t.nm ?? ""}|${t.num ?? ""}|${t.ps ?? ""}`
 export const snap = (b: BoardState): Record<string, XZ> => Object.fromEntries(b.tokens.map((t) => [t.id, [t.x, t.z] as XZ]))
 
 /** Re-place one team on a new formation, keeping the same token ids. */
@@ -222,10 +233,12 @@ function pitch(M: ModeDef): THREE.Group {
 }
 
 const NAME_H = 2.2
+/** Name sits just above the shirt number on screen from every camera (top view included). */
+const NAME_LIFT = -0.75
 /** Short name under the shirt number — tagged so exports can hide it (privacy). */
 function nameSprite(t: Token, y: number): THREE.Sprite | null {
   if (!t.nm) return null
-  const s = textSprite(t.nm); s.scale.multiplyScalar(NAME_H / s.scale.y); s.position.y = y; s.userData.isName = true
+  const s = textSprite(t.nm); s.scale.multiplyScalar(NAME_H / s.scale.y); s.position.y = y; s.center.set(0.5, NAME_LIFT); s.userData.isName = true
   return s
 }
 const hex = (c: string): number => parseInt(c.slice(1), 16)
@@ -241,7 +254,7 @@ function athleteObj(t: Token, i: number): THREE.Group {
   const ring = new THREE.Mesh(new THREE.RingGeometry(0.95, 1.2, 32), new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.75 }))
   ring.rotation.x = -Math.PI / HALF; ring.position.y = Y_LINE; g.add(ring)
   const sp = numberSprite(String(t.num ?? ""), col, t.ps && STATUS_DOT[t.ps]); sp.position.y = 5.2; g.add(sp)
-  const nmS = nameSprite(t, 8.1); if (nmS) g.add(nmS)
+  const nmS = nameSprite(t, 5.2); if (nmS) g.add(nmS)
   return g
 }
 
@@ -254,7 +267,7 @@ function playerObj(t: Token): THREE.Group {
   const ring = new THREE.Mesh(new THREE.RingGeometry(0.95, 1.2, 32), new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.75 }))
   ring.rotation.x = -Math.PI / HALF; ring.position.y = Y_LINE; ring.name = "ring"; g.add(ring)
   const sp = numberSprite(String(t.num ?? ""), col, t.ps && STATUS_DOT[t.ps]); sp.position.y = 3.6; g.add(sp)
-  const nmS = nameSprite(t, 6.4); if (nmS) g.add(nmS)
+  const nmS = nameSprite(t, 3.6); if (nmS) g.add(nmS)
   return g
 }
 
@@ -354,10 +367,12 @@ export interface Board3D {
   /** While exporting: names follow the coach's choice, never shown when the board hides them. */
   exportNames: (on: boolean) => void
   dispose: () => void
+  /** Put a real player on token tid from the current frame on (frame 1 = the starting line-up). */
+  substitute: (tid: string, p: Omit<Sub, "f" | "tid">) => void
   setQuality: (q: Quality) => void
 }
 
-export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChange: (b: BoardState) => void, quality: Quality = "high", onSelect: (r: (RoleInfo & { num?: number; pid?: string }) | null) => void = () => {}): Board3D {
+export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChange: (b: BoardState) => void, quality: Quality = "high", onSelect: (r: (RoleInfo & { num?: number; pid?: string; tid?: string; team?: Side }) | null) => void = () => {}): Board3D {
   let q = quality
   let still = 0
   const wake = (): void => { still = 0 }
@@ -379,8 +394,8 @@ export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChan
   const drawZones = (): void => {
     zones.clear(); const t = st.tokens.find((x) => x.id === sel)
     if (!t || t.kind !== "p") { onSelect(null); return }
-    const role = roleFor(st.mode, t.code)
-    onSelect(role ? { ar: role.name.ar, en: role.name.en, desc: role.desc.ar, num: t.num, pid: t.pid } : { ar: t.code || "لاعب", en: "", desc: "", num: t.num, pid: t.pid })
+    const role = roleFor(st.mode, t.code), who = identAt(st, t, fi), ids = { num: who.num, pid: who.pid, tid: t.id, team: t.team }
+    onSelect(role ? { ar: role.name.ar, en: role.name.en, desc: role.desc.ar, ...ids } : { ar: t.code || "لاعب", en: "", desc: "", ...ids })
     if (!role?.z) return
     const M = dimsOf(st), flip = t.team === "B", yf = flip ? 0.5 - t.z / M.W : 0.5 + t.z / M.W, sign = yf > 0.56 ? 1 : yf < 0.44 ? -1 : 0
     const ell = (z: number[], col: string, op: number): void => {
@@ -396,6 +411,21 @@ export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChan
   const ballMesh = (): THREE.Group => { const g = new THREE.Group(); const m = new THREE.Mesh(new THREE.SphereGeometry(0.42, 24, 16), new THREE.MeshStandardMaterial({ color: BALL_COL[SPORT_OF[st.mode]], roughness: 0.35 })); m.position.y = 0.42; m.castShadow = true; g.add(m); return g }
 
   let namesOn = true
+  const makeObj = (t: Token, i: number): THREE.Group => {
+    if (t.kind === "ball") return ballMesh()
+    if (t.kind === "eq") return equipObj(t.eq ?? "cone")
+    const who = identAt(st, t, fi), o = q === "high" ? athleteObj(who, i) : playerObj(who)
+    o.userData.key = identKey(who); return o
+  }
+  /** After a frame change: tokens whose player changed (substitution) get their figure rebuilt in place. */
+  const refreshIdents = (): void => {
+    st.tokens.forEach((t, i) => {
+      const ob = objs.get(t.id); if (t.kind !== "p" || !ob || ob.o.userData.key === identKey(identAt(st, t, fi))) return
+      const n = makeObj(t, i); if (q !== "high") n.traverse((m) => { m.castShadow = false }); n.scale.copy(ob.o.scale); n.position.copy(ob.o.position); n.rotation.copy(ob.o.rotation); n.userData.id = t.id
+      world.remove(ob.o); world.add(n); objs.set(t.id, { o: n, to: ob.to })
+    })
+    showNames(namesOn)
+  }
   const showNames = (on: boolean): void => { world.traverse((o) => { if (o.userData.isName) o.visible = on }) }
   const build = (): void => {
     still = 0
@@ -403,7 +433,7 @@ export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChan
     field = st.mode === "area" ? areaField(dimsOf(st)) : FB.has(st.mode) ? pitch(MODES[st.mode]) : court(st.mode); world.add(field)
     world.add(zones); sel = null; zones.clear(); onSelect(null)
     marks = new THREE.Group(); world.add(marks); st.marks.forEach((m) => marks.add(Object.assign(markObj(m), { name: m.id })))
-    st.tokens.forEach((t, i) => { const o = t.kind === "ball" ? ballMesh() : t.kind === "eq" ? equipObj(t.eq ?? "cone") : q === "high" ? athleteObj(t, i) : playerObj(t); if (q !== "high") o.traverse((m) => { m.castShadow = false }); o.rotation.y = t.rot ?? 0; if (t.kind !== "eq") o.scale.setScalar(courtK(st.mode, dimsOf(st))); o.position.set(t.x, 0, t.z); o.userData.id = t.id; world.add(o); objs.set(t.id, { o, to: o.position.clone() }) })
+    st.tokens.forEach((t, i) => { const o = makeObj(t, i); if (q !== "high") o.traverse((m) => { m.castShadow = false }); o.rotation.y = t.rot ?? 0; if (t.kind !== "eq") o.scale.setScalar(courtK(st.mode, dimsOf(st))); o.position.set(t.x, 0, t.z); o.userData.id = t.id; world.add(o); objs.set(t.id, { o, to: o.position.clone() }) })
     showNames(namesOn)
   }
 
@@ -505,6 +535,7 @@ export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChan
   const frame = (i: number, animate: boolean): void => {
     fi = Math.max(0, Math.min(st.frames.length - 1, i)); const f = st.frames[fi]; wake()
     st.tokens.forEach((t) => { const p = f[t.id]; if (!p) return; t.x = p[0]; t.z = p[1]; const ob = objs.get(t.id); if (ob) { ob.to.set(p[0], 0, p[1]); if (!animate) ob.o.position.copy(ob.to) } })
+    if (st.subs?.length) refreshIdents()
   }
   const restore = (from: string[], to: string[]): void => { const s = from.pop(); if (!s) return; to.push(JSON.stringify(st)); st = JSON.parse(s) as BoardState; fi = Math.min(fi, st.frames.length - 1); build(); frame(fi, false); onChange(st) }
   return {
@@ -531,6 +562,13 @@ export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChan
     png: (names = true) => { showNames(names && namesOn); cam.lookAt(view.tx, 0, view.tz); rn.render(sc, cam); const u = rn.domElement.toDataURL("image/png"); showNames(namesOn); rn.render(sc, cam); return u },
     setNames: (on) => { namesOn = on; showNames(on); wake() },
     exportNames: (on) => { showNames(on && namesOn); wake() },
+    substitute: (tid, p) => {
+      const t = st.tokens.find((x) => x.id === tid); if (!t) return
+      remember()
+      if (fi === 0) { Object.assign(t, { pid: p.pid, nm: p.nm, ps: p.ps, num: p.num ?? t.num }); st.subs = (st.subs ?? []).filter((x) => !(x.tid === tid && x.f === 0)) }
+      else st.subs = [...(st.subs ?? []).filter((x) => !(x.tid === tid && x.f === fi)), { f: fi, tid, ...p }]
+      refreshIdents(); if (sel === tid) drawZones(); onChange(st); wake()
+    },
     setQuality: (nq) => { q = nq; applyQ(); build(); frame(fi, false); wake() },
     dispose: () => { cancelAnimationFrame(raf); ro.disconnect(); rn.dispose() },
   }

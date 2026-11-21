@@ -1,15 +1,17 @@
 // السبورة التكتيكية 3D — the pitch is the screen: draw passes, runs, dribbles and zones on the grass, move players,
 // add movement frames and play them like a broadcast replay. Saved on this device.
 import { useEffect, useRef, useState } from "react"
-import { fromPlay, opensIn3D, type RoleInfo, PLAY_MODES, autoQuality, type QualityPref, mountBoard3D, newBoard, formsOf, setFormation, MARK_COLOR, TEAM_COLOR, type Board3D as Api, type BoardState, type Cam, type Mode, type Side, type Tool, type Equip } from "./engine"
+import { onPitchAt, identAt, fromPlay, opensIn3D, type RoleInfo, PLAY_MODES, autoQuality, type QualityPref, mountBoard3D, newBoard, formsOf, setFormation, MARK_COLOR, TEAM_COLOR, STATUS_DOT, type Board3D as Api, type BoardState, type Cam, type Mode, type Side, type Tool, type Equip } from "./engine"
 import "./board3d.css"
 import { can, guard, useWho } from "@/features/auth/caps"
 import { PLAYS, PLAY_CAT } from "@/features/library/content"
 import { useSquadData, positionsFor, type Player } from "@/features/squad/data"
 import { SquadPicker, PlayerCard } from "./SquadPicker"
-import { SPORT_OF_MODE, placeSquad, stripSquad } from "./team"
+import { SPORT_OF_MODE, placeSquad, stripSquad, pitchNames } from "./team"
 
 const KEY = "im-board3d-v1"
+// Runs of spaces in the auto caption: matches "  " and " "; rejects "_". https://regex101.com/?regex=%5Cs%2B&flags=g&testString=%D9%8A%D8%AF%D8%AE%D9%84%20%2016
+const SPACES = /\s+/g
 const QKEY = "im-board3d-quality"
 const LKEY = "im-board3d-library"
 interface Saved { id: string; name: string; at: string; state: BoardState }
@@ -88,13 +90,13 @@ export function Board3D({ dark, playId }: { readonly dark: boolean; readonly pla
   const [, tick] = useState(0)
   const [txt, setTxt] = useState("")
   const [menu, setMenu] = useState(false)
-  const [role, setRole] = useState<(RoleInfo & { num?: number; pid?: string }) | null>(null)
+  const [role, setRole] = useState<(RoleInfo & { num?: number; pid?: string; tid?: string; team?: Side }) | null>(null)
   // فريقي — the coach's real players on "فريقنا"
   const { data: squad, error: squadErr } = useSquadData()
   const who = useWho()
   const [picker, setPicker] = useState(false)
   const [chosen, setChosen] = useState<Player[]>([])
-  const [bench, setBench] = useState<Player[]>([])
+  const [swapIn, setSwapIn] = useState<Player | null>(null)
   const [expNames, setExpNames] = useState(false)
   const [qp, setQp] = useState<QualityPref>(readQ)
   useEffect(() => { try { localStorage.setItem(QKEY, qp) } catch { /* private mode */ } api.current?.setQuality(resolveQ(qp)) }, [qp])
@@ -126,14 +128,31 @@ export function Board3D({ dark, playId }: { readonly dark: boolean; readonly pla
   }, [playing])
 
   const st = api.current?.state() ?? b
+  // الدكة — chosen players not on the pitch at this frame. Tap a bench player, then the player who comes off (or the reverse).
+  const labels = pitchNames(chosen)
+  const onPitch = st.squad ? onPitchAt(st, fi) : new Set<string>()
+  const benchNow = st.squad ? chosen.filter((p) => !onPitch.has(p.id)) : []
+  const subOn = (tid: string, p: Player): void => {
+    const s = api.current?.state(); const t = s?.tokens.find((x) => x.id === tid); if (!s || !t) return
+    const out = identAt(s, t, fi)
+    api.current?.substitute(tid, { pid: p.id, nm: labels.get(p.id) ?? p.full_name, ps: p.status, num: p.shirt_number ?? undefined })
+    if (fi > 0 && !s.caps?.[fi]) api.current?.setCaption(fi, `تبديل: يدخل ${p.shirt_number ?? ""} ${labels.get(p.id) ?? ""} مكان ${out.num ?? ""} ${out.nm ?? ""}`.replace(SPACES, " ").trim())
+    setSwapIn(null); api.current?.select(null)
+  }
+  const benchTap = (p: Player): void => {
+    if (role?.tid && role.team === "A") { subOn(role.tid, p); return }
+    setSwapIn((x) => (x?.id === p.id ? null : p))
+  }
+  useEffect(() => { if (swapIn && role?.tid && role.team === "A") subOn(role.tid, swapIn) // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [role])
   const replace = (n: BoardState): void => { const m = privacy(n); setB(m); setFi(0); api.current?.load(m); api.current?.setNames(!(m.squad && !squad)) }
   /** Players on a frame-0 board: put them, keep every frame's positions for the same tokens. */
   const link = (teamId: string, players: Player[]): void => {
     const s = api.current?.state(); const team = squad?.teams.find((t) => t.id === teamId); if (!s || !team) return
-    const { board, bench: rest } = placeSquad(s, team, players)
-    setChosen(players); setBench(rest); setFi(0); api.current?.load(board); setPicker(false)
+    const { board } = placeSquad(s, team, players)
+    setChosen(players); setSwapIn(null); setFi(0); api.current?.load(board); setPicker(false)
   }
-  const unlinkSquad = (): void => { const s = api.current?.state(); if (!s) return; api.current?.load(stripSquad(s)); setChosen([]); setBench([]) }
+  const unlinkSquad = (): void => { const s = api.current?.state(); if (!s) return; api.current?.load(stripSquad(s)); setChosen([]); setSwapIn(null) }
   // Privacy: a saved board shows real names only to someone who can see that team. Not loaded yet or
   // offline → names are only hidden on screen (the coach's own board keeps them); loaded and not theirs → removed.
   function privacy(n: BoardState): BoardState {
@@ -148,7 +167,7 @@ export function Board3D({ dark, playId }: { readonly dark: boolean; readonly pla
     if (squad && !chosen.length) setChosen(squad.players.filter((p) => s.tokens.some((t) => t.pid === p.id)))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [squad, squadErr])
-  const form = (side: Side, key: string): void => { const s = api.current?.state(); if (!s) return; setFormation(s, side, key); if (side === "A" && s.squad && chosen.length) { const team = squad?.teams.find((t) => t.id === s.squad?.id); if (team) { const o = placeSquad(s, team, chosen); Object.assign(s, o.board); setBench(o.bench) } } s.frames[fi] = Object.fromEntries(s.tokens.map((t) => [t.id, [t.x, t.z]])); api.current?.frame(fi, true); api.current?.load(s); api.current?.frame(fi, false) }
+  const form = (side: Side, key: string): void => { const s = api.current?.state(); if (!s) return; setFormation(s, side, key); if (side === "A" && s.squad && chosen.length) { const team = squad?.teams.find((t) => t.id === s.squad?.id); if (team) { const o = placeSquad(s, team, chosen); Object.assign(s, o.board) } } s.frames[fi] = Object.fromEntries(s.tokens.map((t) => [t.id, [t.x, t.z]])); api.current?.frame(fi, true); api.current?.load(s); api.current?.frame(fi, false) }
   const clearMarks = (): void => { const s = api.current?.state(); if (!s) return; api.current?.load({ ...s, marks: [] }) }
   const [rec, setRec] = useState(false)
   /** Video of the movement frames (WebM): the pitch + each frame's caption + platform mark, recorded while it plays. */
@@ -239,7 +258,7 @@ export function Board3D({ dark, playId }: { readonly dark: boolean; readonly pla
         </aside>
       )}
       {picker && SPORT_OF_MODE[st.mode] && <SquadPicker who={who} mode={st.mode} data={squad} error={squadErr} slots={st.tokens.filter((t) => t.kind === "p" && t.team === "A").length}
-        linkedTeam={st.squad?.id} chosen={chosen} bench={bench} expNames={expNames} onExpNames={setExpNames} onApply={link} onUnlink={unlinkSquad} onClose={() => setPicker(false)} />}
+        linkedTeam={st.squad?.id} chosen={chosen} expNames={expNames} onExpNames={setExpNames} onApply={link} onUnlink={unlinkSquad} onClose={() => setPicker(false)} />}
       {role && tool === "move" && role.pid && squad && (() => { const p = squad.players.find((x) => x.id === role.pid); const tm = p && squad.teams.find((t) => t.id === p.team_id); return p && tm ? <PlayerCard p={p} pos={positionsFor(tm.sport).find((x) => x.code === p.position)} role={role} onClose={() => api.current?.select(null)} /> : null })()}
       {role && tool === "move" && !(role.pid && squad?.players.some((x) => x.id === role.pid)) && (
         <div className="b3role glass"><button className="x" onClick={() => api.current?.select(null)}>✕</button>
@@ -252,6 +271,13 @@ export function Board3D({ dark, playId }: { readonly dark: boolean; readonly pla
         <div className="eqs">{EQUIP.map((e) => <button key={e.k} className={eq === e.k ? "on" : ""} onClick={() => setEq(e.k)}>{e.ar}<span className="en">{e.en}</span></button>)}</div></div>}
       {tool === "text" && <div className="b3txt glass"><b>اكتب الملاحظة ثم اضغط مكانها على الملعب</b><input autoFocus value={txt} onChange={(e) => setTxt(e.target.value)} placeholder="مثال: ضغط عالي هنا" /></div>}
       {playing && st.caps?.[fi] && <div className="b3cap">{st.caps[fi]}</div>}
+      {st.squad && !playing && benchNow.length > 0 && (
+        <div className="b3bench glass" aria-label="الدكة">
+          <b>الدكة <span className="en">Bench</span></b>
+          {benchNow.map((p) => <button key={p.id} className={swapIn?.id === p.id ? "on" : ""} onClick={() => benchTap(p)} title="اضغط ثم اختار اللاعب اللي هيخرج">
+            <span className="no">{p.shirt_number ?? "–"}</span>{labels.get(p.id)}<i style={{ background: STATUS_DOT[p.status] }} /></button>)}
+          <small>{swapIn ? `اضغط على اللاعب اللي هيخرج — يدخل ${labels.get(swapIn.id)} ${fi > 0 ? `من المرحلة ${fi + 1}` : "من البداية"}` : fi > 0 ? `التبديل هيتسجّل في المرحلة ${fi + 1}` : "تبديل قبل البداية (التشكيل الأساسي)"}</small>
+        </div>)}
       <footer className="b3tl glass">
         <button className="pp" onClick={() => setPlaying((p) => !p)} disabled={st.frames.length < 2} aria-label={playing ? "إيقاف" : "تشغيل"}>
           <svg viewBox="0 0 24 24">{playing ? <path d="M6 4h4v16H6zM14 4h4v16h-4z" /> : <path d="M7 4l13 8-13 8z" />}</svg></button>

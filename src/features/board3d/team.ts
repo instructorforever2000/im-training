@@ -94,10 +94,10 @@ export function placeSquad(b: BoardState, team: Team, chosen: readonly Player[])
     return { ...unlink(t), pid: p.id, nm: names.get(p.id) ?? shortName(p.full_name), ps: p.status, num: p.shirt_number ?? t.num }
   })
   const placed = new Set([...match.values()].map((p) => p.id))
-  return { board: { ...b, tokens, squad: { id: team.id, name: team.name } }, bench: chosen.filter((p) => !placed.has(p.id)) }
+  return { board: { ...b, tokens, subs: [], squad: { id: team.id, name: team.name } }, bench: chosen.filter((p) => !placed.has(p.id)) }
 }
 
 /** Remove real names: used when the viewer has no access to the saved board's team (privacy). */
 export function stripSquad(b: BoardState): BoardState {
-  return { ...b, squad: undefined, tokens: b.tokens.map(unlink) }
+  return { ...b, squad: undefined, subs: [], tokens: b.tokens.map(unlink) }
 }

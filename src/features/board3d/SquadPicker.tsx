@@ -1,8 +1,9 @@
 // فريقي — choose the team and the players available today, then place them on "فريقنا".
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { todayAttendance, OUT_TODAY, ATTEND_AR, type TodaySheet } from "./attendance"
 import type { Mode, RoleInfo } from "./engine"
 import { STATUS_DOT } from "./engine"
-import { teamsFor, availableByDefault, shortName } from "./team"
+import { teamsFor, availableByDefault } from "./team"
 import { positionsFor, ageOf, type Player, type Position, type SquadData, type LoadError } from "@/features/squad/data"
 import cfg from "@/features/squad/squad-config.json"
 import type { Who } from "@/features/auth/caps"
@@ -13,12 +14,12 @@ const FOOT_AR: Record<string, string> = { R: "اليمنى", L: "اليسرى", 
 
 interface PickerProps {
   readonly who: Who; readonly mode: Mode; readonly data: SquadData | null; readonly error: LoadError; readonly slots: number
-  readonly linkedTeam?: string; readonly chosen: readonly Player[]; readonly bench: readonly Player[]
+  readonly linkedTeam?: string; readonly chosen: readonly Player[]
   readonly expNames: boolean; readonly onExpNames: (on: boolean) => void
   readonly onApply: (teamId: string, players: Player[]) => void; readonly onUnlink: () => void; readonly onClose: () => void
 }
 
-export function SquadPicker({ who, mode, data, error, slots, linkedTeam, chosen, bench, expNames, onExpNames, onApply, onUnlink, onClose }: PickerProps): React.JSX.Element {
+export function SquadPicker({ who, mode, data, error, slots, linkedTeam, chosen, expNames, onExpNames, onApply, onUnlink, onClose }: PickerProps): React.JSX.Element {
   const teams = data ? teamsFor(mode, data.teams) : []
   const [teamId, setTeamId] = useState<string>(linkedTeam ?? teams[0]?.id ?? "")
   const roster = (data?.players ?? []).filter((p) => p.team_id === teamId && p.is_active)
@@ -27,6 +28,20 @@ export function SquadPicker({ who, mode, data, error, slots, linkedTeam, chosen,
     return new Set((mine.length ? mine : roster.filter(availableByDefault)).map((p) => p.id))
   }
   const [pick, setPick] = useState<Set<string>>(() => start(teamId))
+  // كشف الحضور اليوم: whoever is marked absent / excused / injured today starts unticked.
+  const [sheet, setSheet] = useState<TodaySheet | null>(null)
+  useEffect(() => {
+    let alive = true
+    setSheet(null)
+    if (!teamId || !who.staff) return
+    void todayAttendance(teamId).then((t) => {
+      if (!alive || !t) return
+      setSheet(t)
+      if (!chosen.some((p) => p.team_id === teamId)) setPick((s) => new Set([...s].filter((id) => !OUT_TODAY.has(t.marks.get(id) ?? ""))))
+    })
+    return () => { alive = false }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [teamId])
   const team = teams.find((t) => t.id === teamId)
   const pos = team ? positionsFor(team.sport) : []
   const toggle = (id: string): void => setPick((s) => { const n = new Set(s); if (n.has(id)) n.delete(id); else n.add(id); return n })
@@ -42,6 +57,7 @@ export function SquadPicker({ who, mode, data, error, slots, linkedTeam, chosen,
     return (
       <>
         <select className="tsel" value={teamId} onChange={(e) => changeTeam(e.target.value)}>{teams.map((t) => <option key={t.id} value={t.id}>{t.name}{t.age_group ? ` · ${t.age_group}` : ""}</option>)}</select>
+        {sheet && <p className="att">كشف الحضور اليوم: <b>{sheet.title}</b> — الغائب والمعتذر والمصاب مش متعلّم عليهم. <span className="en">Today's attendance</span></p>}
         <div className="hd"><b>قائمة الحصة / المباراة <span className="en">Squad selection</span></b><small className={pick.size > slots ? "over" : ""}>{pick.size} / {slots}</small></div>
         {!roster.length && <p className="mu">الفريق ده لسه مفيهوش لاعبين.</p>}
         <ul className="roster">{[...roster].sort((a, z) => (a.shirt_number ?? NO_NUMBER) - (z.shirt_number ?? NO_NUMBER)).map((p) => (
@@ -50,11 +66,11 @@ export function SquadPicker({ who, mode, data, error, slots, linkedTeam, chosen,
             <span className="no">{p.shirt_number ?? "–"}</span><b>{p.full_name}</b>
             <small>{pos.find((x) => x.code === p.position)?.ar ?? "بدون مركز"}</small>
             <i className="st" style={{ background: STATUS_DOT[p.status] }} title={STATUS[p.status]?.ar}>{STATUS[p.status]?.ar}</i>
+            {sheet?.marks.has(p.id) && <em className={`att-m ${OUT_TODAY.has(sheet.marks.get(p.id) ?? "") ? "out" : ""}`}>اليوم: {ATTEND_AR[sheet.marks.get(p.id) ?? "present"]}</em>}
           </label></li>))}</ul>
         {pick.size > slots && <p className="mu">الزيادة ({pick.size - slots}) هتفضل على الدكة.</p>}
         <button className="go" disabled={!pick.size} onClick={() => onApply(teamId, roster.filter((p) => pick.has(p.id)))}>وزّع على الملعب <span className="en">Place on pitch</span></button>
         {linkedTeam && <button className="un" onClick={onUnlink}>فك ربط الفريق (أرقام فقط)</button>}
-        {bench.length > 0 && <p className="mu">على الدكة: {bench.map((p) => `${p.shirt_number ?? ""} ${shortName(p.full_name)}`).join(" · ")}</p>}
         <label className="chk"><input type="checkbox" checked={expNames} onChange={(e) => onExpNames(e.target.checked)} />إظهار الأسماء في الصورة والفيديو <span className="en">Names in exports</span></label>
         <p className="mu">الأساسي: الصورة والفيديو بالأرقام بس — حماية لخصوصية اللاعبين.</p>
       </>
