@@ -5,6 +5,9 @@ import { fromPlay, opensIn3D, type RoleInfo, PLAY_MODES, autoQuality, type Quali
 import "./board3d.css"
 import { can, guard } from "@/features/auth/caps"
 import { PLAYS, PLAY_CAT } from "@/features/library/content"
+import { useSquadData, positionsFor, type Player } from "@/features/squad/data"
+import { SquadPicker, PlayerCard } from "./SquadPicker"
+import { SPORT_OF_MODE, placeSquad, stripSquad } from "./team"
 
 const KEY = "im-board3d-v1"
 const QKEY = "im-board3d-quality"
@@ -85,7 +88,13 @@ export function Board3D({ dark, playId }: { readonly dark: boolean; readonly pla
   const [, tick] = useState(0)
   const [txt, setTxt] = useState("")
   const [menu, setMenu] = useState(false)
-  const [role, setRole] = useState<(RoleInfo & { num?: number }) | null>(null)
+  const [role, setRole] = useState<(RoleInfo & { num?: number; pid?: string }) | null>(null)
+  // فريقي — the coach's real players on "فريقنا"
+  const { data: squad, error: squadErr } = useSquadData()
+  const [picker, setPicker] = useState(false)
+  const [chosen, setChosen] = useState<Player[]>([])
+  const [bench, setBench] = useState<Player[]>([])
+  const [expNames, setExpNames] = useState(false)
   const [qp, setQp] = useState<QualityPref>(readQ)
   useEffect(() => { try { localStorage.setItem(QKEY, qp) } catch { /* private mode */ } api.current?.setQuality(resolveQ(qp)) }, [qp])
   const [eq, setEq] = useState<Equip>("cone")
@@ -117,7 +126,21 @@ export function Board3D({ dark, playId }: { readonly dark: boolean; readonly pla
 
   const st = api.current?.state() ?? b
   const replace = (n: BoardState): void => { setB(n); setFi(0); api.current?.load(n) }
-  const form = (side: Side, key: string): void => { const s = api.current?.state(); if (!s) return; setFormation(s, side, key); s.frames[fi] = Object.fromEntries(s.tokens.map((t) => [t.id, [t.x, t.z]])); api.current?.frame(fi, true); api.current?.load(s); api.current?.frame(fi, false) }
+  /** Players on a frame-0 board: put them, keep every frame's positions for the same tokens. */
+  const link = (teamId: string, players: Player[]): void => {
+    const s = api.current?.state(); const team = squad?.teams.find((t) => t.id === teamId); if (!s || !team) return
+    const { board, bench: rest } = placeSquad(s, team, players)
+    setChosen(players); setBench(rest); setFi(0); api.current?.load(board); setPicker(false)
+  }
+  const unlinkSquad = (): void => { const s = api.current?.state(); if (!s) return; api.current?.load(stripSquad(s)); setChosen([]); setBench([]) }
+  // Privacy: a saved board shows real names only to someone who can see that team.
+  useEffect(() => {
+    const s = api.current?.state(); if (!s?.squad || (!squad && !squadErr)) return
+    if (!squad?.teams.some((t) => t.id === s.squad?.id)) { api.current?.load(stripSquad(s)); return }
+    if (!chosen.length) setChosen(squad.players.filter((p) => s.tokens.some((t) => t.pid === p.id)))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [squad, squadErr])
+  const form = (side: Side, key: string): void => { const s = api.current?.state(); if (!s) return; setFormation(s, side, key); if (side === "A" && s.squad && chosen.length) { const team = squad?.teams.find((t) => t.id === s.squad?.id); if (team) { const o = placeSquad(s, team, chosen); Object.assign(s, o.board); setBench(o.bench) } } s.frames[fi] = Object.fromEntries(s.tokens.map((t) => [t.id, [t.x, t.z]])); api.current?.frame(fi, true); api.current?.load(s); api.current?.frame(fi, false) }
   const clearMarks = (): void => { const s = api.current?.state(); if (!s) return; api.current?.load({ ...s, marks: [] }) }
   const [rec, setRec] = useState(false)
   /** Video of the movement frames (WebM): the pitch + each frame's caption + platform mark, recorded while it plays. */
@@ -146,7 +169,7 @@ export function Board3D({ dark, playId }: { readonly dark: boolean; readonly pla
       x.fillStyle = "#e0564f"; x.beginPath(); x.arc(c.width - 40 * k, 34 * k, 8 * k, 0, Math.PI * 2); x.fill()
       if (!done) raf = requestAnimationFrame(draw)
     }
-    setRec(true); setPlaying(false); r.start(); draw()
+    setRec(true); setPlaying(false); a.setNames(expNames); r.start(); draw()
     const stop = a.play((i) => { cur = i; setFi(i) }, () => {
       window.setTimeout(() => {
         done = true; cancelAnimationFrame(raf); r.stop(); stop()
@@ -154,11 +177,11 @@ export function Board3D({ dark, playId }: { readonly dark: boolean; readonly pla
     })
     r.onstop = () => {
       const url = URL.createObjectURL(new Blob(chunks, { type: "video/webm" })), l = document.createElement("a")
-      l.href = url; l.download = "IM-tactical-board-3d.webm"; l.click(); window.setTimeout(() => URL.revokeObjectURL(url), 4000); setRec(false)
+      l.href = url; l.download = "IM-tactical-board-3d.webm"; l.click(); window.setTimeout(() => URL.revokeObjectURL(url), 4000); setRec(false); a.setNames(true)
     }
   }
   const exportPng = (): void => {
-    if (!can("download")) { guard("download", () => {}); return } const u = api.current?.png(); if (!u) return; const a = document.createElement("a"); a.href = u; a.download = "IM-tactical-board-3d.png"; a.click() }
+    if (!can("download")) { guard("download", () => {}); return } const u = api.current?.png(expNames); if (!u) return; const a = document.createElement("a"); a.href = u; a.download = "IM-tactical-board-3d.png"; a.click() }
 
   return (
     <div className={`b3${full ? " full" : ""}`} ref={root}>
@@ -170,6 +193,7 @@ export function Board3D({ dark, playId }: { readonly dark: boolean; readonly pla
           <label key={s} className="frm"><i style={{ background: TEAM_COLOR[s] }} />{s === "A" ? "فريقنا" : "المنافس"}
             <select value={st.form[s]} onChange={(e) => form(s, e.target.value)}>{st.form[s] === "—" && <option value="—">من الخطة</option>}{formsOf(st.mode, s).map((f) => <option key={f}>{f}</option>)}</select></label>
         ))}
+        {SPORT_OF_MODE[st.mode] && <button className={`chip ${st.squad ? "on" : ""}`} onClick={() => setPicker((v) => !v)} title="اختار فريقك من قاعدة اللاعبين — My team">{st.squad ? `فريقي: ${st.squad.name}` : "فريقي"} <span className="en">My team</span></button>}
         <label className="frm" title="جودة العرض — «تلقائي» يختار حسب قوة الجهاز">جودة العرض
           <select value={qp} onChange={(e) => setQp(e.target.value as QualityPref)}><option value="auto">تلقائي</option><option value="high">عالية</option><option value="lite">خفيفة</option></select></label>
         <button className="chip on" onClick={() => setPanel((v) => !v)}>اللوحات والخطط <span className="en">Library</span></button>
@@ -206,7 +230,10 @@ export function Board3D({ dark, playId }: { readonly dark: boolean; readonly pla
           
         </aside>
       )}
-      {role && tool === "move" && (
+      {picker && SPORT_OF_MODE[st.mode] && <SquadPicker mode={st.mode} data={squad} error={squadErr} slots={st.tokens.filter((t) => t.kind === "p" && t.team === "A").length}
+        linkedTeam={st.squad?.id} chosen={chosen} bench={bench} expNames={expNames} onExpNames={setExpNames} onApply={link} onUnlink={unlinkSquad} onClose={() => setPicker(false)} />}
+      {role && tool === "move" && role.pid && squad && (() => { const p = squad.players.find((x) => x.id === role.pid); const tm = p && squad.teams.find((t) => t.id === p.team_id); return p && tm ? <PlayerCard p={p} pos={positionsFor(tm.sport).find((x) => x.code === p.position)} role={role} onClose={() => api.current?.select(null)} /> : null })()}
+      {role && tool === "move" && !(role.pid && squad?.players.some((x) => x.id === role.pid)) && (
         <div className="b3role glass"><button className="x" onClick={() => api.current?.select(null)}>✕</button>
           <b>{role.num ? `${role.num} · ` : ""}{role.ar} {role.en && <span className="en">{role.en}</span>}</b>
           {role.desc && <p>{role.desc}</p>}

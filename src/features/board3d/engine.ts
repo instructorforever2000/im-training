@@ -23,9 +23,10 @@ export type Equip = "cone" | "ladder" | "hurdle" | "pole" | "flag" | "minigoal" 
 export type Side = "A" | "B"
 export type Cam = "broadcast" | "top" | "goal" | "half" | "vertical"
 type XZ = [number, number]
-export interface Token { id: string; kind: "p" | "ball" | "eq"; eq?: Equip; rot?: number; team?: Side; num?: number; code?: string; x: number; z: number }
+/** A token linked to a real player of the squad (فريقي): pid = players.id, nm = short name shown on the pitch, ps = status colour key. */
+export interface Token { id: string; kind: "p" | "ball" | "eq"; eq?: Equip; rot?: number; team?: Side; num?: number; code?: string; pid?: string; nm?: string; ps?: string; x: number; z: number }
 export interface Mark { id: string; kind: Exclude<Tool, "move" | "erase" | "equip">; pts: XZ[]; text?: string }
-export interface BoardState { mode: Mode; form: Record<Side, string>; tokens: Token[]; marks: Mark[]; frames: Record<string, XZ>[]; caps?: string[]; dims?: { L: number; W: number } }
+export interface BoardState { squad?: { id: string; name: string }; mode: Mode; form: Record<Side, string>; tokens: Token[]; marks: Mark[]; frames: Record<string, XZ>[]; caps?: string[]; dims?: { L: number; W: number } }
 
 interface ModeDef { L: number; W: number }
 const MODES = { ...(ENG.MODES as unknown as Record<string, ModeDef>), area: { L: 30, W: 20 } } as Record<string, ModeDef>
@@ -121,13 +122,15 @@ export function setFormation(b: BoardState, side: Side, key: string): void {
   b.form[side] = key
 }
 
-function numberSprite(n: string, bg: string): THREE.Sprite {
+export const STATUS_DOT: Record<string, string> = { ready: "#2fa36b", limited: "#e09a1c", injured: "#d9483b", absent: "#94a3b8" }
+function numberSprite(n: string, bg: string, dot?: string): THREE.Sprite {
   const px = 128, c = document.createElement("canvas"); c.width = c.height = px
   const x = c.getContext("2d")
   if (x) {
     x.fillStyle = bg; x.beginPath(); x.arc(px / HALF, px / HALF, px / HALF - 4, 0, TAU); x.fill()
     x.lineWidth = 6; x.strokeStyle = "#0b1b33"; x.stroke()
     x.fillStyle = "#0b1b33"; x.font = `bold ${px / HALF}px Outfit, sans-serif`; x.textAlign = "center"; x.textBaseline = "middle"; x.fillText(n, px / HALF, px / HALF + 4)
+    if (dot) { x.fillStyle = dot; x.beginPath(); x.arc(px * 0.82, px * 0.18, px * 0.17, 0, TAU); x.fill(); x.lineWidth = 5; x.strokeStyle = "#ffffff"; x.stroke() }
   }
   const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(c), depthTest: false }))
   s.scale.set(2.6, 2.6, 1); s.renderOrder = 5
@@ -218,6 +221,13 @@ function pitch(M: ModeDef): THREE.Group {
   return g
 }
 
+const NAME_H = 2.2
+/** Short name under the shirt number — tagged so exports can hide it (privacy). */
+function nameSprite(t: Token, y: number): THREE.Sprite | null {
+  if (!t.nm) return null
+  const s = textSprite(t.nm); s.scale.multiplyScalar(NAME_H / s.scale.y); s.position.y = y; s.userData.isName = true
+  return s
+}
 const hex = (c: string): number => parseInt(c.slice(1), 16)
 const SKINS = [0xc68e64, 0x8d5a3b, 0xe0b48f, 0xa8744f, 0x6f4630], HAIRS = [0x15110e, 0x2b1d14, 0x0e0c0b]
 const ATH_SCALE = 2.3
@@ -230,7 +240,8 @@ function athleteObj(t: Token, i: number): THREE.Group {
   g.add(body); g.userData.rig = rig; g.userData.body = body
   const ring = new THREE.Mesh(new THREE.RingGeometry(0.95, 1.2, 32), new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.75 }))
   ring.rotation.x = -Math.PI / HALF; ring.position.y = Y_LINE; g.add(ring)
-  const sp = numberSprite(String(t.num ?? ""), col); sp.position.y = 5.2; g.add(sp)
+  const sp = numberSprite(String(t.num ?? ""), col, t.ps && STATUS_DOT[t.ps]); sp.position.y = 5.2; g.add(sp)
+  const nmS = nameSprite(t, 8.1); if (nmS) g.add(nmS)
   return g
 }
 
@@ -242,7 +253,8 @@ function playerObj(t: Token): THREE.Group {
   head.position.y = 2.35; head.castShadow = true; g.add(head)
   const ring = new THREE.Mesh(new THREE.RingGeometry(0.95, 1.2, 32), new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.75 }))
   ring.rotation.x = -Math.PI / HALF; ring.position.y = Y_LINE; ring.name = "ring"; g.add(ring)
-  const sp = numberSprite(String(t.num ?? ""), col); sp.position.y = 3.6; g.add(sp)
+  const sp = numberSprite(String(t.num ?? ""), col, t.ps && STATUS_DOT[t.ps]); sp.position.y = 3.6; g.add(sp)
+  const nmS = nameSprite(t, 6.4); if (nmS) g.add(nmS)
   return g
 }
 
@@ -336,12 +348,14 @@ export interface Board3D {
   addFrame: () => number
   play: (onStep: (i: number) => void, onEnd: () => void) => () => void
   dark: (on: boolean) => void
-  png: () => string
+  png: (names?: boolean) => string
+  /** Show/hide player names on the pitch (exports hide them unless asked). */
+  setNames: (on: boolean) => void
   dispose: () => void
   setQuality: (q: Quality) => void
 }
 
-export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChange: (b: BoardState) => void, quality: Quality = "high", onSelect: (r: (RoleInfo & { num?: number }) | null) => void = () => {}): Board3D {
+export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChange: (b: BoardState) => void, quality: Quality = "high", onSelect: (r: (RoleInfo & { num?: number; pid?: string }) | null) => void = () => {}): Board3D {
   let q = quality
   let still = 0
   const wake = (): void => { still = 0 }
@@ -364,7 +378,7 @@ export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChan
     zones.clear(); const t = st.tokens.find((x) => x.id === sel)
     if (!t || t.kind !== "p") { onSelect(null); return }
     const role = roleFor(st.mode, t.code)
-    onSelect(role ? { ar: role.name.ar, en: role.name.en, desc: role.desc.ar, num: t.num } : { ar: t.code || "لاعب", en: "", desc: "", num: t.num })
+    onSelect(role ? { ar: role.name.ar, en: role.name.en, desc: role.desc.ar, num: t.num, pid: t.pid } : { ar: t.code || "لاعب", en: "", desc: "", num: t.num, pid: t.pid })
     if (!role?.z) return
     const M = dimsOf(st), flip = t.team === "B", yf = flip ? 0.5 - t.z / M.W : 0.5 + t.z / M.W, sign = yf > 0.56 ? 1 : yf < 0.44 ? -1 : 0
     const ell = (z: number[], col: string, op: number): void => {
@@ -416,6 +430,7 @@ export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChan
     st.tokens.forEach((t) => { const d = Math.hypot(t.x - p[0], t.z - p[1]); if (d < bd) { bd = d; best = t } })
     return best
   }
+  const showNames = (on: boolean): void => { world.traverse((o) => { if (o.userData.isName) o.visible = on }) }
   const commit = (): void => { st.frames[fi] = snap(st); onChange(st) }
 
   let moved = false
@@ -509,7 +524,8 @@ export function mountBoard3D(canvas: HTMLCanvasElement, init: BoardState, onChan
       return () => window.clearInterval(t)
     },
     dark,
-    png: () => rn.domElement.toDataURL("image/png"),
+    png: (names = true) => { showNames(names); cam.lookAt(view.tx, 0, view.tz); rn.render(sc, cam); const u = rn.domElement.toDataURL("image/png"); showNames(true); rn.render(sc, cam); return u },
+    setNames: (on) => { showNames(on); wake() },
     setQuality: (nq) => { q = nq; applyQ(); build(); frame(fi, false); wake() },
     dispose: () => { cancelAnimationFrame(raf); ro.disconnect(); rn.dispose() },
   }
